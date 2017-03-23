@@ -18,7 +18,7 @@ public:
         if (position != set_.end())
         {
             auto containedValue = *position;
-            set_.erase(position);
+            position = set_.erase(position);
             set_.insert(position, aggregator_(value, containedValue));
         }
         else
