@@ -5,19 +5,20 @@
 #include "optional.hpp"
 
 template <typename Container>
-class sorted_insert_iterator : public std::iterator<std::output_iterator_tag,void,void,void,void>
+class sorted_insert_iterator
 {
 protected:
   Container* container_;
     fluent::optional<typename Container::iterator> hint_;
 
 public:
-  using container_type = Container;
-  explicit sorted_insert_iterator (Container& container)
+    using iterator_category = std::output_iterator_tag;
+    using container_type = Container;
+    explicit sorted_insert_iterator (Container& container)
     : container_(&container), hint_(fluent::nullopt) {}
-  sorted_insert_iterator (Container& container, typename Container::iterator hint)
+    sorted_insert_iterator (Container& container, typename Container::iterator hint)
     : container_(&container), hint_(hint) {}
-  sorted_insert_iterator<Container>& operator= (const typename Container::value_type& value)
+    sorted_insert_iterator<Container>& operator= (const typename Container::value_type& value)
     {
         if (hint_)
             container_->insert(*hint_,value);
@@ -25,7 +26,7 @@ public:
             container_->insert(value);
         return *this;
     }
-  sorted_insert_iterator<Container>& operator= (typename Container::value_type&& value)
+    sorted_insert_iterator<Container>& operator= (typename Container::value_type&& value)
     {
         if (hint_)
             container_->insert(hint_,std::move(value));
@@ -33,9 +34,9 @@ public:
             container_->insert(std::move(value));
         return *this;
     }
-  sorted_insert_iterator<Container>& operator* () { return *this; }
-  sorted_insert_iterator<Container>& operator++ () { return *this; }
-  sorted_insert_iterator<Container> operator++ (int) { return *this; }
+    sorted_insert_iterator<Container>& operator* () { return *this; }
+    sorted_insert_iterator<Container>& operator++ () { return *this; }
+    sorted_insert_iterator<Container> operator++ (int) { return *this; }
 };
 
 template <typename Container>

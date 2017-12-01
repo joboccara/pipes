@@ -37,3 +37,11 @@ TEST_CASE("map_aggregator from vector of pairs")
     
     REQUIRE((results == expected));
 }
+
+TEST_CASE("map_aggregator's iterator category should be std::output_iterator_tag")
+{
+    std::map<int, std::string> results;
+    static_assert(std::is_same<decltype(map_aggregator(results, concatenateStrings))::iterator_category,
+                  std::output_iterator_tag>::value,
+                  "iterator category should be std::output_iterator_tag");
+}

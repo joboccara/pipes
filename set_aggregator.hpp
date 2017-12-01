@@ -4,9 +4,10 @@
 #include <iterator>
 
 template<typename Set, typename Function>
-class set_aggregate_iterator : public std::iterator<std::output_iterator_tag, void, void, void, void>
+class set_aggregate_iterator
 {
 public:
+    using iterator_category = std::output_iterator_tag;
     using container_type = Set;
     set_aggregate_iterator(Set& set, Function aggregator) : set_(set), aggregator_(aggregator) {}
     set_aggregate_iterator operator++(){ return *this; }

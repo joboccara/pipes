@@ -24,3 +24,11 @@ TEST_CASE("sorted_inserter should not insert existing values")
     
     REQUIRE((results == expected));
 }
+
+TEST_CASE("sorted_inserter's iterator category should be std::output_iterator_tag")
+{
+    std::set<int> results;
+    static_assert(std::is_same<decltype(sorted_inserter(results))::iterator_category,
+                  std::output_iterator_tag>::value,
+                  "iterator category should be std::output_iterator_tag");
+}

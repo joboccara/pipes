@@ -1,3 +1,4 @@
+#include <iterator>
 #include <set>
 #include <vector>
 
@@ -32,6 +33,7 @@ TEST_CASE("setAggregator")
 {
     std::vector<Value> entries = { {1, "a"}, {2, "b"}, {3, "c"}, {4, "d"} };
     std::vector<Value> entries2 = { {2, "b"}, {3, "c"}, {4, "d"}, {5, "e"} };
+    
     std::set<Value> expected = { {1, "a"}, {2, "bb"}, {3, "cc"}, {4, "dd"}, {5, "e"} };
     std::set<Value> results;
     
@@ -39,4 +41,12 @@ TEST_CASE("setAggregator")
     std::copy(entries2.begin(), entries2.end(), set_aggregator(results, concatenateValues));
     
     REQUIRE((results == expected));
+}
+
+TEST_CASE("set_aggregator's iterator category should be std::output_iterator_tag")
+{
+    std::set<Value> results;
+    static_assert(std::is_same<decltype(set_aggregator(results, concatenateValues))::iterator_category,
+                  std::output_iterator_tag>::value,
+                  "iterator category should be std::output_iterator_tag");
 }
