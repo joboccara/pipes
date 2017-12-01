@@ -3,6 +3,9 @@
 
 #include <iterator>
 
+namespace fluent
+{
+
 class dead_end_iterator
 {
 public:
@@ -16,5 +19,7 @@ public:
     template<typename T>
     dead_end_iterator& operator=(T const&) { return *this; }
 };
+
+} // namespace fluent
 
 #endif /* dead_end_iterator_h */

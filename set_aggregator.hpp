@@ -3,6 +3,9 @@
 
 #include <iterator>
 
+namespace fluent
+{
+
 template<typename Set, typename Function>
 class set_aggregate_iterator
 {
@@ -39,5 +42,7 @@ set_aggregate_iterator<Set, Function> set_aggregator(Set& set, Function aggregat
 {
     return set_aggregate_iterator<Set, Function>(set, aggregator);
 }
+    
+} // namespace fluent
 
 #endif

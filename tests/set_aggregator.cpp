@@ -37,8 +37,8 @@ TEST_CASE("setAggregator")
     std::set<Value> expected = { {1, "a"}, {2, "bb"}, {3, "cc"}, {4, "dd"}, {5, "e"} };
     std::set<Value> results;
     
-    std::copy(entries.begin(), entries.end(), set_aggregator(results, concatenateValues));
-    std::copy(entries2.begin(), entries2.end(), set_aggregator(results, concatenateValues));
+    std::copy(entries.begin(), entries.end(), fluent::set_aggregator(results, concatenateValues));
+    std::copy(entries2.begin(), entries2.end(), fluent::set_aggregator(results, concatenateValues));
     
     REQUIRE((results == expected));
 }
@@ -46,7 +46,7 @@ TEST_CASE("setAggregator")
 TEST_CASE("set_aggregator's iterator category should be std::output_iterator_tag")
 {
     std::set<Value> results;
-    static_assert(std::is_same<decltype(set_aggregator(results, concatenateValues))::iterator_category,
+    static_assert(std::is_same<decltype(fluent::set_aggregator(results, concatenateValues))::iterator_category,
                   std::output_iterator_tag>::value,
                   "iterator category should be std::output_iterator_tag");
 }

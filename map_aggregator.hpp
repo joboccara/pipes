@@ -3,6 +3,9 @@
 
 #include <iterator>
 
+namespace fluent
+{
+
 template<typename Map, typename Function>
 class map_aggregate_iterator
 {
@@ -36,5 +39,8 @@ map_aggregate_iterator<Map, Function> map_aggregator(Map& map, Function aggregat
 {
     return map_aggregate_iterator<Map, Function>(map, aggregator);
 }
+    
+} // namespace fluent
+
 
 #endif

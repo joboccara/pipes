@@ -1,11 +1,3 @@
-//
-//  optional.hpp
-//  Defaulted
-//
-//  Created by Jonathan Boccara on 18/11/2017.
-//  Copyright © 2017 Jonathan Boccara. All rights reserved.
-//
-
 #ifndef optional_h
 #define optional_h
 

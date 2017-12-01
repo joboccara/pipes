@@ -1,6 +1,9 @@
 #ifndef output_transformer_h
 #define output_transformer_h
 
+namespace fluent
+{
+
 template<typename Iterator, typename TransformFunction>
 class output_transform_iterator
 {
@@ -42,5 +45,7 @@ output_transformer<TransformFunction> make_output_transformer(TransformFunction 
 {
     return output_transformer<TransformFunction>(transformFunction);
 }
+
+} // namespace fluent
 
 #endif /* output_transformer_h */
