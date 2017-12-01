@@ -11,8 +11,7 @@ public:
     set_aggregate_iterator(Set& set, Function aggregator) : set_(set), aggregator_(aggregator) {}
     set_aggregate_iterator operator++(){ return *this; }
     set_aggregate_iterator operator*(){ return *this; }
-    template<typename Value>
-    set_aggregate_iterator& operator=(Value const& value)
+    set_aggregate_iterator& operator=(typename Set::value_type const& value)
     {
         auto position = set_.find(value);
         if (position != set_.end())
