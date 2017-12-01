@@ -1,5 +1,7 @@
 This library provides output iterators that enrich and complement the ones of the STL, such as `std::back_inserter`.
 
+All iterators are located in the namespace `fluent`.
+
 #`sorted_inserter`
 
 In the majority of cases where it is used in algoritms, `std::inserter` forces its user to provide a position. It makes sense for un-sorted containers such as `std::vector`, but for sorted containers such as `std::set` we end up choosing begin or end by defult, which doesn't make sense:
