@@ -2,19 +2,19 @@
 #define SORTED_INSERTER_HPP
 
 #include <iterator>
-#include <boost/optional.hpp>
+#include "optional.hpp"
 
 template <typename Container>
 class sorted_insert_iterator : public std::iterator<std::output_iterator_tag,void,void,void,void>
 {
 protected:
   Container* container_;
-  boost::optional<typename Container::iterator> hint_;
+    fluent::optional<typename Container::iterator> hint_;
 
 public:
   using container_type = Container;
   explicit sorted_insert_iterator (Container& container)
-    : container_(&container), hint_(boost::none) {}
+    : container_(&container), hint_(fluent::nullopt) {}
   sorted_insert_iterator (Container& container, typename Container::iterator hint)
     : container_(&container), hint_(hint) {}
   sorted_insert_iterator<Container>& operator= (const typename Container::value_type& value)
