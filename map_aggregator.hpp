@@ -13,8 +13,8 @@ public:
     using iterator_category = std::output_iterator_tag;
     using container_type = Map;
     map_aggregate_iterator(Map& map, Function aggregator) : map_(map), aggregator_(aggregator) {}
-    map_aggregate_iterator operator++(){ return *this; }
-    map_aggregate_iterator operator*(){ return *this; }
+    map_aggregate_iterator& operator++(){ return *this; }
+    map_aggregate_iterator& operator*(){ return *this; }
     map_aggregate_iterator& operator=(typename Map::value_type const& keyValue)
     {
         auto position = map_.find(keyValue.first);
