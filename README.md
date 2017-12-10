@@ -11,6 +11,7 @@ std::vector<int> v = {1, 3, -4, 2, 7, 10, 8};
 std::set<int> results;
 std::copy(begin(v), end(v), std::inserter(results, end(results)));
 ```
+
 `sorted_inserter` removes this constraint by making the position optional. If no hint is passed, the containers is left to determine the correct position to insert:
 
 ```cpp
@@ -58,6 +59,26 @@ std::copy(begin(input), end(input), times2(std::back_inserter(results)));
 // results contains {2, 4, 6, 8, 10}
 ```
 Read the [full story](https://www.fluentcpp.com/2017/11/28/output-iterator-adaptors-symmetry-range-adaptors/) about smart output iterators.
+
+#output_partitioner
+
+`output_partitioner` is an output iterator that takes a predicate and 2 other output itertors. It routes the data it receives over to either one of these iterators, depending on whether that piece of data satisfies the predicate.
+It can be built with the helper function `make_output_partitioner`:
+
+```cpp
+std::vector<int> input = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
+
+auto const isEvenPartition = fluent::make_output_partitioner([](int n){ return n % 2 == 0; });
+
+std::vector<int> evens;
+std::vector<int> odds;
+
+std::copy(begin(input), end(input), isEvenPartition(std::back_inserter(evens), std::back_inserter(odds)));
+
+// evens contains {2, 4, 6, 8, 10};
+// odds contains {1, 3, 5, 7, 9};
+
+```
 
 #`dead_end_iterator`
 
