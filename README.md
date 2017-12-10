@@ -23,6 +23,20 @@ std::copy(begin(v), end(v), sorted_inserter(results));
 ```
 Read the [full story](https://www.fluentcpp.com/2017/03/17/smart-iterators-for-inserting-into-sorted-container/) about `sorted_inserter`.
 
+#`custom_inserter`
+
+`custom_inserter` takes a function (or function object) that inserts into an arbitrary output container. The purpose of this iterator is to give legacy code that does not use STL containers access to STL algorithms:
+
+```cpp
+std::vector<int> input = {1, 2, 3, 4, 5, 6, 7 ,8, 9, 10};
+
+void legacyInsert(int number, DarkLegacyStructure const& thing); // this function inserts into the old non-STL container
+
+DarkLegacyStructure legacyStructure = // ...
+
+std::copy(begin(input), end(input), custom_inserter([&legacyStructure](int number){ legacyInsert(number, legacyStructure); });
+```
+
 #`map_aggregator`
 
 `map_aggregator` provides the possibility to embark an aggregator function in the inserter iterator, so that new elements whose **key is already present in the map** can be merged with the existent (e.g. have their values added together).
