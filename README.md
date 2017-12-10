@@ -75,23 +75,21 @@ std::copy(begin(input), end(input), times2(std::back_inserter(results)));
 ```
 Read the [full story](https://www.fluentcpp.com/2017/11/28/output-iterator-adaptors-symmetry-range-adaptors/) about smart output iterators.
 
-#`output_transformer`
+#`output_filter`
 
-`output_transformer` is an output iterator that wraps around another output iterator. It embarks a function `f` and, when it receives a value, applies `f` on it and sends the result to the output iterator that it is wrapping.
+`output_filter` is also an output iterator that wraps around another output iterator. It takes a predicate, and sends the data it receives to that iterator only if it satisfies the predicate.
 
-The helper function `make_output_transformer` takes a function and returns an `output_transformer` embarking (a copy of) that function.
+The helper function `make_output_filter` takes a predicate and returns an `output_filter` embarking (a copy of) that predicate.
 
 ```cpp
-std::vector<int> input = {1, 2, 3, 4, 5};
-
-auto const times2 = make_output_transformer([](int i) { return i*2; });
+std::vector<int> input = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
+auto const ifIsEven = make_output_filter([](int i){ return i % 2 == 0; });
 
 std::vector<int> results;
-std::copy(begin(input), end(input), times2(std::back_inserter(results)));
+std::copy(begin(input), end(input), ifIsEven(std::back_inserter(results)));
 
 // results contains {2, 4, 6, 8, 10}
 ```
-
 
 #output_partitioner
 
