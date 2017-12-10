@@ -36,6 +36,7 @@ DarkLegacyStructure legacyStructure = // ...
 
 std::copy(begin(input), end(input), custom_inserter([&legacyStructure](int number){ legacyInsert(number, legacyStructure); });
 ```
+Read the [full story](https://www.fluentcpp.com/2017/11/24/how-to-use-the-stl-in-legacy-code/) about making legacy code compatible with the STL.
 
 #`map_aggregator`
 
@@ -73,6 +74,24 @@ std::copy(begin(input), end(input), times2(std::back_inserter(results)));
 // results contains {2, 4, 6, 8, 10}
 ```
 Read the [full story](https://www.fluentcpp.com/2017/11/28/output-iterator-adaptors-symmetry-range-adaptors/) about smart output iterators.
+
+#`output_transformer`
+
+`output_transformer` is an output iterator that wraps around another output iterator. It embarks a function `f` and, when it receives a value, applies `f` on it and sends the result to the output iterator that it is wrapping.
+
+The helper function `make_output_transformer` takes a function and returns an `output_transformer` embarking (a copy of) that function.
+
+```cpp
+std::vector<int> input = {1, 2, 3, 4, 5};
+
+auto const times2 = make_output_transformer([](int i) { return i*2; });
+
+std::vector<int> results;
+std::copy(begin(input), end(input), times2(std::back_inserter(results)));
+
+// results contains {2, 4, 6, 8, 10}
+```
+
 
 #output_partitioner
 
