@@ -10,6 +10,10 @@ class dead_end_iterator
 {
 public:
     using iterator_category = std::output_iterator_tag;
+    using value_type = void;
+    using difference_type = void;
+    using pointer = void;
+    using reference = void;
     
     dead_end_iterator& operator++() { return *this; }
     dead_end_iterator& operator++(int) { return *this; }

@@ -11,6 +11,11 @@ class map_aggregate_iterator
 {
 public:
     using iterator_category = std::output_iterator_tag;
+    using value_type = void;
+    using difference_type = void;
+    using pointer = void;
+    using reference = void;
+
     using container_type = Map;
     map_aggregate_iterator(Map& map, Function aggregator) : map_(map), aggregator_(aggregator) {}
     map_aggregate_iterator& operator++(){ return *this; }

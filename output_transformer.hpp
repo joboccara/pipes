@@ -9,6 +9,10 @@ class output_transform_iterator
 {
 public:
     using iterator_category = std::output_iterator_tag;
+    using value_type = void;
+    using difference_type = void;
+    using pointer = void;
+    using reference = void;
     
     explicit output_transform_iterator(Iterator iterator, TransformFunction transformFunction) : iterator_(iterator), transformFunction_(transformFunction) {}
     output_transform_iterator& operator++(){ ++iterator_; return *this; }

@@ -9,6 +9,10 @@ namespace fluent
     {
     public:
         using iterator_category = std::output_iterator_tag;
+        using value_type = void;
+        using difference_type = void;
+        using pointer = void;
+        using reference = void;
         
         explicit output_filter_iterator(Iterator iterator, Predicate predicate) : iterator_(iterator), predicate_(predicate) {}
         output_filter_iterator& operator++(){ ++iterator_; return *this; }
