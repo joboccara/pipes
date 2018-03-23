@@ -30,7 +30,7 @@ TEST_CASE("output_partitioner's iterator category should be std::output_iterator
 
 TEST_CASE("output_partitioner cannot override existing contents")
 {
-    /* This code should not compile
+    /* This code should not compile as the output_partition_iterator is plugged on a vector::begin
     
     std::vector<int> input = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
     

@@ -27,7 +27,7 @@ TEST_CASE("output_filter's iterator category should be std::output_iterator_tag"
 
 TEST_CASE("output_filter cannot override existing contents")
 {
-    /* This code should not compile
+    /* This code should not compile as the output_filter_iterator is plugged on a vector::begin
      
     std::vector<int> input = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
     std::vector<int> expected = {2, 4, 6, 8, 10};

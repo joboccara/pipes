@@ -12,7 +12,7 @@ class sorted_insert_iterator
 {
 protected:
   Container* container_;
-    fluent::optional<typename Container::iterator> hint_;
+    detail::optional<typename Container::iterator> hint_;
 
 public:
     using iterator_category = std::output_iterator_tag;
@@ -23,7 +23,7 @@ public:
 
     using container_type = Container;
     explicit sorted_insert_iterator (Container& container)
-    : container_(&container), hint_(fluent::nullopt) {}
+    : container_(&container), hint_(detail::nullopt) {}
     sorted_insert_iterator (Container& container, typename Container::iterator hint)
     : container_(&container), hint_(hint) {}
     sorted_insert_iterator<Container>& operator= (const typename Container::value_type& value)
