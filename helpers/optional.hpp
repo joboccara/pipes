@@ -1,5 +1,5 @@
-#ifndef optional_h
-#define optional_h
+#ifndef fluent_optional_h
+#define fluent_optional_h
 
 namespace fluent
 {
@@ -38,4 +38,4 @@ private:
 
 }
 
-#endif /* optional_h */
+#endif /* fluent_optional_h */

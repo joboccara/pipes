@@ -1,13 +1,17 @@
 #ifndef output_filter_h
 #define output_filter_h
 
+#include "helpers/meta.hpp"
+#include <iterator>
+
 namespace fluent
 {
-    
     template<typename Iterator, typename Predicate>
     class output_filter_iterator
     {
     public:
+        static_assert(fluent::IsOutputIterator<Iterator>::value, "output_filter_iterator can only plug on output iterators");
+        
         using iterator_category = std::output_iterator_tag;
         using value_type = void;
         using difference_type = void;
@@ -15,7 +19,7 @@ namespace fluent
         using reference = void;
         
         explicit output_filter_iterator(Iterator iterator, Predicate predicate) : iterator_(iterator), predicate_(predicate) {}
-        output_filter_iterator& operator++(){ ++iterator_; return *this; }
+        output_filter_iterator& operator++(){ return *this; }
         output_filter_iterator& operator++(int){ ++*this; return *this; }
         output_filter_iterator& operator*(){ return *this; }
         template<typename T>

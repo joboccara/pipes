@@ -1,6 +1,9 @@
 #ifndef output_partitioner_hpp
 #define output_partitioner_hpp
 
+#include "helpers/meta.hpp"
+#include <iterator>
+
 namespace fluent
 {
 
@@ -8,6 +11,9 @@ template<typename IteratorTrue, typename IteratorFalse, typename Predicate>
 class output_partition_iterator
 {
 public:
+    static_assert(IsOutputIterator<IteratorTrue>::value, "output_partition_iterator can only plug on output iterators");
+    static_assert(IsOutputIterator<IteratorFalse>::value, "output_partition_iterator can only plug on output iterators");
+
     using iterator_category = std::output_iterator_tag;
     using value_type = void;
     using difference_type = void;
@@ -15,7 +21,7 @@ public:
     using reference = void;
     
     explicit output_partition_iterator(IteratorTrue iteratorTrue, IteratorFalse iteratorFalse, Predicate predicate) : iteratorTrue_(iteratorTrue), iteratorFalse_(iteratorFalse), predicate_(predicate) {}
-    output_partition_iterator& operator++(){ ++iteratorTrue_; ++iteratorFalse_; return *this; }
+    output_partition_iterator& operator++(){ return *this; }
     output_partition_iterator& operator++(int){ ++*this; return *this; }
     output_partition_iterator& operator*(){ return *this; }
     template<typename T>

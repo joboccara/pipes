@@ -24,3 +24,20 @@ TEST_CASE("output_filter's iterator category should be std::output_iterator_tag"
                   std::output_iterator_tag>::value,
                   "iterator category should be std::output_iterator_tag");
 }
+
+TEST_CASE("output_filter cannot override existing contents")
+{
+    /* This code should not compile
+     
+    std::vector<int> input = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
+    std::vector<int> expected = {2, 4, 6, 8, 10};
+    
+    auto const ifIsEven = fluent::make_output_filter([](int i){ return i % 2 == 0; });
+    
+    std::vector<int> results = {0, 0, 0, 0, 0};
+    std::copy(begin(input), end(input), ifIsEven(begin(results)));
+    
+    REQUIRE(results == expected);
+    
+    */ 
+}
