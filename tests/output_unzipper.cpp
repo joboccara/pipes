@@ -2,6 +2,8 @@
 #include "output_unzipper.hpp"
 
 #include <algorithm>
+#include <map>
+#include <string>
 #include <utility>
 #include <vector>
 
@@ -20,6 +22,22 @@ TEST_CASE("output_unzipper breaks tuples down to containers")
     REQUIRE(column2 == expectedColumn2);
     REQUIRE(column3 == expectedColumn3);
 }
+
+TEST_CASE("output_unzipper breaks pairs down to two containers")
+{
+    std::map<int, std::string> entries = { {1, "one"}, {2, "two"}, {3, "three"}, {4, "four"}, {5, "five"} };
+    std::vector<int> expectedKeys = {1, 2, 3, 4, 5};
+    std::vector<std::string> expectedValues = {"one", "two", "three", "four", "five"};
+
+    std::vector<int> keys;
+    std::vector<std::string> values;
+    
+    std::copy(begin(entries), end(entries), fluent::output_unzipper(back_inserter(keys), back_inserter(values)));
+    
+    REQUIRE(keys == expectedKeys);
+    REQUIRE(values == expectedValues);
+}
+
 
 TEST_CASE("output_unzipper's iterator category should be std::output_iterator_tag")
 {
