@@ -10,7 +10,7 @@ namespace fluent
     class output_filter_iterator
     {
     public:
-        static_assert(fluent::IsOutputIterator<Iterator>::value, "output_filter_iterator can only plug on output iterators");
+        static_assert(IsOutputIterator<Iterator>::value, "output_filter_iterator can only plug on output iterators");
         
         using iterator_category = std::output_iterator_tag;
         using value_type = void;
