@@ -7,9 +7,6 @@
 
 namespace fluent
 {
-template<typename Iterator>
-using IsOutputIterator = std::is_same<typename std::iterator_traits<Iterator>::iterator_category, std::output_iterator_tag>;
-    
 namespace detail
 {
     
@@ -23,9 +20,6 @@ namespace detail
     struct conjunction<B1, Bn...> : std::conditional_t<bool(B1::value), conjunction<Bn...>, B1> {};
     
 } // namespace detail
-    
-template<typename... Iterators>
-using AreOutputIterators = detail::conjunction<IsOutputIterator<Iterators>...>;
 
 namespace detail
 {

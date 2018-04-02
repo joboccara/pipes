@@ -9,9 +9,7 @@ namespace fluent
 template<typename Iterator, typename Predicate>
 class output_filter_iterator
 {
-public:
-    static_assert(IsOutputIterator<Iterator>::value, "output_filter_iterator can only plug on output iterators");
-    
+public:    
     using iterator_category = std::output_iterator_tag;
     using value_type = void;
     using difference_type = void;
@@ -28,6 +26,7 @@ public:
         if (predicate_(value))
         {
             *iterator_ = value;
+            ++iterator_;
         }
         return *this;
     }

@@ -11,9 +11,6 @@ template<typename IteratorTrue, typename IteratorFalse, typename Predicate>
 class output_partition_iterator
 {
 public:
-    static_assert(IsOutputIterator<IteratorTrue>::value, "output_partition_iterator can only plug on output iterators");
-    static_assert(IsOutputIterator<IteratorFalse>::value, "output_partition_iterator can only plug on output iterators");
-
     using iterator_category = std::output_iterator_tag;
     using value_type = void;
     using difference_type = void;
@@ -30,10 +27,12 @@ public:
         if (predicate_(value))
         {
             *iteratorTrue_ = value;
+            ++iteratorTrue_;
         }
         else
         {
             *iteratorFalse_ = value;
+            ++iteratorFalse_;
         }
         return *this;
     }

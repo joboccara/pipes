@@ -19,6 +19,24 @@ TEST_CASE("output_partitioner")
     REQUIRE(odds == expectedOdds);
 }
 
+TEST_CASE("output_partitioner can override existing results")
+{
+    std::vector<int> input = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
+    
+    std::vector<int> expectedEvens = {2, 4, 6, 8, 10, 0, 0, 0, 0, 0};
+    std::vector<int> expectedOdds = {1, 3, 5, 7, 9, 0, 0, 0, 0, 0};
+    
+    auto const isEvenPartition = fluent::make_output_partitioner([](int n){ return n % 2 == 0; });
+    
+    std::vector<int> evens = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+    std::vector<int> odds = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+    
+    std::copy(begin(input), end(input), isEvenPartition(begin(evens), begin(odds)));
+    
+    REQUIRE(evens == expectedEvens);
+    REQUIRE(odds == expectedOdds);
+}
+
 TEST_CASE("output_partitioner's iterator category should be std::output_iterator_tag")
 {
     auto const isEvenPartition = fluent::make_output_partitioner([](int n){ return n % 2 == 0; });

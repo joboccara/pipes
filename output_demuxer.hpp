@@ -65,8 +65,6 @@ template<typename... DemuxBranches>
 class output_demux_iterator
 {
 public:
-    static_assert(AreOutputIterators<typename DemuxBranches::iterator_type...>::value, "output_demux_iterator can only plug on output iterators");
-
     using iterator_category = std::output_iterator_tag;
     using value_type = void;
     using difference_type = void;
@@ -82,7 +80,7 @@ public:
     {
         execute_on_first_that_satisfies_predicate(branches_,
                                                   detail::make_named<detail::ExecuteOnFirst_Predicate>([&value](auto&& branch){ return branch.predicate(value); }),
-                                                  detail::make_named<detail::ExecuteOnFirst_Function>([&value](auto&& branch){ *branch.iterator = value; } ));
+                                                  detail::make_named<detail::ExecuteOnFirst_Function>([&value](auto&& branch){ *branch.iterator = value; ++branch.iterator; } ));
         
         return *this;
     }
