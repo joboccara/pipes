@@ -57,16 +57,16 @@ std::copy(entries2.begin(), entries2.end(), map_aggregator(results, concatenateS
 
 Read the [full story](https://www.fluentcpp.com/2017/03/21/smart-iterator-aggregating-new-elements-existing-ones-map-set/) about `map_aggregator` and `set_aggregator`.
 
-#`output_transformer`
+#`transform`
 
 `output_transformer` is an output iterator that wraps around another output iterator. It embarks a function `f` and, when it receives a value, applies `f` on it and sends the result to the output iterator that it is wrapping.
 
-The helper function `make_output_transformer` takes a function and returns an `output_transformer` embarking (a copy of) that function.
+The helper function `transform` takes a function and returns an `output_transformer` embarking (a copy of) that function.
 
 ```cpp
 std::vector<int> input = {1, 2, 3, 4, 5};
 
-auto const times2 = make_output_transformer([](int i) { return i*2; });
+auto const times2 = transform([](int i) { return i*2; });
 
 std::vector<int> results;
 std::copy(begin(input), end(input), times2(std::back_inserter(results)));
@@ -75,15 +75,15 @@ std::copy(begin(input), end(input), times2(std::back_inserter(results)));
 ```
 Read the [full story](https://www.fluentcpp.com/2017/11/28/output-iterator-adaptors-symmetry-range-adaptors/) about smart output iterators.
 
-#`output_filter`
+#`filter`
 
 `output_filter` is also an output iterator that wraps around another output iterator. It takes a predicate, and sends the data it receives to that iterator only if it satisfies the predicate.
 
-The helper function `make_output_filter` takes a predicate and returns an `output_filter` embarking (a copy of) that predicate.
+The helper function `filter` takes a predicate and returns an `output_filter` embarking (a copy of) that predicate.
 
 ```cpp
 std::vector<int> input = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
-auto const ifIsEven = make_output_filter([](int i){ return i % 2 == 0; });
+auto const ifIsEven = filter([](int i){ return i % 2 == 0; });
 
 std::vector<int> results;
 std::copy(begin(input), end(input), ifIsEven(std::back_inserter(results)));
@@ -91,15 +91,15 @@ std::copy(begin(input), end(input), ifIsEven(std::back_inserter(results)));
 // results contains {2, 4, 6, 8, 10}
 ```
 
-#output_partitioner
+#partition
 
 `output_partitioner` is an output iterator that takes a predicate and 2 other output itertors. It routes the data it receives over to either one of these iterators, depending on whether that piece of data satisfies the predicate.
-It can be built with the helper function `make_output_partitioner`:
+It can be built with the helper function `partition`:
 
 ```cpp
 std::vector<int> input = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
 
-auto const isEvenPartition = fluent::make_output_partitioner([](int n){ return n % 2 == 0; });
+auto const isEvenPartition = fluent::partition([](int n){ return n % 2 == 0; });
 
 std::vector<int> evens;
 std::vector<int> odds;
