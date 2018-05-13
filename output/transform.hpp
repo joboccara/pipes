@@ -1,5 +1,5 @@
-#ifndef output_transformer_h
-#define output_transformer_h
+#ifndef output_transform_h
+#define output_transform_h
 
 namespace fluent
 {
@@ -50,11 +50,16 @@ output_transform_iterator<Iterator, TransformFunction> operator|(output_transfor
     return outputTransformer(iterator);
 }
 
+namespace output
+{
+
 template<typename TransformFunction>
-output_transformer<TransformFunction> make_output_transformer(TransformFunction transformFunction)
+output_transformer<TransformFunction> transform(TransformFunction transformFunction)
 {
     return output_transformer<TransformFunction>(transformFunction);
 }
+
+} // namespace output
 
 } // namespace fluent
 

@@ -1,7 +1,7 @@
 #ifndef output_filter_h
 #define output_filter_h
 
-#include "helpers/meta.hpp"
+#include "../helpers/meta.hpp"
 #include <iterator>
 
 namespace fluent
@@ -55,13 +55,18 @@ output_filter_iterator<Iterator, FilterFunction> operator|(output_filter<FilterF
 {
     return outputFilter(iterator);
 }
+    
+namespace output
+{
 
 template<typename Predicate>
-output_filter<Predicate> make_output_filter(Predicate predicate)
+output_filter<Predicate> filter(Predicate predicate)
 {
     return output_filter<Predicate>(predicate);
 }
-    
+
+} // namespace output
+
 } // namespace fluent
 
 #endif /* output_transformer_h */

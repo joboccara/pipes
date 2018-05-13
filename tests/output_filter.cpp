@@ -1,12 +1,12 @@
 #include <algorithm>
 
 #include "catch.hpp"
-#include "output_filter.hpp"
+#include "../output/filter.hpp"
 
-TEST_CASE("output_filter")
+TEST_CASE("output::filter")
 {
     std::vector<int> input = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
-    auto const ifIsEven = fluent::make_output_filter([](int i){ return i % 2 == 0; });
+    auto const ifIsEven = fluent::output::filter([](int i){ return i % 2 == 0; });
     
     std::vector<int> expected = {2, 4, 6, 8, 10};
     
@@ -16,10 +16,10 @@ TEST_CASE("output_filter")
     REQUIRE(results == expected);
 }
 
-TEST_CASE("output_filter can override existing results")
+TEST_CASE("output::filter can override existing results")
 {
     std::vector<int> input = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
-    auto const ifIsEven = fluent::make_output_filter([](int i){ return i % 2 == 0; });
+    auto const ifIsEven = fluent::output::filter([](int i){ return i % 2 == 0; });
     
     std::vector<int> expected = {2, 4, 6, 8, 10, 0, 0, 0, 0, 0};
     
@@ -29,23 +29,23 @@ TEST_CASE("output_filter can override existing results")
     REQUIRE(results == expected);
 }
 
-TEST_CASE("output_filter's iterator category should be std::output_iterator_tag")
+TEST_CASE("output::filter's iterator category should be std::output_iterator_tag")
 {
-    auto const isEven = fluent::make_output_filter([](int i) { return i % 2 == 0; });
+    auto const isEven = fluent::output::filter([](int i) { return i % 2 == 0; });
     std::vector<int> output;
     static_assert(std::is_same<decltype(isEven(std::back_inserter(output)))::iterator_category,
                   std::output_iterator_tag>::value,
                   "iterator category should be std::output_iterator_tag");
 }
 
-TEST_CASE("output_filter cannot override existing contents")
+TEST_CASE("output::filter cannot override existing contents")
 {
     /* This code should not compile as the output_filter_iterator is plugged on a vector::begin
      
     std::vector<int> input = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
     std::vector<int> expected = {2, 4, 6, 8, 10};
     
-    auto const ifIsEven = fluent::make_output_filter([](int i){ return i % 2 == 0; });
+    auto const ifIsEven = fluent::output::filter([](int i){ return i % 2 == 0; });
     
     std::vector<int> results = {0, 0, 0, 0, 0};
     std::copy(begin(input), end(input), ifIsEven(begin(results)));

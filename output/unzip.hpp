@@ -1,7 +1,7 @@
-#ifndef output_unzipper_h
-#define output_unzipper_h
+#ifndef output_unzip_h
+#define output_unzip_h
 
-#include "helpers/meta.hpp"
+#include "../helpers/meta.hpp"
 
 namespace fluent
 {
@@ -40,12 +40,17 @@ public:
 private:
     std::tuple<Iterators...> iterators_;
 };
+    
+namespace output
+{
 
 template<typename... Iterators>
-output_unzip_iterator<Iterators...> output_unzipper(Iterators... iterators)
+output_unzip_iterator<Iterators...> unzip(Iterators... iterators)
 {
     return output_unzip_iterator<Iterators...>(iterators...);
 }
+    
+} // namespace output
 
 } // namespace fluent
 

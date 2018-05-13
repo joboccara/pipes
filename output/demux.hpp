@@ -1,8 +1,8 @@
 #ifndef output_demuxer_h
 #define output_demuxer_h
 
-#include "helpers/meta.hpp"
-#include "helpers/named_type.hpp"
+#include "../helpers/meta.hpp"
+#include "../helpers/named_type.hpp"
 
 namespace fluent
 {
@@ -94,12 +94,17 @@ private:
     std::tuple<DemuxBranches...> branches_;
 };
 
+namespace output
+{
+
 template<typename... DemuxBranches>
-output_demux_iterator<DemuxBranches...> output_demuxer(DemuxBranches const&... demuxBranches)
+output_demux_iterator<DemuxBranches...> demux(DemuxBranches const&... demuxBranches)
 {
     return output_demux_iterator<DemuxBranches...>(demuxBranches...);
 }
 
+} // namespace output
+    
 template<typename Predicate>
 class Demux_if
 {

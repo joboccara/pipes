@@ -1,7 +1,7 @@
 #ifndef output_partitioner_hpp
 #define output_partitioner_hpp
 
-#include "helpers/meta.hpp"
+#include "../helpers/meta.hpp"
 #include <iterator>
 
 namespace fluent
@@ -57,11 +57,16 @@ private:
     Predicate predicate_;
 };
 
+namespace output
+{
+
 template<typename Predicate>
-output_partitioner<Predicate> make_output_partitioner(Predicate predicate)
+output_partitioner<Predicate> partition(Predicate predicate)
 {
     return output_partitioner<Predicate>(predicate);
 }
+
+} // namespace output
 
 } // namespace fluent
     
