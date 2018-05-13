@@ -1,5 +1,6 @@
 #include "catch.hpp"
 #include "../output/unzip.hpp"
+#include "../output/transform.hpp"
 
 #include <algorithm>
 #include <map>
@@ -63,4 +64,30 @@ TEST_CASE("output::unzip can override existing contents")
     REQUIRE(column1 == expectedColumn1);
     REQUIRE(column2 == expectedColumn2);
     REQUIRE(column3 == expectedColumn3);
+}
+
+std::string toUpperString(std::string const& s)
+{
+    std::string upperString;
+    std::transform(begin(s), end(s), std::back_inserter(upperString), [](char c){ return std::toupper(c); });
+    return upperString;
+}
+
+TEST_CASE("output::unzip + output::transform")
+{
+    std::map<int, std::string> entries = { {1, "one"}, {2, "two"}, {3, "three"}, {4, "four"}, {5, "five"} };
+    std::vector<int> expectedKeys = {1, 2, 3, 4, 5};
+    std::vector<std::string> expectedValues = {"ONE", "TWO", "THREE", "FOUR", "FIVE"};
+    
+    std::vector<int> keys;
+    std::vector<std::string> values;
+    
+    auto const toUpper = fluent::output::transform(toUpperString);
+    
+    std::copy(begin(entries), end(entries),
+              fluent::output::unzip(back_inserter(keys),
+                                    toUpper(back_inserter(values))));
+    
+    REQUIRE(keys == expectedKeys);
+    REQUIRE(values == expectedValues);
 }
