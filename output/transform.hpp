@@ -45,7 +45,7 @@ private:
 };
     
 template<typename TransformFunction, typename Iterator>
-output_transform_iterator<Iterator, TransformFunction> operator|(output_transformer<TransformFunction> const& outputTransformer, Iterator iterator)
+output_transform_iterator<Iterator, TransformFunction> operator>>=(output_transformer<TransformFunction> const& outputTransformer, Iterator iterator)
 {
     return outputTransformer(iterator);
 }

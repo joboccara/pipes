@@ -51,7 +51,7 @@ private:
 };
 
 template<typename FilterFunction, typename Iterator>
-output_filter_iterator<Iterator, FilterFunction> operator|(output_filter<FilterFunction> const& outputFilter, Iterator iterator)
+output_filter_iterator<Iterator, FilterFunction> operator>>=(output_filter<FilterFunction> const& outputFilter, Iterator iterator)
 {
     return outputFilter(iterator);
 }

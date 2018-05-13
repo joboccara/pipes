@@ -4,6 +4,7 @@
 #include "../output/partition.hpp"
 #include "../output/unzip.hpp"
 #include "../output/demux.hpp"
+#include "../to_output.hpp"
 
 #include <algorithm>
 #include <utility>
@@ -81,16 +82,16 @@ TEST_CASE("Mix of various output iterators with pipe")
     
     
     std::copy(begin(numbers), end(numbers), fluent::output::demux(fluent::demux_if( [](int n){ return n % 3 == 0; } ).sendTo(
-                                                                                                                      times2 | back_inserter(output1)
+                                                                                                                      times2 >>= back_inserter(output1)
                                                                                                                      ),
                                                            fluent::demux_if( [](int n){ return n % 2 == 0; } ).sendTo(
-                                                                                                                      divideBy2 | isEvenPartition(
+                                                                                                                      divideBy2 >>= isEvenPartition(
                                                                                                                                                    back_inserter(output2),
-                                                                                                                                                   times2 | back_inserter(output3)
+                                                                                                                                                   times2 >>= back_inserter(output3)
                                                                                                                                                  )
                                                                                                                       ),
                                                            fluent::demux_if( [](int n){ return n % 1 == 0; } ).sendTo(
-                                                                                                                      pairUpWithA | fluent::output::unzip(
+                                                                                                                      pairUpWithA >>= fluent::output::unzip(
                                                                                                                                                             back_inserter(output4),
                                                                                                                                                             back_inserter(output5)
                                                                                                                                                            )
@@ -101,4 +102,48 @@ TEST_CASE("Mix of various output iterators with pipe")
     REQUIRE(output3 == expectedOutput3);
     REQUIRE(output4 == expectedOutput4);
     REQUIRE(output5 == expectedOutput5);
+}
+
+TEST_CASE("Sequence of output iterators, no algorithms")
+{
+    std::vector<int> numbers = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
+    std::vector<int> expected = {4, 8, 12, 16, 20, 24, 28, 32, 36, 40};
+    
+    auto const times2 = fluent::output::transform([](int n){ return n * 2; });
+    std::vector<int> results;
+    
+    numbers >>= fluent::to_output >>= times2(times2(back_inserter(results)));
+    
+    REQUIRE(results == expected);
+}
+
+TEST_CASE("Sequence of output iterators, no algorithms, with pipes")
+{
+    std::vector<int> numbers = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
+    std::vector<int> expected = {4, 8, 12, 16, 20, 24, 28, 32, 36, 40};
+    
+    auto const times2 = [](int n){ return n * 2; };
+    std::vector<int> results;
+    
+    numbers >>= fluent::to_output >>= fluent::output::transform(times2) >>= fluent::output::transform(times2) >>= back_inserter(results);
+    
+    REQUIRE(results == expected);
+}
+
+std::vector<int> operator|(std::vector<int> const& v1, std::vector<int> const& v2)
+{
+    return v2;
+}
+
+TEST_CASE("Sequence of input ranges and output iterators, with pipes")
+{
+    std::vector<int> numbers = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
+    std::vector<int> expected = {4, 8, 12, 16, 20, 24, 28, 32, 36, 40};
+    
+    auto const times2 = [](int n){ return n * 2; };
+    std::vector<int> results;
+    
+    numbers | numbers | numbers >>= fluent::to_output >>= fluent::output::transform(times2) >>= fluent::output::transform(times2) >>= back_inserter(results);
+    
+    REQUIRE(results == expected);
 }
