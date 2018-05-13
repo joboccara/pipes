@@ -29,7 +29,7 @@ public:
         }
         else
         {
-            map_.insert(position, keyValue);
+            map_.insert(keyValue);
         }
         return *this;
     }
