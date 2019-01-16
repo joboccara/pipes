@@ -1,10 +1,12 @@
 #ifndef output_transform_h
 #define output_transform_h
 
+#include "../helpers/meta.hpp"
+
 namespace fluent
 {
 
-template<typename Iterator, typename TransformFunction>
+template<typename TransformFunctionTuple, typename... Iterators>
 class output_transform_iterator
 {
 public:
@@ -14,38 +16,42 @@ public:
     using pointer = void;
     using reference = void;
     
-    explicit output_transform_iterator(Iterator iterator, TransformFunction transformFunction) : iterator_(iterator), transformFunction_(transformFunction) {}
-    output_transform_iterator& operator++(){ ++iterator_; return *this; }
+    explicit output_transform_iterator(TransformFunctionTuple transformFunctionTuple, Iterators... iterators) : iterators_(iterators...), transformFunctionTuple_(transformFunctionTuple) {}
+    output_transform_iterator& operator++()
+    {
+        detail::apply([](auto&& iterator){ ++iterator; }, iterators_);
+        return *this;
+    }
     output_transform_iterator& operator++(int){ ++*this; return *this; }
     output_transform_iterator& operator*(){ return *this; }
     template<typename T>
     output_transform_iterator& operator=(T const& value)
     {
-        *iterator_ = transformFunction_(value);
+        detail::apply2([&value](auto&& function, auto&& iterator){ *iterator = function(value); }, transformFunctionTuple_, iterators_);
         return *this;
     }
 private:
-    Iterator iterator_;
-    TransformFunction transformFunction_;
+    std::tuple<Iterators...> iterators_;
+    TransformFunctionTuple transformFunctionTuple_;
 };
 
-template<typename TransformFunction>
+template<typename... TransformFunctions>
 class output_transformer
 {
 public:
-    explicit output_transformer(TransformFunction transformFunction) : transformFunction_(transformFunction) {}
-    template<typename Iterator>
-    output_transform_iterator<Iterator, TransformFunction> operator()(Iterator iterator) const
+    explicit output_transformer(TransformFunctions... transformFunctions) : transformFunctionsTuple_(transformFunctions...) {}
+    template<typename... Iterators>
+    output_transform_iterator<std::tuple<TransformFunctions...>, Iterators...> operator()(Iterators... iterators) const
     {
-        return output_transform_iterator<Iterator, TransformFunction>(iterator, transformFunction_);
+        return output_transform_iterator<std::tuple<TransformFunctions...>, Iterators...>(transformFunctionsTuple_, iterators...);
     }
     
 private:
-    TransformFunction transformFunction_;
+    std::tuple<TransformFunctions...> transformFunctionsTuple_;
 };
     
 template<typename TransformFunction, typename Iterator>
-output_transform_iterator<Iterator, TransformFunction> operator>>=(output_transformer<TransformFunction> const& outputTransformer, Iterator iterator)
+    output_transform_iterator<std::tuple<TransformFunction>, Iterator> operator>>=(output_transformer<TransformFunction> const& outputTransformer, Iterator iterator)
 {
     return outputTransformer(iterator);
 }
@@ -53,10 +59,10 @@ output_transform_iterator<Iterator, TransformFunction> operator>>=(output_transf
 namespace output
 {
 
-template<typename TransformFunction>
-output_transformer<TransformFunction> transform(TransformFunction transformFunction)
+template<typename... TransformFunctions>
+output_transformer<TransformFunctions...> transform(TransformFunctions... transformFunctions)
 {
-    return output_transformer<TransformFunction>(transformFunction);
+    return output_transformer<TransformFunctions...>(transformFunctions...);
 }
 
 } // namespace output
