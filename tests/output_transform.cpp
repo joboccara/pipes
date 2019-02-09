@@ -9,13 +9,21 @@ TEST_CASE("output::transform")
 {
     std::vector<int> input = {1, 2, 3, 4, 5};
     std::vector<int> expected = {2, 4, 6, 8, 10};
-    
-    auto const times2 = fluent::output::transform([](int i) { return i*2; });
-    
     std::vector<int> results;
-    std::copy(begin(input), end(input), times2(std::back_inserter(results)));
+
+    SECTION("one transform")
+    {
+        auto const times2 = fluent::output::transform([](int i) { return i*2; });
+        
+        std::copy(begin(input), end(input), times2(std::back_inserter(results)));
+        REQUIRE(results == expected);
+    }
     
-    REQUIRE(results == expected);
+    SECTION("operator>>=")
+    {
+        std::copy(begin(input), end(input), fluent::output::transform([](int i) { return i*2; }) >>= std::back_inserter(results));
+        REQUIRE(results == expected);
+    }
 }
 
 TEST_CASE("output::transform's iterator category should be std::output_iterator_tag")
