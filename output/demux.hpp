@@ -63,7 +63,7 @@ template<typename Predicate>
 class Demux_if
 {
 public:
-    Demux_if(Predicate predicate) : predicate_(std::move(predicate)) {}
+    explicit Demux_if(Predicate predicate) : predicate_(std::move(predicate)) {}
     
     template<typename Iterator>
     auto send_to(Iterator&& iterator) const &
