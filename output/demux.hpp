@@ -2,60 +2,13 @@
 #define output_demuxer_h
 
 #include "../helpers/meta.hpp"
-#include "../helpers/named_type.hpp"
 
 namespace fluent
 {
     
-namespace detail
-{
-    template<typename Predicate>
-    using ExecuteOnFirst_Predicate = detail::NamedType<Predicate, struct ExecuteOnFirst_Predicate_Tag>;
-    
-    template<typename Function>
-    using ExecuteOnFirst_Function = detail::NamedType<Function, struct ExecuteOnFirst_Function_Tag>;
-    
-    template <typename Predicate, typename Function>
-    struct Executor_on_first_that_satisfies_predicate
-    {
-        Executor_on_first_that_satisfies_predicate(ExecuteOnFirst_Predicate<Predicate> p, ExecuteOnFirst_Function<Function> f) : p_(p.get()), f_(f.get()) {}
-        Predicate p_;
-        Function f_;
-        bool hasExecutedAlready = false;
-        
-        template<typename T>
-        void operator()(T&& value)
-        {
-            if (!hasExecutedAlready)
-            {
-                if (p_(value))
-                {
-                    f_(value);
-                    hasExecutedAlready = true;
-                }
-            }
-        }
-    };
-    
-    template<typename Predicate, typename Function>
-    Executor_on_first_that_satisfies_predicate<Predicate, Function> make_executor_on_first_that_satisfies_predicate(ExecuteOnFirst_Predicate<Predicate> p, ExecuteOnFirst_Function<Function> f)
-    {
-        return Executor_on_first_that_satisfies_predicate<Predicate, Function>(p, f);
-    }
-    
-    template <typename Tuple, typename Predicate, typename Function>
-    void execute_on_first_that_satisfies_predicate(Tuple&& tuple, ExecuteOnFirst_Predicate<Predicate> p, ExecuteOnFirst_Function<Function> f)
-    {
-        auto executor_on_first_that_satisfies_predicate = detail::make_executor_on_first_that_satisfies_predicate(p, f);
-        apply(executor_on_first_that_satisfies_predicate, tuple);
-    }
-    
-} // namespace detail
-
 template<typename Predicate, typename Iterator>
 struct demux_branch
 {
-    using iterator_type = Iterator;
     Predicate predicate;
     Iterator iterator;
     demux_branch(Predicate predicate, Iterator iterator) : predicate(predicate), iterator(iterator) {}
@@ -78,10 +31,11 @@ public:
     template<typename T>
     output_demux_iterator& operator=(T&& value)
     {
-        execute_on_first_that_satisfies_predicate(branches_,
-                                                  detail::make_named<detail::ExecuteOnFirst_Predicate>([&value](auto&& branch){ return branch.predicate(value); }),
-                                                  detail::make_named<detail::ExecuteOnFirst_Function>([&value](auto&& branch){ *branch.iterator = value; ++branch.iterator; } ));
-        
+        auto const firstSatisfyingBranchIndex = detail::find_if(branches_, [&value](auto&& branch){ return branch.predicate(value); });
+        if (firstSatisfyingBranchIndex < sizeof...(DemuxBranches))
+        {
+            detail::perform(branches_, firstSatisfyingBranchIndex, [&value](auto&& branch){ *branch.iterator = value; ++ branch.iterator; });
+        }
         return *this;
     }
     

@@ -10,20 +10,15 @@ namespace fluent
 namespace detail
 {
     
-    template<class...>
-    struct conjunction : std::true_type { };
+template<class...>
+struct conjunction : std::true_type { };
 
-    template<class B1>
-    struct conjunction<B1> : B1 { };
+template<class B1>
+struct conjunction<B1> : B1 { };
 
-    template<class B1, class... Bn>
-    struct conjunction<B1, Bn...> : std::conditional_t<bool(B1::value), conjunction<Bn...>, B1> {};
-    
-} // namespace detail
+template<class B1, class... Bn>
+struct conjunction<B1, Bn...> : std::conditional_t<bool(B1::value), conjunction<Bn...>, B1> {};
 
-namespace detail
-{
-    
 template <class F, class Tuple, std::size_t... I>
 F apply_impl(F&& f, Tuple&& t, std::index_sequence<I...>)
 {
@@ -50,7 +45,40 @@ constexpr decltype(auto) apply2(F&& f, Tuple1&& t1, Tuple2&& t2)
                                std::make_index_sequence<std::tuple_size<std::remove_reference_t<Tuple1>>::value>{});
 }
 
-}  // namespace detail
+template<typename Tuple, typename Predicate>
+size_t find_if(Tuple&& tuple, Predicate pred)
+{
+    size_t index = std::tuple_size<std::remove_reference_t<Tuple>>::value;
+    size_t currentIndex = 0;
+    bool found = false;
+    apply([&](auto&& value)
+          {
+              if (!found && pred(value))
+              {
+                  index = currentIndex;
+                  found = true;
+              }
+              ++currentIndex;
+          }, tuple);
+    return index;
 }
+
+template<typename Tuple, typename Action>
+void perform(Tuple&& tuple, size_t index, Action action)
+{
+    size_t currentIndex = 0;
+    apply([&](auto&& value)
+          {
+              if (currentIndex == index)
+              {
+                  action(std::forward<decltype(value)>(value));
+              }
+              ++currentIndex;
+          }, tuple);
+}
+    
+}  // namespace detail
+}  // namespace fluent
+
 
 #endif /* fluent_meta */
