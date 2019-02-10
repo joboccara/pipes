@@ -17,9 +17,9 @@ TEST_CASE("output::demux dispatches an input to several destinations")
     std::vector<int> multiplesOf2Only;
     std::vector<int> multiplesOf1Only;
     
-    std::copy(begin(numbers), end(numbers), fluent::output::demux(fluent::demux_if( [](int n){ return n % 3 == 0; } ).sendTo(back_inserter(multiplesOf3)),
-                                                                  fluent::demux_if( [](int n){ return n % 2 == 0; } ).sendTo(back_inserter(multiplesOf2Only)),
-                                                                  fluent::demux_if( [](int n){ return n % 1 == 0; } ).sendTo(back_inserter(multiplesOf1Only)) ));
+    std::copy(begin(numbers), end(numbers), fluent::output::demux(fluent::demux_if( [](int n){ return n % 3 == 0; } ).send_to(back_inserter(multiplesOf3)),
+                                                                  fluent::demux_if( [](int n){ return n % 2 == 0; } ).send_to(back_inserter(multiplesOf2Only)),
+                                                                  fluent::demux_if( [](int n){ return n % 1 == 0; } ).send_to(back_inserter(multiplesOf1Only)) ));
     
     REQUIRE(multiplesOf3 == expectedMultiplesOf3);
     REQUIRE(multiplesOf2Only == expectedMultiplesOf2Only);
@@ -38,9 +38,9 @@ TEST_CASE("output::demux can override existing results")
     std::vector<int> multiplesOf2Only = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
     std::vector<int> multiplesOf1Only = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
     
-    std::copy(begin(numbers), end(numbers), fluent::output::demux(fluent::demux_if( [](int n){ return n % 3 == 0; } ).sendTo(begin(multiplesOf3)),
-                                                                  fluent::demux_if( [](int n){ return n % 2 == 0; } ).sendTo(begin(multiplesOf2Only)),
-                                                                  fluent::demux_if( [](int n){ return n % 1 == 0; } ).sendTo(begin(multiplesOf1Only)) ));
+    std::copy(begin(numbers), end(numbers), fluent::output::demux(fluent::demux_if( [](int n){ return n % 3 == 0; } ).send_to(begin(multiplesOf3)),
+                                                                  fluent::demux_if( [](int n){ return n % 2 == 0; } ).send_to(begin(multiplesOf2Only)),
+                                                                  fluent::demux_if( [](int n){ return n % 1 == 0; } ).send_to(begin(multiplesOf1Only)) ));
     
     REQUIRE(multiplesOf3 == expectedMultiplesOf3);
     REQUIRE(multiplesOf2Only == expectedMultiplesOf2Only);
@@ -51,7 +51,7 @@ TEST_CASE("output::demux's iterator category should be std::output_iterator_tag"
 {
     std::vector<int> output;
     bool isMultipleOf3(int n);
-    static_assert(std::is_same<decltype(fluent::output::demux(fluent::demux_if(isMultipleOf3).sendTo(back_inserter(output))))::iterator_category,
+    static_assert(std::is_same<decltype(fluent::output::demux(fluent::demux_if(isMultipleOf3).send_to(back_inserter(output))))::iterator_category,
                   std::output_iterator_tag>::value,
                   "iterator category should be std::output_iterator_tag");
 }

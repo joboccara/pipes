@@ -112,13 +112,13 @@ public:
     Demux_if(Predicate predicate) : predicate_(std::move(predicate)) {}
     
     template<typename Iterator>
-    auto sendTo(Iterator&& iterator) const &
+    auto send_to(Iterator&& iterator) const &
     {
         return demux_branch<Predicate, Iterator>(predicate_, std::forward<Iterator>(iterator));
     }
     
     template<typename Iterator>
-    auto sendTo(Iterator&& iterator) &&
+    auto send_to(Iterator&& iterator) &&
     {
         return demux_branch<Predicate, Iterator>(std::move(predicate_), std::forward<Iterator>(iterator));
     }

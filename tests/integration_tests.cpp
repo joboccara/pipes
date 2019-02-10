@@ -32,10 +32,10 @@ TEST_CASE("Mix of various output iterators")
     auto const pairUpWithA = fluent::output::transform([](int i) { return std::make_pair(i, 'A'); });
 
 
-    std::copy(begin(numbers), end(numbers), fluent::output::demux(fluent::demux_if( [](int n){ return n % 3 == 0; } ).sendTo(
+    std::copy(begin(numbers), end(numbers), fluent::output::demux(fluent::demux_if( [](int n){ return n % 3 == 0; } ).send_to(
                                                                                                                       times2(back_inserter(output1))
                                                                                                                      ),
-                                                           fluent::demux_if( [](int n){ return n % 2 == 0; } ).sendTo(
+                                                           fluent::demux_if( [](int n){ return n % 2 == 0; } ).send_to(
                                                                                                                       divideBy2(
                                                                                                                                 isEvenPartition(
                                                                                                                                                 back_inserter(output2),
@@ -43,7 +43,7 @@ TEST_CASE("Mix of various output iterators")
                                                                                                                                                )
                                                                                                                                )
                                                                                                                      ),
-                                                           fluent::demux_if( [](int n){ return n % 1 == 0; } ).sendTo(
+                                                           fluent::demux_if( [](int n){ return n % 1 == 0; } ).send_to(
                                                                                                                       pairUpWithA(
                                                                                                                                   fluent::output::unzip(
                                                                                                                                                           back_inserter(output4),
@@ -81,16 +81,16 @@ TEST_CASE("Mix of various output iterators with pipe")
     auto const pairUpWithA = fluent::output::transform([](int i) { return std::make_pair(i, 'A'); });
     
     
-    std::copy(begin(numbers), end(numbers), fluent::output::demux(fluent::demux_if( [](int n){ return n % 3 == 0; } ).sendTo(
+    std::copy(begin(numbers), end(numbers), fluent::output::demux(fluent::demux_if( [](int n){ return n % 3 == 0; } ).send_to(
                                                                                                                       times2 >>= back_inserter(output1)
                                                                                                                      ),
-                                                           fluent::demux_if( [](int n){ return n % 2 == 0; } ).sendTo(
+                                                           fluent::demux_if( [](int n){ return n % 2 == 0; } ).send_to(
                                                                                                                       divideBy2 >>= isEvenPartition(
                                                                                                                                                    back_inserter(output2),
                                                                                                                                                    times2 >>= back_inserter(output3)
                                                                                                                                                  )
                                                                                                                       ),
-                                                           fluent::demux_if( [](int n){ return n % 1 == 0; } ).sendTo(
+                                                           fluent::demux_if( [](int n){ return n % 1 == 0; } ).send_to(
                                                                                                                       pairUpWithA >>= fluent::output::unzip(
                                                                                                                                                             back_inserter(output4),
                                                                                                                                                             back_inserter(output5)
