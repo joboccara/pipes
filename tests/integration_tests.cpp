@@ -104,6 +104,20 @@ TEST_CASE("Mix of various output iterators with pipe")
     REQUIRE(output5 == expectedOutput5);
 }
 
+TEST_CASE("Transform and filter")
+{
+    std::vector<int> input = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
+    std::vector<int> expected = {8, 16, 24, 32, 40};
+    
+    auto const isEven = [](int n){ return n % 2 == 0; };
+    auto const times2 = [](int n){ return n * 2; };
+
+    std::vector<int> results;
+    std::copy(begin(input), end(input), fluent::output::filter(isEven)(fluent::output::transform(times2)(fluent::output::transform(times2)(back_inserter(results)))));
+
+    REQUIRE(results == expected);
+}
+
 TEST_CASE("Sequence of output iterators, no algorithms")
 {
     std::vector<int> numbers = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
