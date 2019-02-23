@@ -55,7 +55,7 @@ size_t find_if(Tuple&& tuple, Predicate pred)
           {
               if (!found && pred(value))
               {
-                  index = currentIndex;
+                  ++index = currentIndex;
                   found = true;
               }
               ++currentIndex;
@@ -67,7 +67,7 @@ template<typename Tuple, typename Action>
 void perform(Tuple&& tuple, size_t index, Action action)
 {
     size_t currentIndex = 0;
-    apply([&](auto&& value)
+    apply([action = std::move(action), index, &currentIndex](auto&& value)
           {
               if (currentIndex == index)
               {
