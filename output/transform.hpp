@@ -1,68 +1,104 @@
 #ifndef output_transform_h
 #define output_transform_h
 
+#include "../helpers/FWD.hpp"
 #include "../helpers/meta.hpp"
 
 namespace fluent
 {
 
-template<typename TransformFunctionTuple, typename... Iterators>
-class output_transform_iterator
+template <typename T, template<typename> class crtpType>
+struct crtp
 {
-public:
+    T& derived() { return static_cast<T&>(*this); }
+    T const& derived() const { return static_cast<T const&>(*this); }
+private:
+    crtp(){}
+    friend crtpType<T>;
+};
+    
+template<typename Derived>
+struct OutputIterator : crtp<Derived, OutputIterator>
+{
     using iterator_category = std::output_iterator_tag;
     using value_type = void;
     using difference_type = void;
     using pointer = void;
     using reference = void;
+
+    Derived& operator++() { return this->derived(); }
+    Derived& operator++(int){ ++this->derived(); return this->derived(); }
+    Derived& operator*() { return this->derived(); }
     
-    explicit output_transform_iterator(TransformFunctionTuple transformFunctionTuple, Iterators... iterators) : iterators_(iterators...), transformFunctionTuple_(transformFunctionTuple) {}
-    output_transform_iterator& operator++()
-    {
-        detail::apply([](auto&& iterator){ ++iterator; }, iterators_);
-        return *this;
-    }
-    output_transform_iterator& operator++(int){ ++*this; return *this; }
-    output_transform_iterator& operator*(){ return *this; }
     template<typename T>
-    output_transform_iterator& operator=(T const& value)
+    Derived& operator=(T&& input)
     {
-        detail::apply2([&value](auto&& function, auto&& iterator){ *iterator = function(value); }, transformFunctionTuple_, iterators_);
-        return *this;
+        this->derived().onReceive(FWD(input));
+        return this->derived();
     }
+};
+    
+template<typename Pipe, typename T>
+void send(OutputIterator<Pipe>& outputIterator, T&& value)
+{
+    *outputIterator = FWD(value);
+    ++outputIterator;
+}
+    
+template<typename TransformFunctionTuple, typename... OutputPipes>
+class transform_pipe : public OutputIterator<transform_pipe<TransformFunctionTuple, OutputPipes...>>
+{
+public:
+    explicit transform_pipe(TransformFunctionTuple transformFunctionTuple, OutputPipes... outputPipes) : outputPipes_(outputPipes...), transformFunctionTuple_(transformFunctionTuple) {}
+
 private:
-    std::tuple<Iterators...> iterators_;
+    template<typename T>
+    void onReceive(T&& input)
+    {
+        detail::apply2([&input](auto&& function, auto&& outputPipe)
+        {
+            *outputPipe = function(input);
+            ++outputPipe;
+        }, transformFunctionTuple_, outputPipes_);
+    }
+
+private:
+    std::tuple<OutputPipes...> outputPipes_;
     TransformFunctionTuple transformFunctionTuple_;
+
+public: // but technical
+    using OutputIterator<transform_pipe<TransformFunctionTuple, OutputPipes...>>::operator=;
+    friend OutputIterator<transform_pipe<TransformFunctionTuple, OutputPipes...>>;
 };
 
 template<typename... TransformFunctions>
-class output_transformer
+class transform_pipe_maker
 {
 public:
-    explicit output_transformer(TransformFunctions... transformFunctions) : transformFunctionsTuple_(transformFunctions...) {}
-    template<typename... Iterators>
-    output_transform_iterator<std::tuple<TransformFunctions...>, Iterators...> operator()(Iterators... iterators) const
+    explicit transform_pipe_maker(TransformFunctions... transformFunctions) : transformFunctionsTuple_(transformFunctions...) {}
+    template<typename... OutputPipes>
+    transform_pipe<std::tuple<TransformFunctions...>, OutputPipes...> operator()(OutputPipes... outputPipes) const
     {
-        return output_transform_iterator<std::tuple<TransformFunctions...>, Iterators...>(transformFunctionsTuple_, iterators...);
+        return transform_pipe<std::tuple<TransformFunctions...>, OutputPipes...>(transformFunctionsTuple_, outputPipes...);
     }
     
 private:
     std::tuple<TransformFunctions...> transformFunctionsTuple_;
 };
     
-template<typename TransformFunction, typename Iterator>
-    output_transform_iterator<std::tuple<TransformFunction>, Iterator> operator>>=(output_transformer<TransformFunction> const& outputTransformer, Iterator iterator)
+template<typename TransformFunction, typename OutputPipe>
+    transform_pipe<std::tuple<TransformFunction>, OutputPipe> operator>>=(transform_pipe_maker<TransformFunction> const& outputTransformer, OutputPipe outputPipe)
 {
-    return outputTransformer(iterator);
+    return outputTransformer(outputPipe);
 }
 
 namespace output
 {
 
 template<typename... TransformFunctions>
-output_transformer<TransformFunctions...> transform(TransformFunctions... transformFunctions)
+transform_pipe_maker<TransformFunctions...> transform(TransformFunctions... transformFunctions)
 {
-    return output_transformer<TransformFunctions...>(transformFunctions...);
+    return transform_pipe_maker<TransformFunctions...>(transformFunctions...);
 }
 
 } // namespace output
