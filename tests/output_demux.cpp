@@ -58,7 +58,7 @@ TEST_CASE("output::demux's iterator category should be std::output_iterator_tag"
 
 TEST_CASE("output::demux cannot override existing contents")
 {
-    /* This code should not compile as the output_demux_iterator is plugged on a vector::begin
+    /* This code should not compile as the output_demux_pipe is plugged on a vector::begin
 
     std::vector<int> numbers = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
     std::vector<int> expectedMultiplesOf3 =     {3, 6, 9, 0, 0};

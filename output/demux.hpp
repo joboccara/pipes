@@ -2,48 +2,39 @@
 #define output_demuxer_h
 
 #include "../helpers/meta.hpp"
+#include "../output_iterator.hpp"
 
 namespace pipes
 {
     
-template<typename Predicate, typename Iterator>
+template<typename Predicate, typename OutputPipe>
 struct demux_branch
 {
     Predicate predicate;
-    Iterator iterator;
-    demux_branch(Predicate predicate, Iterator iterator) : predicate(predicate), iterator(iterator) {}
+    OutputPipe outputPipe;
+    demux_branch(Predicate predicate, OutputPipe outputPipe) : predicate(predicate), outputPipe(outputPipe) {}
 };
 
 template<typename... DemuxBranches>
-class output_demux_iterator
+class demux_pipe : public OutputIteratorBase<demux_pipe<DemuxBranches...>>
 {
 public:
-    using iterator_category = std::output_iterator_tag;
-    using value_type = void;
-    using difference_type = void;
-    using pointer = void;
-    using reference = void;
-    
-    explicit output_demux_iterator(DemuxBranches const&... demuxBranches) : branches_(std::make_tuple(demuxBranches...)) {}
-    output_demux_iterator& operator++() { return *this; }
-    output_demux_iterator& operator++(int){ ++*this; return *this; }
-    output_demux_iterator& operator*(){ return *this; }
+    explicit demux_pipe(DemuxBranches const&... demuxBranches) : branches_(std::make_tuple(demuxBranches...)) {}
+
     template<typename T>
-    output_demux_iterator& operator=(T&& value)
+    void onReceive(T&& value)
     {
         auto const firstSatisfyingBranchIndex = detail::find_if(branches_, [&value](auto&& branch){ return branch.predicate(value); });
         if (firstSatisfyingBranchIndex < sizeof...(DemuxBranches))
         {
-            detail::perform(branches_, firstSatisfyingBranchIndex, [&value](auto&& branch){ *branch.iterator = value; ++ branch.iterator; });
+            detail::perform(branches_, firstSatisfyingBranchIndex, [&value](auto&& branch){ send(branch.outputPipe, value); });
         }
-        return *this;
     }
     
-    output_demux_iterator& operator=(output_demux_iterator const&) = default;
-    output_demux_iterator& operator=(output_demux_iterator&&) = default;
-    output_demux_iterator(output_demux_iterator const&) = default;
-    output_demux_iterator(output_demux_iterator&&) = default;
-    
+public: // but technical
+    using OutputIteratorBase<demux_pipe<DemuxBranches...>>::operator=;
+    friend OutputIteratorBase<demux_pipe<DemuxBranches...>>;
+
 private:
     std::tuple<DemuxBranches...> branches_;
 };
@@ -52,9 +43,9 @@ namespace output
 {
 
 template<typename... DemuxBranches>
-output_demux_iterator<DemuxBranches...> demux(DemuxBranches const&... demuxBranches)
+demux_pipe<DemuxBranches...> demux(DemuxBranches const&... demuxBranches)
 {
-    return output_demux_iterator<DemuxBranches...>(demuxBranches...);
+    return demux_pipe<DemuxBranches...>(demuxBranches...);
 }
 
 } // namespace output
@@ -65,16 +56,16 @@ class Demux_if
 public:
     explicit Demux_if(Predicate predicate) : predicate_(std::move(predicate)) {}
     
-    template<typename Iterator>
-    auto send_to(Iterator&& iterator) const &
+    template<typename OutputPipe>
+    auto send_to(OutputPipe&& outputPipe) const &
     {
-        return demux_branch<Predicate, Iterator>(predicate_, std::forward<Iterator>(iterator));
+        return demux_branch<Predicate, OutputPipe>(predicate_, std::forward<OutputPipe>(outputPipe));
     }
     
-    template<typename Iterator>
-    auto send_to(Iterator&& iterator) &&
+    template<typename OutputPipe>
+    auto send_to(OutputPipe&& outputPipe) &&
     {
-        return demux_branch<Predicate, Iterator>(std::move(predicate_), std::forward<Iterator>(iterator));
+        return demux_branch<Predicate, OutputPipe>(std::move(predicate_), std::forward<OutputPipe>(outputPipe));
     }
     
 private:
