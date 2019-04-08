@@ -1,68 +1,61 @@
-#ifndef output_filter_h
-#define output_filter_h
+#ifndef output_pipe_maker_h
+#define output_pipe_maker_h
 
 #include "../helpers/meta.hpp"
-#include <iterator>
+#include "../output_iterator.hpp"
 
 namespace pipes
 {
-template<typename Iterator, typename Predicate>
-class output_filter_iterator
+template<typename OutputPipe, typename Predicate>
+    class filter_pipe : public OutputIteratorBase<filter_pipe<OutputPipe, Predicate>>
 {
 public:    
-    using iterator_category = std::output_iterator_tag;
-    using value_type = void;
-    using difference_type = void;
-    using pointer = void;
-    using reference = void;
-    
-    explicit output_filter_iterator(Iterator iterator, Predicate predicate) : iterator_(iterator), predicate_(predicate) {}
-    output_filter_iterator& operator++(){ return *this; }
-    output_filter_iterator& operator++(int){ ++*this; return *this; }
-    output_filter_iterator& operator*(){ return *this; }
+    explicit filter_pipe(OutputPipe outputPipe, Predicate predicate) : outputPipe_(outputPipe), predicate_(predicate) {}
+
     template<typename T>
-    output_filter_iterator& operator=(T const& value)
+    void onReceive(T const& value)
     {
         if (predicate_(value))
         {
-            *iterator_ = value;
-            ++iterator_;
+            send(outputPipe_, value);
         }
-        return *this;
     }
 private:
-    Iterator iterator_;
+    OutputPipe outputPipe_;
     Predicate predicate_;
+
+public: // but technical
+    using OutputIteratorBase<filter_pipe<OutputPipe, Predicate>>::operator=;
 };
 
 template<typename Predicate>
-class output_filter
+class output_pipe_maker
 {
 public:
-    explicit output_filter(Predicate predicate) : predicate_(predicate) {}
-    template<typename Iterator>
-    output_filter_iterator<Iterator, Predicate> operator()(Iterator iterator) const
+    explicit output_pipe_maker(Predicate predicate) : predicate_(predicate) {}
+    template<typename OutputPipe>
+    filter_pipe<OutputPipe, Predicate> operator()(OutputPipe outputPipe) const
     {
-        return output_filter_iterator<Iterator, Predicate>(iterator, predicate_);
+        return filter_pipe<OutputPipe, Predicate>(outputPipe, predicate_);
     }
     
 private:
     Predicate predicate_;
 };
 
-template<typename FilterFunction, typename Iterator>
-output_filter_iterator<Iterator, FilterFunction> operator>>=(output_filter<FilterFunction> const& outputFilter, Iterator iterator)
+template<typename FilterFunction, typename OutputPipe>
+filter_pipe<OutputPipe, FilterFunction> operator>>=(output_pipe_maker<FilterFunction> const& outputFilter, OutputPipe outputPipe)
 {
-    return outputFilter(iterator);
+    return outputFilter(outputPipe);
 }
     
 namespace output
 {
 
 template<typename Predicate>
-output_filter<Predicate> filter(Predicate predicate)
+output_pipe_maker<Predicate> filter(Predicate predicate)
 {
-    return output_filter<Predicate>(predicate);
+    return output_pipe_maker<Predicate>(predicate);
 }
 
 } // namespace output

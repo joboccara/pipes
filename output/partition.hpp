@@ -26,13 +26,13 @@ public:
         }
     }
 
-public: // but technical
-    using OutputIteratorBase<partition_pipe<OutputPipeTrue, OutputPipeFalse, Predicate>>::operator=;
-
 private:
     OutputPipeTrue outputPipeTrue_;
     OutputPipeFalse outputPipeFalse_;
     Predicate predicate_;
+
+public: // but technical
+    using OutputIteratorBase<partition_pipe<OutputPipeTrue, OutputPipeFalse, Predicate>>::operator=;
 };
 
 template<typename Predicate>

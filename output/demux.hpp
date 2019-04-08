@@ -30,13 +30,13 @@ public:
             detail::perform(branches_, firstSatisfyingBranchIndex, [&value](auto&& branch){ send(branch.outputPipe, value); });
         }
     }
+
+private:
+    std::tuple<DemuxBranches...> branches_;
     
 public: // but technical
     using OutputIteratorBase<demux_pipe<DemuxBranches...>>::operator=;
     friend OutputIteratorBase<demux_pipe<DemuxBranches...>>;
-
-private:
-    std::tuple<DemuxBranches...> branches_;
 };
 
 namespace output
