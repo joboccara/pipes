@@ -19,10 +19,10 @@ auto make_transform(std::index_sequence<Is...> const&)
     return transform([](auto&& tup){return std::get<Is>(FWD(tup));}...);
 }
 
-template<typename... Iterators>
-auto unzip(Iterators... iterators)
+template<typename... OutputPipes>
+auto unzip(OutputPipes... outputPipes)
 {
-    return make_transform(std::index_sequence_for<Iterators...>{})(iterators...);
+    return make_transform(std::index_sequence_for<OutputPipes...>{})(outputPipes...);
 }
     
 } // namespace output
