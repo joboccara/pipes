@@ -1,16 +1,14 @@
 #ifndef output_unzip_h
 #define output_unzip_h
 
-#include "../helpers/FWD.hpp"
-#include "../helpers/meta.hpp"
+#include "helpers/FWD.hpp"
+#include "helpers/meta.hpp"
 #include "transform.hpp"
 
 #include <tuple>
 #include <utility>
 
 namespace pipes
-{
-namespace output
 {
 
 template<size_t... Is>
@@ -25,7 +23,6 @@ auto unzip(OutputPipes... outputPipes)
     return make_transform(std::index_sequence_for<OutputPipes...>{})(outputPipes...);
 }
     
-} // namespace output
 } // namespace pipes
 
 #endif /* output_unzipper_h */

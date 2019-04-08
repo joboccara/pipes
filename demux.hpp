@@ -1,8 +1,8 @@
 #ifndef output_demuxer_h
 #define output_demuxer_h
 
-#include "../helpers/meta.hpp"
-#include "../output_iterator.hpp"
+#include "helpers/meta.hpp"
+#include "output_iterator.hpp"
 
 namespace pipes
 {
@@ -39,17 +39,12 @@ public: // but technical
     friend OutputIteratorBase<demux_pipe<DemuxBranches...>>;
 };
 
-namespace output
-{
-
 template<typename... DemuxBranches>
 demux_pipe<DemuxBranches...> demux(DemuxBranches const&... demuxBranches)
 {
     return demux_pipe<DemuxBranches...>(demuxBranches...);
 }
 
-} // namespace output
-    
 template<typename Predicate>
 class Demux_if
 {

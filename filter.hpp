@@ -1,8 +1,8 @@
 #ifndef output_pipe_maker_h
 #define output_pipe_maker_h
 
-#include "../helpers/meta.hpp"
-#include "../output_iterator.hpp"
+#include "helpers/meta.hpp"
+#include "output_iterator.hpp"
 
 namespace pipes
 {
@@ -48,17 +48,12 @@ filter_pipe<OutputPipe, FilterFunction> operator>>=(output_pipe_maker<FilterFunc
 {
     return outputFilter(outputPipe);
 }
-    
-namespace output
-{
 
 template<typename Predicate>
 output_pipe_maker<Predicate> filter(Predicate predicate)
 {
     return output_pipe_maker<Predicate>(predicate);
 }
-
-} // namespace output
 
 } // namespace pipes
 

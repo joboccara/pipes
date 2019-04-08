@@ -1,10 +1,10 @@
 #ifndef output_transform_h
 #define output_transform_h
 
-#include "../helpers/FWD.hpp"
-#include "../helpers/meta.hpp"
+#include "helpers/FWD.hpp"
+#include "helpers/meta.hpp"
 
-#include "../output_iterator.hpp"
+#include "output_iterator.hpp"
 
 namespace pipes
 {
@@ -55,16 +55,11 @@ template<typename TransformFunction, typename OutputPipe>
     return outputTransformer(outputPipe);
 }
 
-namespace output
-{
-
 template<typename... TransformFunctions>
 transform_pipe_maker<TransformFunctions...> transform(TransformFunctions... transformFunctions)
 {
     return transform_pipe_maker<TransformFunctions...>(transformFunctions...);
 }
-
-} // namespace output
 
 } // namespace pipes
 

@@ -1,8 +1,8 @@
 #ifndef partition_pipe_maker_hpp
 #define partition_pipe_maker_hpp
 
-#include "../helpers/meta.hpp"
-#include "../output_iterator.hpp"
+#include "helpers/meta.hpp"
+#include "output_iterator.hpp"
 
 namespace pipes
 {
@@ -50,16 +50,11 @@ private:
     Predicate predicate_;
 };
 
-namespace output
-{
-
 template<typename Predicate>
 partition_pipe_maker<Predicate> partition(Predicate predicate)
 {
     return partition_pipe_maker<Predicate>(predicate);
 }
-
-} // namespace output
 
 } // namespace pipes
     
