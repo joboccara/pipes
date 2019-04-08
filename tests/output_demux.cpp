@@ -1,5 +1,5 @@
 #include "catch.hpp"
-#include "../demux.hpp"
+#include "demux.hpp"
 
 #include <algorithm>
 #include <utility>

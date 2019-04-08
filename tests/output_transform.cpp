@@ -1,6 +1,6 @@
 #include "catch.hpp"
-#include "../helpers/FWD.hpp"
-#include "../transform.hpp"
+#include "helpers/FWD.hpp"
+#include "transform.hpp"
 
 #include <algorithm>
 #include <vector>
