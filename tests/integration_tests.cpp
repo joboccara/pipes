@@ -1,10 +1,10 @@
 #include "catch.hpp"
-#include "../transform.hpp"
-#include "../filter.hpp"
-#include "../partition.hpp"
-#include "../unzip.hpp"
-#include "../demux.hpp"
-#include "../to_output.hpp"
+#include "transform.hpp"
+#include "filter.hpp"
+#include "partition.hpp"
+#include "unzip.hpp"
+#include "demux.hpp"
+#include "to_output.hpp"
 
 #include <algorithm>
 #include <utility>
