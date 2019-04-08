@@ -4,7 +4,7 @@
 #include "../helpers/meta.hpp"
 #include <iterator>
 
-namespace fluent
+namespace pipes
 {
 template<typename Iterator, typename Predicate>
 class output_filter_iterator
@@ -67,6 +67,6 @@ output_filter<Predicate> filter(Predicate predicate)
 
 } // namespace output
 
-} // namespace fluent
+} // namespace pipes
 
 #endif /* output_transformer_h */

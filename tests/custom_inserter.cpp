@@ -12,7 +12,7 @@ TEST_CASE("custom_inserter")
     std::vector<int> results;
     auto legacyInsertion = [&results](int number) { results.push_back(number); };
     
-    std::copy(begin(input), end(input), fluent::custom_inserter(legacyInsertion));
+    std::copy(begin(input), end(input), pipes::custom_inserter(legacyInsertion));
     
     REQUIRE(results == expected);
 }
@@ -20,7 +20,7 @@ TEST_CASE("custom_inserter")
 TEST_CASE("custom_inserter's iterator category should be std::output_iterator_tag")
 {
     auto inserter = [](){};
-    static_assert(std::is_same<decltype(fluent::custom_inserter(inserter))::iterator_category,
+    static_assert(std::is_same<decltype(pipes::custom_inserter(inserter))::iterator_category,
                   std::output_iterator_tag>::value,
                   "iterator category should be std::output_iterator_tag");
 }

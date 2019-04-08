@@ -1,7 +1,7 @@
 #ifndef output_iterator_h
 #define output_iterator_h
 
-namespace fluent
+namespace pipes
 {
 
 struct to_output_t {};
@@ -29,6 +29,6 @@ void operator>>=(Range&& range, output_to_iterator<Iterator> const& outputToIter
     std::copy(begin(range), end(range), outputToIterator.get());
 }
 
-} // namespace fluent
+} // namespace pipes
 
 #endif /* output_demuxer_h */

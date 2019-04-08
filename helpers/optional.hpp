@@ -1,7 +1,7 @@
-#ifndef fluent_optional_h
-#define fluent_optional_h
+#ifndef pipes_optional_h
+#define pipes_optional_h
 
-namespace fluent
+namespace pipes
 {
 namespace detail
 {
@@ -38,6 +38,6 @@ namespace detail
     };
 
 } // namespace detail
-} // namespace fluent
+} // namespace pipes
 
-#endif /* fluent_optional_h */
+#endif /* pipes_optional_h */

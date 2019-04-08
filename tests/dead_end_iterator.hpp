@@ -3,7 +3,7 @@
 
 #include <iterator>
 
-namespace fluent
+namespace pipes
 {
 
 class dead_end_iterator
@@ -24,6 +24,6 @@ public:
     dead_end_iterator& operator=(T const&) { return *this; }
 };
 
-} // namespace fluent
+} // namespace pipes
 
 #endif /* dead_end_iterator_h */

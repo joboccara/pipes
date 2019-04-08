@@ -8,7 +8,7 @@
 #include <tuple>
 #include <utility>
 
-namespace fluent
+namespace pipes
 {
 namespace output
 {
@@ -26,6 +26,6 @@ auto unzip(Iterators... iterators)
 }
     
 } // namespace output
-} // namespace fluent
+} // namespace pipes
 
 #endif /* output_unzipper_h */

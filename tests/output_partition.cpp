@@ -8,7 +8,7 @@ TEST_CASE("output::partition")
     std::vector<int> expectedEvens = {2, 4, 6, 8, 10};
     std::vector<int> expectedOdds = {1, 3, 5, 7, 9};
 
-    auto const isEvenPartition = fluent::output::partition([](int n){ return n % 2 == 0; });
+    auto const isEvenPartition = pipes::output::partition([](int n){ return n % 2 == 0; });
     
     std::vector<int> evens;
     std::vector<int> odds;
@@ -26,7 +26,7 @@ TEST_CASE("output::partition can override existing results")
     std::vector<int> expectedEvens = {2, 4, 6, 8, 10, 0, 0, 0, 0, 0};
     std::vector<int> expectedOdds = {1, 3, 5, 7, 9, 0, 0, 0, 0, 0};
     
-    auto const isEvenPartition = fluent::output::partition([](int n){ return n % 2 == 0; });
+    auto const isEvenPartition = pipes::output::partition([](int n){ return n % 2 == 0; });
     
     std::vector<int> evens = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
     std::vector<int> odds = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
@@ -39,7 +39,7 @@ TEST_CASE("output::partition can override existing results")
 
 TEST_CASE("output::partition's iterator category should be std::output_iterator_tag")
 {
-    auto const isEvenPartition = fluent::output::partition([](int n){ return n % 2 == 0; });
+    auto const isEvenPartition = pipes::output::partition([](int n){ return n % 2 == 0; });
     std::vector<int> output1, output2;
     static_assert(std::is_same<decltype(isEvenPartition(std::back_inserter(output1), std::back_inserter(output2)))::iterator_category,
                   std::output_iterator_tag>::value,
@@ -55,7 +55,7 @@ TEST_CASE("output::partition cannot override existing contents")
     std::vector<int> expectedEvens = {2, 4, 6, 8, 10};
     std::vector<int> expectedOdds = {1, 3, 5, 7, 9};
     
-    auto const isEvenPartition = fluent::output::partition([](int n){ return n % 2 == 0; });
+    auto const isEvenPartition = pipes::output::partition([](int n){ return n % 2 == 0; });
     
     std::vector<int> evens = {0, 0, 0, 0, 0};
     std::vector<int> odds = {0, 0, 0, 0, 0};

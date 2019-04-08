@@ -4,7 +4,7 @@
 #include "../helpers/meta.hpp"
 #include <iterator>
 
-namespace fluent
+namespace pipes
 {
 
 template<typename IteratorTrue, typename IteratorFalse, typename Predicate>
@@ -68,6 +68,6 @@ output_partitioner<Predicate> partition(Predicate predicate)
 
 } // namespace output
 
-} // namespace fluent
+} // namespace pipes
     
 #endif /* output_partitioner_hpp */

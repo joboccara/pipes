@@ -1,7 +1,7 @@
 #ifndef custom_inserter_hpp
 #define custom_inserter_hpp
 
-namespace fluent
+namespace pipes
 {
     
 template<typename InsertFunction>
@@ -37,6 +37,6 @@ custom_insert_iterator<InsertFunction> custom_inserter(InsertFunction insertFunc
     return custom_insert_iterator<InsertFunction>(insertFunction);
 }
     
-} // namespace fluent
+} // namespace pipes
 
 #endif /* custom_inserter_hpp */

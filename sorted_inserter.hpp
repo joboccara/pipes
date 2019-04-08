@@ -4,7 +4,7 @@
 #include <iterator>
 #include "optional.hpp"
 
-namespace fluent
+namespace pipes
 {
 
 template <typename Container>
@@ -59,6 +59,6 @@ sorted_insert_iterator<Container> sorted_inserter(Container& container, typename
     return sorted_insert_iterator<Container>(container, hint);
 }
 
-} // namespace fluent
+} // namespace pipes
 
 #endif

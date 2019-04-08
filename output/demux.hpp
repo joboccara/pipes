@@ -3,7 +3,7 @@
 
 #include "../helpers/meta.hpp"
 
-namespace fluent
+namespace pipes
 {
     
 template<typename Predicate, typename Iterator>
@@ -87,6 +87,6 @@ Demux_if<Predicate> demux_if(Predicate&& predicate)
     return Demux_if<Predicate>(std::forward<Predicate>(predicate));
 }
 
-} // namespace fluent
+} // namespace pipes
 
 #endif /* output_demuxer_h */

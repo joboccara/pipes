@@ -7,5 +7,5 @@ TEST_CASE("dead_end_iterator")
 {
     const std::vector<int> input = {1, 2, 3, 4, 5};
     
-    std::copy(begin(input), end(input), fluent::dead_end_iterator());
+    std::copy(begin(input), end(input), pipes::dead_end_iterator());
 }

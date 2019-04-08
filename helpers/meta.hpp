@@ -1,11 +1,11 @@
-#ifndef fluent_meta_h
-#define fluent_meta_h
+#ifndef pipes_meta_h
+#define pipes_meta_h
 
 #include <iterator>
 #include <type_traits>
 #include <utility>
 
-namespace fluent
+namespace pipes
 {
 namespace detail
 {
@@ -78,7 +78,7 @@ void perform(Tuple&& tuple, size_t index, Action action)
 }
     
 }  // namespace detail
-}  // namespace fluent
+}  // namespace pipes
 
 
-#endif /* fluent_meta */
+#endif /* pipes_meta */

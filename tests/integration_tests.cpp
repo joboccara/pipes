@@ -26,16 +26,16 @@ TEST_CASE("Mix of various output iterators")
     std::vector<int> output4;
     std::vector<char> output5;
 
-    auto const times2 = fluent::output::transform([](int i) { return i*2; });
-    auto const divideBy2 = fluent::output::transform([](int i) { return i/2; });
-    auto const isEvenPartition = fluent::output::partition([](int n){ return n % 2 == 0; });
-    auto const pairUpWithA = fluent::output::transform([](int i) { return std::make_pair(i, 'A'); });
+    auto const times2 = pipes::output::transform([](int i) { return i*2; });
+    auto const divideBy2 = pipes::output::transform([](int i) { return i/2; });
+    auto const isEvenPartition = pipes::output::partition([](int n){ return n % 2 == 0; });
+    auto const pairUpWithA = pipes::output::transform([](int i) { return std::make_pair(i, 'A'); });
 
 
-    std::copy(begin(numbers), end(numbers), fluent::output::demux(fluent::demux_if( [](int n){ return n % 3 == 0; } ).send_to(
+    std::copy(begin(numbers), end(numbers), pipes::output::demux(pipes::demux_if( [](int n){ return n % 3 == 0; } ).send_to(
                                                                                                                       times2(back_inserter(output1))
                                                                                                                      ),
-                                                           fluent::demux_if( [](int n){ return n % 2 == 0; } ).send_to(
+                                                           pipes::demux_if( [](int n){ return n % 2 == 0; } ).send_to(
                                                                                                                       divideBy2(
                                                                                                                                 isEvenPartition(
                                                                                                                                                 back_inserter(output2),
@@ -43,9 +43,9 @@ TEST_CASE("Mix of various output iterators")
                                                                                                                                                )
                                                                                                                                )
                                                                                                                      ),
-                                                           fluent::demux_if( [](int n){ return n % 1 == 0; } ).send_to(
+                                                           pipes::demux_if( [](int n){ return n % 1 == 0; } ).send_to(
                                                                                                                       pairUpWithA(
-                                                                                                                                  fluent::output::unzip(
+                                                                                                                                  pipes::output::unzip(
                                                                                                                                                           back_inserter(output4),
                                                                                                                                                           back_inserter(output5)
                                                                                                                                                  )
@@ -75,23 +75,23 @@ TEST_CASE("Mix of various output iterators with pipe")
     std::vector<int> output4;
     std::vector<char> output5;
     
-    auto const times2 = fluent::output::transform([](int i) { return i*2; });
-    auto const divideBy2 = fluent::output::transform([](int i) { return i/2; });
-    auto const isEvenPartition = fluent::output::partition([](int n){ return n % 2 == 0; });
-    auto const pairUpWithA = fluent::output::transform([](int i) { return std::make_pair(i, 'A'); });
+    auto const times2 = pipes::output::transform([](int i) { return i*2; });
+    auto const divideBy2 = pipes::output::transform([](int i) { return i/2; });
+    auto const isEvenPartition = pipes::output::partition([](int n){ return n % 2 == 0; });
+    auto const pairUpWithA = pipes::output::transform([](int i) { return std::make_pair(i, 'A'); });
     
     
-    std::copy(begin(numbers), end(numbers), fluent::output::demux(fluent::demux_if( [](int n){ return n % 3 == 0; } ).send_to(
+    std::copy(begin(numbers), end(numbers), pipes::output::demux(pipes::demux_if( [](int n){ return n % 3 == 0; } ).send_to(
                                                                                                                       times2 >>= back_inserter(output1)
                                                                                                                      ),
-                                                           fluent::demux_if( [](int n){ return n % 2 == 0; } ).send_to(
+                                                           pipes::demux_if( [](int n){ return n % 2 == 0; } ).send_to(
                                                                                                                       divideBy2 >>= isEvenPartition(
                                                                                                                                                    back_inserter(output2),
                                                                                                                                                    times2 >>= back_inserter(output3)
                                                                                                                                                  )
                                                                                                                       ),
-                                                           fluent::demux_if( [](int n){ return n % 1 == 0; } ).send_to(
-                                                                                                                      pairUpWithA >>= fluent::output::unzip(
+                                                           pipes::demux_if( [](int n){ return n % 1 == 0; } ).send_to(
+                                                                                                                      pairUpWithA >>= pipes::output::unzip(
                                                                                                                                                             back_inserter(output4),
                                                                                                                                                             back_inserter(output5)
                                                                                                                                                            )
@@ -113,7 +113,7 @@ TEST_CASE("Transform and filter")
     auto const times2 = [](int n){ return n * 2; };
 
     std::vector<int> results;
-    std::copy(begin(input), end(input), fluent::output::filter(isEven)(fluent::output::transform(times2)(fluent::output::transform(times2)(back_inserter(results)))));
+    std::copy(begin(input), end(input), pipes::output::filter(isEven)(pipes::output::transform(times2)(pipes::output::transform(times2)(back_inserter(results)))));
 
     REQUIRE(results == expected);
 }
@@ -123,10 +123,10 @@ TEST_CASE("Sequence of output iterators, no algorithms")
     std::vector<int> numbers = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
     std::vector<int> expected = {4, 8, 12, 16, 20, 24, 28, 32, 36, 40};
     
-    auto const times2 = fluent::output::transform([](int n){ return n * 2; });
+    auto const times2 = pipes::output::transform([](int n){ return n * 2; });
     std::vector<int> results;
     
-    numbers >>= fluent::to_output >>= times2(times2(back_inserter(results)));
+    numbers >>= pipes::to_output >>= times2(times2(back_inserter(results)));
     
     REQUIRE(results == expected);
 }
@@ -139,7 +139,7 @@ TEST_CASE("Sequence of output iterators, no algorithms, with pipes")
     auto const times2 = [](int n){ return n * 2; };
     std::vector<int> results;
     
-    numbers >>= fluent::to_output >>= fluent::output::transform(times2) >>= fluent::output::transform(times2) >>= back_inserter(results);
+    numbers >>= pipes::to_output >>= pipes::output::transform(times2) >>= pipes::output::transform(times2) >>= back_inserter(results);
     
     REQUIRE(results == expected);
 }
@@ -157,7 +157,7 @@ TEST_CASE("Sequence of input ranges and output iterators, with pipes")
     auto const times2 = [](int n){ return n * 2; };
     std::vector<int> results;
     
-    numbers | numbers | numbers >>= fluent::to_output >>= fluent::output::transform(times2) >>= fluent::output::transform(times2) >>= back_inserter(results);
+    numbers | numbers | numbers >>= pipes::to_output >>= pipes::output::transform(times2) >>= pipes::output::transform(times2) >>= back_inserter(results);
     
     REQUIRE(results == expected);
 }

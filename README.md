@@ -1,6 +1,6 @@
 This library provides output iterators that enrich and complement the ones of the STL, such as `std::back_inserter`.
 
-All iterators are located in the namespace `fluent`.
+All iterators are located in the namespace `pipes`.
 
 #`sorted_inserter`
 
@@ -21,7 +21,7 @@ std::copy(begin(v), end(v), sorted_inserter(results));
 
 //results contains { -4, 1, 2, 3, 7, 8, 10 }
 ```
-Read the [full story](https://www.fluentcpp.com/2017/03/17/smart-iterators-for-inserting-into-sorted-container/) about `sorted_inserter`.
+Read the [full story](https://www.pipescpp.com/2017/03/17/smart-iterators-for-inserting-into-sorted-container/) about `sorted_inserter`.
 
 #`custom_inserter`
 
@@ -36,7 +36,7 @@ DarkLegacyStructure legacyStructure = // ...
 
 std::copy(begin(input), end(input), custom_inserter([&legacyStructure](int number){ legacyInsert(number, legacyStructure); });
 ```
-Read the [full story](https://www.fluentcpp.com/2017/11/24/how-to-use-the-stl-in-legacy-code/) about making legacy code compatible with the STL.
+Read the [full story](https://www.pipescpp.com/2017/11/24/how-to-use-the-stl-in-legacy-code/) about making legacy code compatible with the STL.
 
 #`map_aggregator`
 
@@ -55,7 +55,7 @@ std::copy(entries2.begin(), entries2.end(), map_aggregator(results, concatenateS
 
 `set_aggreagator` provides a similar functionality for aggregating elements into sets.
 
-Read the [full story](https://www.fluentcpp.com/2017/03/21/smart-iterator-aggregating-new-elements-existing-ones-map-set/) about `map_aggregator` and `set_aggregator`.
+Read the [full story](https://www.pipescpp.com/2017/03/21/smart-iterator-aggregating-new-elements-existing-ones-map-set/) about `map_aggregator` and `set_aggregator`.
 
 #`transform`
 
@@ -73,7 +73,7 @@ std::copy(begin(input), end(input), times2(std::back_inserter(results)));
 
 // results contains {2, 4, 6, 8, 10}
 ```
-Read the [full story](https://www.fluentcpp.com/2017/11/28/output-iterator-adaptors-symmetry-range-adaptors/) about smart output iterators.
+Read the [full story](https://www.pipescpp.com/2017/11/28/output-iterator-adaptors-symmetry-range-adaptors/) about smart output iterators.
 
 #`filter`
 
@@ -99,7 +99,7 @@ It can be built with the helper function `partition`:
 ```cpp
 std::vector<int> input = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
 
-auto const isEvenPartition = fluent::partition([](int n){ return n % 2 == 0; });
+auto const isEvenPartition = pipes::partition([](int n){ return n % 2 == 0; });
 
 std::vector<int> evens;
 std::vector<int> odds;

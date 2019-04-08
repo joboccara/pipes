@@ -1,24 +1,15 @@
 #ifndef output_transform_h
 #define output_transform_h
 
+#include "../helpers/crtp.hpp"
 #include "../helpers/FWD.hpp"
 #include "../helpers/meta.hpp"
 
-namespace fluent
+namespace pipes
 {
 
-template <typename T, template<typename> class crtpType>
-struct crtp
-{
-    T& derived() { return static_cast<T&>(*this); }
-    T const& derived() const { return static_cast<T const&>(*this); }
-private:
-    crtp(){}
-    friend crtpType<T>;
-};
-    
 template<typename Derived>
-struct OutputIteratorBase : crtp<Derived, OutputIteratorBase>
+struct OutputIteratorBase : detail::crtp<Derived, OutputIteratorBase>
 {
     using iterator_category = std::output_iterator_tag;
     using value_type = void;
@@ -102,6 +93,6 @@ transform_pipe_maker<TransformFunctions...> transform(TransformFunctions... tran
 
 } // namespace output
 
-} // namespace fluent
+} // namespace pipes
 
 #endif /* output_transformer_h */
