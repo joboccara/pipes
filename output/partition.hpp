@@ -1,56 +1,49 @@
-#ifndef output_partitioner_hpp
-#define output_partitioner_hpp
+#ifndef partition_pipe_maker_hpp
+#define partition_pipe_maker_hpp
 
 #include "../helpers/meta.hpp"
-#include <iterator>
+#include "../output_iterator.hpp"
 
 namespace pipes
 {
 
-template<typename IteratorTrue, typename IteratorFalse, typename Predicate>
-class output_partition_iterator
+template<typename OutputPipeTrue, typename OutputPipeFalse, typename Predicate>
+class partition_pipe : public OutputIteratorBase<partition_pipe<OutputPipeTrue, OutputPipeFalse, Predicate>>
 {
 public:
-    using iterator_category = std::output_iterator_tag;
-    using value_type = void;
-    using difference_type = void;
-    using pointer = void;
-    using reference = void;
-    
-    explicit output_partition_iterator(IteratorTrue iteratorTrue, IteratorFalse iteratorFalse, Predicate predicate) : iteratorTrue_(iteratorTrue), iteratorFalse_(iteratorFalse), predicate_(predicate) {}
-    output_partition_iterator& operator++(){ return *this; }
-    output_partition_iterator& operator++(int){ ++*this; return *this; }
-    output_partition_iterator& operator*(){ return *this; }
+    explicit partition_pipe(OutputPipeTrue iteratorTrue, OutputPipeFalse iteratorFalse, Predicate predicate) : outputPipeTrue_(iteratorTrue), outputPipeFalse_(iteratorFalse), predicate_(predicate) {}
+
     template<typename T>
-    output_partition_iterator& operator=(T const& value)
+    void onReceive(T const& value)
     {
         if (predicate_(value))
         {
-            *iteratorTrue_ = value;
-            ++iteratorTrue_;
+            send(outputPipeTrue_, value);
         }
         else
         {
-            *iteratorFalse_ = value;
-            ++iteratorFalse_;
+            send(outputPipeFalse_, value);
         }
-        return *this;
     }
+
+public: // but technical
+    using OutputIteratorBase<partition_pipe<OutputPipeTrue, OutputPipeFalse, Predicate>>::operator=;
+
 private:
-    IteratorTrue iteratorTrue_;
-    IteratorFalse iteratorFalse_;
+    OutputPipeTrue outputPipeTrue_;
+    OutputPipeFalse outputPipeFalse_;
     Predicate predicate_;
 };
 
 template<typename Predicate>
-class output_partitioner
+class partition_pipe_maker
 {
 public:
-    explicit output_partitioner(Predicate predicate) : predicate_(predicate) {}
-    template<typename IteratorTrue, typename IteratorFalse>
-    output_partition_iterator<IteratorTrue, IteratorFalse, Predicate> operator()(IteratorTrue iteratorTrue, IteratorFalse iteratorFalse) const
+    explicit partition_pipe_maker(Predicate predicate) : predicate_(predicate) {}
+    template<typename OutputPipeTrue, typename OutputPipeFalse>
+    partition_pipe<OutputPipeTrue, OutputPipeFalse, Predicate> operator()(OutputPipeTrue outputPipeTrue, OutputPipeFalse outputPipeFalse) const
     {
-        return output_partition_iterator<IteratorTrue, IteratorFalse, Predicate>(iteratorTrue, iteratorFalse, predicate_);
+        return partition_pipe<OutputPipeTrue, OutputPipeFalse, Predicate>(outputPipeTrue, outputPipeFalse, predicate_);
     }
     
 private:
@@ -61,13 +54,13 @@ namespace output
 {
 
 template<typename Predicate>
-output_partitioner<Predicate> partition(Predicate predicate)
+partition_pipe_maker<Predicate> partition(Predicate predicate)
 {
-    return output_partitioner<Predicate>(predicate);
+    return partition_pipe_maker<Predicate>(predicate);
 }
 
 } // namespace output
 
 } // namespace pipes
     
-#endif /* output_partitioner_hpp */
+#endif /* partition_pipe_maker_hpp */
