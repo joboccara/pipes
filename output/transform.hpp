@@ -18,7 +18,7 @@ private:
 };
     
 template<typename Derived>
-struct OutputIterator : crtp<Derived, OutputIterator>
+struct OutputIteratorBase : crtp<Derived, OutputIteratorBase>
 {
     using iterator_category = std::output_iterator_tag;
     using value_type = void;
@@ -38,15 +38,15 @@ struct OutputIterator : crtp<Derived, OutputIterator>
     }
 };
     
-template<typename Pipe, typename T>
-void send(OutputIterator<Pipe>& outputIterator, T&& value)
+template<typename OutputIterator, typename T>
+void send(OutputIterator& outputIterator, T&& value)
 {
     *outputIterator = FWD(value);
     ++outputIterator;
 }
     
 template<typename TransformFunctionTuple, typename... OutputPipes>
-class transform_pipe : public OutputIterator<transform_pipe<TransformFunctionTuple, OutputPipes...>>
+class transform_pipe : public OutputIteratorBase<transform_pipe<TransformFunctionTuple, OutputPipes...>>
 {
 public:
     explicit transform_pipe(TransformFunctionTuple transformFunctionTuple, OutputPipes... outputPipes) : outputPipes_(outputPipes...), transformFunctionTuple_(transformFunctionTuple) {}
@@ -57,8 +57,7 @@ private:
     {
         detail::apply2([&input](auto&& function, auto&& outputPipe)
         {
-            *outputPipe = function(input);
-            ++outputPipe;
+            send(outputPipe, function(input));
         }, transformFunctionTuple_, outputPipes_);
     }
 
@@ -67,8 +66,8 @@ private:
     TransformFunctionTuple transformFunctionTuple_;
 
 public: // but technical
-    using OutputIterator<transform_pipe<TransformFunctionTuple, OutputPipes...>>::operator=;
-    friend OutputIterator<transform_pipe<TransformFunctionTuple, OutputPipes...>>;
+    using OutputIteratorBase<transform_pipe<TransformFunctionTuple, OutputPipes...>>::operator=;
+    friend OutputIteratorBase<transform_pipe<TransformFunctionTuple, OutputPipes...>>;
 };
 
 template<typename... TransformFunctions>
