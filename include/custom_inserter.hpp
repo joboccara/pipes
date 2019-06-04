@@ -1,34 +1,28 @@
 #ifndef custom_inserter_hpp
 #define custom_inserter_hpp
 
+#include "output_iterator.hpp"
+
 namespace pipes
 {
     
 template<typename InsertFunction>
-class custom_insert_iterator
+class custom_insert_iterator : public OutputIteratorBase<custom_insert_iterator<InsertFunction>>
 {
 public:
-    using iterator_category = std::output_iterator_tag;
-    using value_type = void;
-    using difference_type = void;
-    using pointer = void;
-    using reference = void;
-    
     explicit custom_insert_iterator(InsertFunction insertFunction) : insertFunction_(insertFunction) {}
     
-    custom_insert_iterator& operator++(){ return *this; }
-    custom_insert_iterator& operator++(int){ return *this; }
-    custom_insert_iterator& operator*(){ return *this; }
-    
     template<typename T>
-    custom_insert_iterator& operator=(T const& value)
+    void onReceive(T const& value)
     {
         insertFunction_(value);
-        return *this;
     }
     
 private:
     InsertFunction insertFunction_;
+
+public: // but technical
+    using OutputIteratorBase<custom_insert_iterator<InsertFunction>>::operator=;
 };
     
 template <typename InsertFunction>
