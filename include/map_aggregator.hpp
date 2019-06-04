@@ -2,25 +2,17 @@
 #define MAP_AGGREGATOR_HPP
 
 #include <iterator>
+#include "output_iterator.hpp"
 
 namespace pipes
 {
 
 template<typename Map, typename Function>
-class map_aggregate_iterator
+class map_aggregate_iterator : public OutputIteratorBase<map_aggregate_iterator<Map, Function>>
 {
 public:
-    using iterator_category = std::output_iterator_tag;
-    using value_type = void;
-    using difference_type = void;
-    using pointer = void;
-    using reference = void;
-
-    using container_type = Map;
-    map_aggregate_iterator(Map& map, Function aggregator) : map_(map), aggregator_(aggregator) {}
-    map_aggregate_iterator& operator++(){ return *this; }
-    map_aggregate_iterator& operator*(){ return *this; }
-    map_aggregate_iterator& operator=(typename Map::value_type const& keyValue)
+    template<typename T>
+    void onReceive(T const& keyValue)
     {
         auto position = map_.find(keyValue.first);
         if (position != map_.end())
@@ -31,12 +23,17 @@ public:
         {
             map_.insert(keyValue);
         }
-        return *this;
     }
+    
+    using container_type = Map;
+    map_aggregate_iterator(Map& map, Function aggregator) : map_(map), aggregator_(aggregator) {}
     
 private:
     Map& map_;
     Function aggregator_;
+    
+public: // but technical
+    using OutputIteratorBase<map_aggregate_iterator<Map, Function>>::operator=;
 };
 
 template<typename Map, typename Function>

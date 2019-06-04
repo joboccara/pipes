@@ -19,8 +19,6 @@ template<typename... DemuxBranches>
 class demux_pipe : public OutputIteratorBase<demux_pipe<DemuxBranches...>>
 {
 public:
-    explicit demux_pipe(DemuxBranches const&... demuxBranches) : branches_(std::make_tuple(demuxBranches...)) {}
-
     template<typename T>
     void onReceive(T&& value)
     {
@@ -31,6 +29,8 @@ public:
         }
     }
 
+    explicit demux_pipe(DemuxBranches const&... demuxBranches) : branches_(std::make_tuple(demuxBranches...)) {}
+    
 private:
     std::tuple<DemuxBranches...> branches_;
     

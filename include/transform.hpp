@@ -13,9 +13,6 @@ template<typename TransformFunctionTuple, typename... OutputPipes>
 class transform_pipe : public OutputIteratorBase<transform_pipe<TransformFunctionTuple, OutputPipes...>>
 {
 public:
-    explicit transform_pipe(TransformFunctionTuple transformFunctionTuple, OutputPipes... outputPipes) : outputPipes_(outputPipes...), transformFunctionTuple_(transformFunctionTuple) {}
-
-private:
     template<typename T>
     void onReceive(T&& input)
     {
@@ -25,13 +22,14 @@ private:
         }, transformFunctionTuple_, outputPipes_);
     }
 
+    explicit transform_pipe(TransformFunctionTuple transformFunctionTuple, OutputPipes... outputPipes) : outputPipes_(outputPipes...), transformFunctionTuple_(transformFunctionTuple) {}
+    
 private:
     std::tuple<OutputPipes...> outputPipes_;
     TransformFunctionTuple transformFunctionTuple_;
 
 public: // but technical
     using OutputIteratorBase<transform_pipe<TransformFunctionTuple, OutputPipes...>>::operator=;
-    friend OutputIteratorBase<transform_pipe<TransformFunctionTuple, OutputPipes...>>;
 };
 
 template<typename... TransformFunctions>

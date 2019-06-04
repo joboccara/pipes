@@ -10,8 +10,6 @@ template<typename OutputPipe, typename Predicate>
     class filter_pipe : public OutputIteratorBase<filter_pipe<OutputPipe, Predicate>>
 {
 public:    
-    explicit filter_pipe(OutputPipe outputPipe, Predicate predicate) : outputPipe_(outputPipe), predicate_(predicate) {}
-
     template<typename T>
     void onReceive(T const& value)
     {
@@ -20,6 +18,9 @@ public:
             send(outputPipe_, value);
         }
     }
+
+    explicit filter_pipe(OutputPipe outputPipe, Predicate predicate) : outputPipe_(outputPipe), predicate_(predicate) {}
+    
 private:
     OutputPipe outputPipe_;
     Predicate predicate_;

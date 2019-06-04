@@ -11,8 +11,6 @@ template<typename OutputPipeTrue, typename OutputPipeFalse, typename Predicate>
 class partition_pipe : public OutputIteratorBase<partition_pipe<OutputPipeTrue, OutputPipeFalse, Predicate>>
 {
 public:
-    explicit partition_pipe(OutputPipeTrue iteratorTrue, OutputPipeFalse iteratorFalse, Predicate predicate) : outputPipeTrue_(iteratorTrue), outputPipeFalse_(iteratorFalse), predicate_(predicate) {}
-
     template<typename T>
     void onReceive(T const& value)
     {
@@ -26,6 +24,8 @@ public:
         }
     }
 
+    explicit partition_pipe(OutputPipeTrue iteratorTrue, OutputPipeFalse iteratorFalse, Predicate predicate) : outputPipeTrue_(iteratorTrue), outputPipeFalse_(iteratorFalse), predicate_(predicate) {}
+    
 private:
     OutputPipeTrue outputPipeTrue_;
     OutputPipeFalse outputPipeFalse_;

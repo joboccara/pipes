@@ -2,25 +2,17 @@
 #define SET_AGGREGATOR_HPP
 
 #include <iterator>
+#include "output_iterator.hpp"
 
 namespace pipes
 {
 
 template<typename Set, typename Function>
-class set_aggregate_iterator
+class set_aggregate_iterator : public OutputIteratorBase<set_aggregate_iterator<Set, Function>>
 {
 public:
-    using iterator_category = std::output_iterator_tag;
-    using value_type = void;
-    using difference_type = void;
-    using pointer = void;
-    using reference = void;
-
-    using container_type = Set;
-    set_aggregate_iterator(Set& set, Function aggregator) : set_(set), aggregator_(aggregator) {}
-    set_aggregate_iterator operator++(){ return *this; }
-    set_aggregate_iterator operator*(){ return *this; }
-    set_aggregate_iterator& operator=(typename Set::value_type const& value)
+    template<typename T>
+    void onReceive(T const& value)
     {
         auto position = set_.find(value);
         if (position != set_.end())
@@ -33,13 +25,17 @@ public:
         {
             set_.insert(position, value);
         }
-        return *this;
     }
+    
+    using container_type = Set;
+    set_aggregate_iterator(Set& set, Function aggregator) : set_(set), aggregator_(aggregator) {}
     
 private:
     Set& set_;
     Function aggregator_;
 
+public: // but technical
+    using OutputIteratorBase<set_aggregate_iterator<Set, Function>>::operator=;
 };
 
 template<typename Set, typename Function>

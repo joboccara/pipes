@@ -3,48 +3,33 @@
 
 #include <iterator>
 #include "optional.hpp"
+#include "output_iterator.hpp"
 
 namespace pipes
 {
 
 template <typename Container>
-class sorted_insert_iterator
+class sorted_insert_iterator : public OutputIteratorBase<sorted_insert_iterator<Container>>
 {
-protected:
-  Container* container_;
-    detail::optional<typename Container::iterator> hint_;
-
 public:
-    using iterator_category = std::output_iterator_tag;
-    using value_type = void;
-    using difference_type = void;
-    using pointer = void;
-    using reference = void;
-
-    using container_type = Container;
-    explicit sorted_insert_iterator (Container& container)
-    : container_(&container), hint_(detail::nullopt) {}
-    sorted_insert_iterator (Container& container, typename Container::iterator hint)
-    : container_(&container), hint_(hint) {}
-    sorted_insert_iterator<Container>& operator= (const typename Container::value_type& value)
+    template<typename T>
+    void onReceive(T const& value)
     {
         if (hint_)
             container_->insert(*hint_,value);
         else
             container_->insert(value);
-        return *this;
     }
-    sorted_insert_iterator<Container>& operator= (typename Container::value_type&& value)
-    {
-        if (hint_)
-            container_->insert(hint_,std::move(value));
-        else
-            container_->insert(std::move(value));
-        return *this;
-    }
-    sorted_insert_iterator<Container>& operator* () { return *this; }
-    sorted_insert_iterator<Container>& operator++ () { return *this; }
-    sorted_insert_iterator<Container> operator++ (int) { return *this; }
+
+    explicit sorted_insert_iterator (Container& container) : container_(&container), hint_(detail::nullopt) {}
+    sorted_insert_iterator (Container& container, typename Container::iterator hint) : container_(&container), hint_(hint) {}
+    
+protected:
+    Container* container_;
+    detail::optional<typename Container::iterator> hint_;
+    
+public: // but technical
+    using OutputIteratorBase<sorted_insert_iterator<Container>>::operator=;
 };
 
 template <typename Container>

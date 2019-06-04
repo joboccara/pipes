@@ -10,13 +10,13 @@ template<typename InsertFunction>
 class custom_insert_iterator : public OutputIteratorBase<custom_insert_iterator<InsertFunction>>
 {
 public:
-    explicit custom_insert_iterator(InsertFunction insertFunction) : insertFunction_(insertFunction) {}
-    
     template<typename T>
     void onReceive(T const& value)
     {
         insertFunction_(value);
     }
+    
+    explicit custom_insert_iterator(InsertFunction insertFunction) : insertFunction_(insertFunction) {}
     
 private:
     InsertFunction insertFunction_;
