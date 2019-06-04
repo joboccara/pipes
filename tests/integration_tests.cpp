@@ -4,7 +4,7 @@
 #include "partition.hpp"
 #include "unzip.hpp"
 #include "demux.hpp"
-#include "to_output.hpp"
+#include "funnel.hpp"
 
 #include <algorithm>
 #include <utility>
@@ -126,7 +126,7 @@ TEST_CASE("Sequence of output iterators, no algorithms")
     auto const times2 = pipes::transform([](int n){ return n * 2; });
     std::vector<int> results;
     
-    numbers >>= pipes::to_output >>= times2(times2(back_inserter(results)));
+    numbers >>= pipes::funnel >>= times2(times2(back_inserter(results)));
     
     REQUIRE(results == expected);
 }
@@ -139,7 +139,7 @@ TEST_CASE("Sequence of output iterators, no algorithms, with pipes")
     auto const times2 = [](int n){ return n * 2; };
     std::vector<int> results;
     
-    numbers >>= pipes::to_output >>= pipes::transform(times2) >>= pipes::transform(times2) >>= back_inserter(results);
+    numbers >>= pipes::funnel >>= pipes::transform(times2) >>= pipes::transform(times2) >>= back_inserter(results);
     
     REQUIRE(results == expected);
 }
@@ -157,7 +157,7 @@ TEST_CASE("Sequence of input ranges and output iterators, with pipes")
     auto const times2 = [](int n){ return n * 2; };
     std::vector<int> results;
     
-    numbers | numbers | numbers >>= pipes::to_output >>= pipes::transform(times2) >>= pipes::transform(times2) >>= back_inserter(results);
+    numbers | numbers | numbers >>= pipes::funnel >>= pipes::transform(times2) >>= pipes::transform(times2) >>= back_inserter(results);
     
     REQUIRE(results == expected);
 }
