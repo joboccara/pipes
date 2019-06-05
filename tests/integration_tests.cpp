@@ -3,7 +3,7 @@
 #include "filter.hpp"
 #include "partition.hpp"
 #include "unzip.hpp"
-#include "demux.hpp"
+#include "switch.hpp"
 #include "funnel.hpp"
 
 #include <algorithm>
@@ -32,25 +32,20 @@ TEST_CASE("Mix of various output iterators")
     auto const pairUpWithA = pipes::transform([](int i) { return std::make_pair(i, 'A'); });
 
 
-    std::copy(begin(numbers), end(numbers), pipes::demux(pipes::demux_if( [](int n){ return n % 3 == 0; } ).send_to(
-                                                                                                                      times2(back_inserter(output1))
-                                                                                                                     ),
-                                                           pipes::demux_if( [](int n){ return n % 2 == 0; } ).send_to(
-                                                                                                                      divideBy2(
-                                                                                                                                isEvenPartition(
-                                                                                                                                                back_inserter(output2),
-                                                                                                                                                times2(back_inserter(output3))
-                                                                                                                                               )
-                                                                                                                               )
-                                                                                                                     ),
-                                                           pipes::demux_if( [](int n){ return n % 1 == 0; } ).send_to(
-                                                                                                                      pairUpWithA(
-                                                                                                                                  pipes::unzip(
-                                                                                                                                                          back_inserter(output4),
-                                                                                                                                                          back_inserter(output5)
-                                                                                                                                                 )
-                                                                                                                                 )
-                                                                                                                     )));
+    std::copy(begin(numbers), end(numbers), pipes::switch_(pipes::case_([](int n){ return n % 3 == 0; }) >>= times2(back_inserter(output1)),
+                                                           pipes::case_([](int n){ return n % 2 == 0; }) >>= divideBy2(
+                                                                                                                       isEvenPartition(
+                                                                                                                                       back_inserter(output2),
+                                                                                                                                       times2(back_inserter(output3))
+                                                                                                                                      )
+                                                                                                                      ),
+                                                           pipes::case_( [](int n){ return n % 1 == 0; } ) >>= pairUpWithA(
+                                                                                                                           pipes::unzip(
+                                                                                                                                        back_inserter(output4),
+                                                                                                                                        back_inserter(output5)
+                                                                                                                                       )
+                                                                                                                          )
+                                                                                                                     ));
     
     REQUIRE(output1 == expectedOutput1);
     REQUIRE(output2 == expectedOutput2);
@@ -81,21 +76,16 @@ TEST_CASE("Mix of various output iterators with pipe")
     auto const pairUpWithA = pipes::transform([](int i) { return std::make_pair(i, 'A'); });
     
     
-    std::copy(begin(numbers), end(numbers), pipes::demux(pipes::demux_if( [](int n){ return n % 3 == 0; } ).send_to(
-                                                                                                                      times2 >>= back_inserter(output1)
-                                                                                                                     ),
-                                                           pipes::demux_if( [](int n){ return n % 2 == 0; } ).send_to(
-                                                                                                                      divideBy2 >>= isEvenPartition(
-                                                                                                                                                   back_inserter(output2),
-                                                                                                                                                   times2 >>= back_inserter(output3)
-                                                                                                                                                 )
-                                                                                                                      ),
-                                                           pipes::demux_if( [](int n){ return n % 1 == 0; } ).send_to(
-                                                                                                                      pairUpWithA >>= pipes::unzip(
-                                                                                                                                                            back_inserter(output4),
-                                                                                                                                                            back_inserter(output5)
-                                                                                                                                                           )
-                                                                                                                      )));
+    std::copy(begin(numbers), end(numbers), pipes::switch_(pipes::case_( [](int n){ return n % 3 == 0; } ) >>= times2 >>= back_inserter(output1),
+                                                           pipes::case_( [](int n){ return n % 2 == 0; } ) >>= divideBy2 >>= isEvenPartition(
+                                                                                                                                             back_inserter(output2),
+                                                                                                                                             times2 >>= back_inserter(output3)
+                                                                                                                                            ),
+                                                           pipes::case_( [](int n){ return n % 1 == 0; } ) >>= pairUpWithA >>= pipes::unzip(
+                                                                                                                                            back_inserter(output4),
+                                                                                                                                            back_inserter(output5)
+                                                                                                                                           )
+                                                                                                                      ));
     
     REQUIRE(output1 == expectedOutput1);
     REQUIRE(output2 == expectedOutput2);

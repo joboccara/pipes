@@ -1,5 +1,7 @@
 #include "catch.hpp"
 #include "demux.hpp"
+#include "filter.hpp"
+#include "transform.hpp"
 
 #include <algorithm>
 #include <utility>
@@ -9,73 +11,80 @@ TEST_CASE("demux dispatches an input to several destinations")
 {
     std::vector<int> numbers = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
     
-    std::vector<int> expectedMultiplesOf3 = {3, 6, 9};
-    std::vector<int> expectedMultiplesOf2Only = {2, 4, 8, 10};
-    std::vector<int> expectedMultiplesOf1Only = {1, 5, 7};
+    std::vector<int> expected1 = numbers;
+    std::vector<int> expected2 = numbers;
+    std::vector<int> expected3 = numbers;
+
+    std::vector<int> results1, results2, results3;
     
-    std::vector<int> multiplesOf3;
-    std::vector<int> multiplesOf2Only;
-    std::vector<int> multiplesOf1Only;
+    std::copy(begin(numbers), end(numbers), pipes::demux(back_inserter(results1), back_inserter(results2), back_inserter(results3)));
     
-    std::copy(begin(numbers), end(numbers), pipes::demux(pipes::demux_if( [](int n){ return n % 3 == 0; } ).send_to(back_inserter(multiplesOf3)),
-                                                                  pipes::demux_if( [](int n){ return n % 2 == 0; } ).send_to(back_inserter(multiplesOf2Only)),
-                                                                  pipes::demux_if( [](int n){ return n % 1 == 0; } ).send_to(back_inserter(multiplesOf1Only)) ));
-    
-    REQUIRE(multiplesOf3 == expectedMultiplesOf3);
-    REQUIRE(multiplesOf2Only == expectedMultiplesOf2Only);
-    REQUIRE(multiplesOf1Only == expectedMultiplesOf1Only);
+    REQUIRE(results1 == expected1);
+    REQUIRE(results2 == expected2);
+    REQUIRE(results3 == expected3);
 }
 
 TEST_CASE("demux can override existing results")
 {
     std::vector<int> numbers = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
     
-    std::vector<int> expectedMultiplesOf3 = {3, 6, 9, 0, 0, 0, 0, 0, 0, 0};
-    std::vector<int> expectedMultiplesOf2Only = {2, 4, 8, 10, 0, 0, 0, 0, 0, 0};
-    std::vector<int> expectedMultiplesOf1Only = {1, 5, 7, 0, 0, 0, 0, 0, 0, 0};
+    std::vector<int> expected1 = numbers;
+    std::vector<int> expected2 = numbers;
+    std::vector<int> expected3 = numbers;
     
-    std::vector<int> multiplesOf3 = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
-    std::vector<int> multiplesOf2Only = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
-    std::vector<int> multiplesOf1Only = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+    std::vector<int> results1(numbers.size(), 0);
+    std::vector<int> results2(numbers.size(), 0);
+    std::vector<int> results3(numbers.size(), 0);
     
-    std::copy(begin(numbers), end(numbers), pipes::demux(pipes::demux_if( [](int n){ return n % 3 == 0; } ).send_to(begin(multiplesOf3)),
-                                                                  pipes::demux_if( [](int n){ return n % 2 == 0; } ).send_to(begin(multiplesOf2Only)),
-                                                                  pipes::demux_if( [](int n){ return n % 1 == 0; } ).send_to(begin(multiplesOf1Only)) ));
+    std::copy(begin(numbers), end(numbers), pipes::demux(begin(results1), begin(results2), begin(results3)));
     
+    REQUIRE(results1 == expected1);
+    REQUIRE(results2 == expected2);
+    REQUIRE(results3 == expected3);
+}
+
+TEST_CASE("demux can send data to other pipes")
+{
+    std::vector<int> numbers = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
+    
+    std::vector<int> expectedMultiplesOf2 = {2, 4, 6, 8, 10};
+    std::vector<int> expectedMultiplesOf3 = {3, 6, 9};
+    std::vector<int> expectedMultiplesOf4 = {4, 8};
+
+    std::vector<int> multiplesOf2, multiplesOf3, multiplesOf4;
+    
+    std::copy(begin(numbers), end(numbers), pipes::demux(pipes::filter([](int i){return i%2 == 0;}) >>= back_inserter(multiplesOf2),
+                                                         pipes::filter([](int i){return i%3 == 0;}) >>= back_inserter(multiplesOf3),
+                                                         pipes::filter([](int i){return i%4 == 0;}) >>= back_inserter(multiplesOf4)));
+    
+    REQUIRE(multiplesOf2 == expectedMultiplesOf2);
     REQUIRE(multiplesOf3 == expectedMultiplesOf3);
-    REQUIRE(multiplesOf2Only == expectedMultiplesOf2Only);
-    REQUIRE(multiplesOf1Only == expectedMultiplesOf1Only);
+    REQUIRE(multiplesOf4 == expectedMultiplesOf4);
+}
+
+TEST_CASE("demux can be used as a tee")
+{
+    std::vector<int> numbers = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
+    
+    std::vector<int> expectedResults = {4, 8, 12, 16, 20};
+    std::vector<int> expectedLog = {2, 4, 6, 8, 10};
+    
+    std::vector<int> results, log;
+    
+    std::copy(begin(numbers), end(numbers), pipes::filter([](int i){return i%2 == 0;})
+                                        >>= pipes::demux(back_inserter(log),
+                                                         pipes::transform([](int i){ return i*2; })
+                                                         >>= back_inserter(results)));
+    
+    REQUIRE(results == expectedResults);
+    REQUIRE(log == expectedLog);
 }
 
 TEST_CASE("demux's iterator category should be std::output_iterator_tag")
 {
     std::vector<int> output;
-    bool isMultipleOf3(int n);
-    static_assert(std::is_same<decltype(pipes::demux(pipes::demux_if(isMultipleOf3).send_to(back_inserter(output))))::iterator_category,
+    static_assert(std::is_same<decltype(pipes::demux(back_inserter(output), back_inserter(output), back_inserter(output)))::iterator_category,
                   std::output_iterator_tag>::value,
                   "iterator category should be std::output_iterator_tag");
 }
 
-TEST_CASE("demux cannot override existing contents")
-{
-    /* This code should not compile as the output_demux_pipe is plugged on a vector::begin
-
-    std::vector<int> numbers = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
-    std::vector<int> expectedMultiplesOf3 =     {3, 6, 9, 0, 0};
-    std::vector<int> expectedMultiplesOf2Only = {2, 4, 8, 10, 0};
-    std::vector<int> expectedMultiplesOf1Only = {1, 5, 7, 0, 0};
-    
-    std::vector<int> multiplesOf3 = {0, 0, 0, 0, 0};
-    std::vector<int> multiplesOf2Only = {0, 0, 0, 0, 0};
-    std::vector<int> multiplesOf1Only = {0, 0, 0, 0, 0};
-    
-    std::copy(begin(numbers), end(numbers), pipes::demux(pipes::demux_if( [](int n){ return n % 3 == 0; } ).sendTo(begin(multiplesOf3)),
-                                                                  pipes::demux_if( [](int n){ return n % 2 == 0; } ).sendTo(back_inserter(multiplesOf2Only)),
-                                                                  pipes::demux_if( [](int n){ return n % 1 == 0; } ).sendTo(back_inserter(multiplesOf1Only)) ));
-    
-    REQUIRE(multiplesOf3 == expectedMultiplesOf3);
-    REQUIRE(multiplesOf2Only == expectedMultiplesOf2Only);
-    REQUIRE(multiplesOf1Only == expectedMultiplesOf1Only);
-     
-    */
-}
