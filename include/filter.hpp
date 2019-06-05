@@ -30,10 +30,10 @@ public: // but technical
 };
 
 template<typename Predicate>
-class output_pipe_maker
+class filter_pipe_maker
 {
 public:
-    explicit output_pipe_maker(Predicate predicate) : predicate_(predicate) {}
+    explicit filter_pipe_maker(Predicate predicate) : predicate_(predicate) {}
     template<typename OutputPipe>
     filter_pipe<OutputPipe, Predicate> operator()(OutputPipe outputPipe) const
     {
@@ -45,15 +45,15 @@ private:
 };
 
 template<typename FilterFunction, typename OutputPipe>
-filter_pipe<OutputPipe, FilterFunction> operator>>=(output_pipe_maker<FilterFunction> const& outputFilter, OutputPipe outputPipe)
+filter_pipe<OutputPipe, FilterFunction> operator>>=(filter_pipe_maker<FilterFunction> const& outputFilter, OutputPipe outputPipe)
 {
     return outputFilter(outputPipe);
 }
 
 template<typename Predicate>
-output_pipe_maker<Predicate> filter(Predicate predicate)
+filter_pipe_maker<Predicate> filter(Predicate predicate)
 {
-    return output_pipe_maker<Predicate>(predicate);
+    return filter_pipe_maker<Predicate>(predicate);
 }
 
 } // namespace pipes
