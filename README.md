@@ -36,7 +36,17 @@ DarkLegacyStructure legacyStructure = // ...
 
 std::copy(begin(input), end(input), custom_inserter([&legacyStructure](int number){ legacyInsert(number, legacyStructure); });
 ```
+
 Read the [full story](https://www.pipescpp.com/2017/11/24/how-to-use-the-stl-in-legacy-code/) about making legacy code compatible with the STL.
+
+Note that `custom_inserter` goes along with a helper function object, `do_`, that allows to perfom several actions sequentially on the output of the algorithm:
+ 
+ ```cpp
+ std::copy(begin(input), end(input), pipes::custom_inserter(pipes::do_([&](int i){ results1.push_back(i*2);}).
+                                                                   then_([&](int i){ results2.push_back(i+1);}).
+                                                                   then_([&](int i){ results3.push_back(-i);})));
+
+ ```
 
 #`map_aggregator`
 
