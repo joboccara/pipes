@@ -26,6 +26,48 @@ TEST_CASE("switch dispatches an input to the first matching destination")
     REQUIRE(multiplesOf1Only == expectedMultiplesOf1Only);
 }
 
+TEST_CASE("switch dispatches to default_ what it couldn't match with the other case_")
+{
+    std::vector<int> numbers = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
+    
+    std::vector<int> expectedMultiplesOf4 = {4, 8};
+    std::vector<int> expectedMultiplesOf3 = {3, 6, 9};
+    std::vector<int> expectedRest = {1, 2, 5, 7, 10};
+    
+    std::vector<int> multiplesOf4;
+    std::vector<int> multiplesOf3;
+    std::vector<int> rest;
+    
+    std::copy(begin(numbers), end(numbers), pipes::switch_(pipes::case_([](int n){ return n % 4 == 0; }) >>= back_inserter(multiplesOf4),
+                                                           pipes::case_([](int n){ return n % 3 == 0; }) >>= back_inserter(multiplesOf3),
+                                                           pipes::default_ >>= back_inserter(rest) ));
+    
+    REQUIRE(multiplesOf4 == expectedMultiplesOf4);
+    REQUIRE(multiplesOf3 == expectedMultiplesOf3);
+    REQUIRE(rest == expectedRest);
+}
+
+TEST_CASE("a intermediate default_ short circuits the following cases (even though this shouldn't be used)")
+{
+    std::vector<int> numbers = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
+    
+    std::vector<int> expectedMultiplesOf4 = {4, 8};
+    std::vector<int> expectedRest = {1, 2, 3, 5, 6, 7, 9, 10};
+    std::vector<int> expectedMultiplesOf3 = {};
+
+    std::vector<int> multiplesOf4;
+    std::vector<int> multiplesOf3;
+    std::vector<int> rest;
+    
+    std::copy(begin(numbers), end(numbers), pipes::switch_(pipes::case_([](int n){ return n % 4 == 0; }) >>= back_inserter(multiplesOf4),
+                                                           pipes::default_ >>= back_inserter(rest),
+                                                           pipes::case_([](int n){ return n % 3 == 0; }) >>= back_inserter(multiplesOf3)));
+    
+    REQUIRE(multiplesOf4 == expectedMultiplesOf4);
+    REQUIRE(multiplesOf3 == expectedMultiplesOf3);
+    REQUIRE(rest == expectedRest);
+}
+
 TEST_CASE("switch can override existing results")
 {
     std::vector<int> numbers = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10};

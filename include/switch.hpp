@@ -49,7 +49,7 @@ template<typename Predicate>
 class Case_
 {
 public:
-    explicit Case_(Predicate const& predicate) : predicate_(predicate) {}
+    explicit constexpr Case_(Predicate const& predicate) : predicate_(predicate) {}
     Predicate const& get() const {return predicate_;}
 private:
     Predicate const& predicate_;
@@ -60,6 +60,8 @@ Case_<Predicate> case_(Predicate&& predicate)
 {
     return Case_<Predicate>(std::forward<Predicate>(predicate));
 }
+    
+auto const default_ = case_([](auto&&){ return true; });
 
 template<typename Predicate, typename OutputPipe>
 case_branch<Predicate, OutputPipe> operator>>=(Case_<Predicate> const& casePredicate, OutputPipe outputPipe)
