@@ -37,3 +37,16 @@ TEST_CASE("filter's iterator category should be std::output_iterator_tag")
                   std::output_iterator_tag>::value,
                   "iterator category should be std::output_iterator_tag");
 }
+
+TEST_CASE("filter operator=")
+{
+    std::vector<int> results1, results2;
+    auto predicate = [](int i){ return i > 0; };
+    auto pipeline1 = pipes::filter(predicate) >>= back_inserter(results1);
+    auto pipeline2 = pipes::filter(predicate) >>= back_inserter(results2);
+    
+    pipeline2 = pipeline1;
+    send(pipeline2, 1);
+    REQUIRE(results1.size() == 1);
+    REQUIRE(results2.size() == 0);
+}

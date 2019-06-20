@@ -24,7 +24,8 @@ private:
     
 public: // but technical
     using OutputIteratorBase<demux_pipe<OutputPipes...>>::operator=;
-    friend OutputIteratorBase<demux_pipe<OutputPipes...>>;
+    demux_pipe& operator=(demux_pipe const&) = default;
+    demux_pipe& operator=(demux_pipe& other) { *this = const_cast<demux_pipe const&>(other); return *this; }
 };
 
 template<typename... OutputPipes>

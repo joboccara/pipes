@@ -24,3 +24,23 @@ TEST_CASE("custom_inserter's iterator category should be std::output_iterator_ta
                   std::output_iterator_tag>::value,
                   "iterator category should be std::output_iterator_tag");
 }
+
+TEST_CASE("custom_inserter::operator= (called in the _Recheck function of Visual Studio's STL)")
+{
+    struct IncrementContext
+    {
+        int& context_;
+        explicit IncrementContext(int& context) : context_(context){}
+        void operator()(int) const { ++context_; }
+    };
+
+    auto context1 = 42;
+    auto custom_inserter1 = pipes::custom_inserter(IncrementContext{context1});
+    auto context2 = 42;
+    auto custom_inserter2 = pipes::custom_inserter(IncrementContext{context2});
+    
+    custom_inserter2 = custom_inserter1;
+    pipes::send(custom_inserter2, 0);
+    REQUIRE(context1 == 43);
+    REQUIRE(context2 == 42);
+}

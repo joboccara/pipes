@@ -88,3 +88,17 @@ TEST_CASE("demux's iterator category should be std::output_iterator_tag")
                   "iterator category should be std::output_iterator_tag");
 }
 
+TEST_CASE("demux operator=")
+{
+    std::vector<int> results1, results2, results3, results4;
+    auto demux1 = pipes::demux(back_inserter(results1), back_inserter(results2));
+    auto demux2 = pipes::demux(back_inserter(results1), back_inserter(results2));
+
+    demux2 = demux1;
+    pipes::send(demux2, 0);
+    
+    REQUIRE(results1.size() == 1);
+    REQUIRE(results2.size() == 1);
+    REQUIRE(results3.size() == 0);
+    REQUIRE(results4.size() == 0);
+}

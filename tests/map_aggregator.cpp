@@ -45,3 +45,16 @@ TEST_CASE("map_aggregator's iterator category should be std::output_iterator_tag
                   std::output_iterator_tag>::value,
                   "iterator category should be std::output_iterator_tag");
 }
+
+TEST_CASE("map_aggregator::operator=")
+{
+    auto results1 = std::map<int, std::string>{};
+    auto map_aggregator1 = pipes::map_aggregator(results1, concatenateStrings);
+    auto results2 = std::map<int, std::string>{};
+    auto map_aggregator2 = pipes::map_aggregator(results2, concatenateStrings);
+    
+    map_aggregator2 = map_aggregator1;
+    pipes::send(map_aggregator2, std::make_pair(0, std::string{"zero"}));
+    REQUIRE(results1.size() == 1);
+    REQUIRE(results2.size() == 0);
+}

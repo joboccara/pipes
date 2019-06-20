@@ -97,3 +97,24 @@ TEST_CASE("switch's iterator category should be std::output_iterator_tag")
                   std::output_iterator_tag>::value,
                   "iterator category should be std::output_iterator_tag");
 }
+
+TEST_CASE("switch operator=")
+{
+    std::vector<int> results1, results2, results3, results4;
+    auto multipleOf3 = [](int n){ return n % 3 == 0; };
+    auto multipleOf2 = [](int n){ return n % 2 == 0; };
+    
+    auto switch1 = pipes::switch_(pipes::case_(multipleOf3) >>= back_inserter(results1),
+                                  pipes::case_(multipleOf2) >>= back_inserter(results2));
+    
+    auto switch2 = pipes::switch_(pipes::case_(multipleOf3) >>= back_inserter(results3),
+                                  pipes::case_(multipleOf2) >>= back_inserter(results4));
+    
+    switch2 = switch1;
+    pipes::send(switch2, 4);
+    
+    REQUIRE(results1.size() == 0);
+    REQUIRE(results2.size() == 1);
+    REQUIRE(results3.size() == 0);
+    REQUIRE(results4.size() == 0);
+}

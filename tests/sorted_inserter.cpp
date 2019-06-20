@@ -32,3 +32,16 @@ TEST_CASE("sorted_inserter's iterator category should be std::output_iterator_ta
                   std::output_iterator_tag>::value,
                   "iterator category should be std::output_iterator_tag");
 }
+
+TEST_CASE("sorted_inserter::operator=")
+{
+    auto results1 = std::set<int>{};
+    auto sorted_inserter1 = pipes::sorted_inserter(results1);
+    auto results2 = std::set<int>{};
+    auto sorted_inserter2 = pipes::sorted_inserter(results2);
+
+    sorted_inserter2 = sorted_inserter1;
+    pipes::send(sorted_inserter2, 0);
+    REQUIRE(results1.size() == 1);
+    REQUIRE(results2.size() == 0);
+}

@@ -1,6 +1,7 @@
 #ifndef output_transform_h
 #define output_transform_h
 
+#include "helpers/assignable.hpp"
 #include "helpers/FWD.hpp"
 #include "helpers/meta.hpp"
 
@@ -18,7 +19,7 @@ public:
     {
         detail::apply2([&input](auto&& function, auto&& outputPipe)
         {
-            send(outputPipe, function(input));
+            send(outputPipe, (*function)(input));
         }, transformFunctionTuple_, outputPipes_);
     }
 
@@ -30,6 +31,8 @@ private:
 
 public: // but technical
     using OutputIteratorBase<transform_pipe<TransformFunctionTuple, OutputPipes...>>::operator=;
+    transform_pipe& operator=(transform_pipe const&) = default;
+    transform_pipe& operator=(transform_pipe& other) { *this = const_cast<transform_pipe const&>(other); return *this; }
 };
 
 template<typename... TransformFunctions>
@@ -38,17 +41,17 @@ class transform_pipe_maker
 public:
     explicit transform_pipe_maker(TransformFunctions... transformFunctions) : transformFunctionsTuple_(transformFunctions...) {}
     template<typename... OutputPipes>
-    transform_pipe<std::tuple<TransformFunctions...>, OutputPipes...> operator()(OutputPipes... outputPipes) const
+    transform_pipe<std::tuple<detail::assignable<TransformFunctions>...>, OutputPipes...> operator()(OutputPipes... outputPipes) const
     {
-        return transform_pipe<std::tuple<TransformFunctions...>, OutputPipes...>(transformFunctionsTuple_, outputPipes...);
+        return transform_pipe<std::tuple<detail::assignable<TransformFunctions>...>, OutputPipes...>(transformFunctionsTuple_, outputPipes...);
     }
     
 private:
-    std::tuple<TransformFunctions...> transformFunctionsTuple_;
+    std::tuple<detail::assignable<TransformFunctions>...> transformFunctionsTuple_;
 };
     
 template<typename TransformFunction, typename OutputPipe>
-    transform_pipe<std::tuple<TransformFunction>, OutputPipe> operator>>=(transform_pipe_maker<TransformFunction> const& outputTransformer, OutputPipe outputPipe)
+    transform_pipe<std::tuple<detail::assignable<TransformFunction>>, OutputPipe> operator>>=(transform_pipe_maker<TransformFunction> const& outputTransformer, OutputPipe outputPipe)
 {
     return outputTransformer(outputPipe);
 }

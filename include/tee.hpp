@@ -25,6 +25,8 @@ private:
 
 public: // but technical
     using OutputIteratorBase<tee_pipe<TeeOutputPipe, NextOutputPipe>>::operator=;
+    tee_pipe& operator=(tee_pipe const&) = default;
+    tee_pipe& operator=(tee_pipe& other) { *this = const_cast<tee_pipe const&>(other); return *this; }
 };
     
 template<typename TeeOutputPipe>

@@ -82,3 +82,16 @@ TEST_CASE("transform with several outputs")
         REQUIRE(results3 == expected3);
     }
 }
+
+TEST_CASE("transform operator=")
+{
+    std::vector<int> results1, results2;
+    auto func = [](int i){ return i * 2; };
+    auto pipeline1 = pipes::transform(func) >>= back_inserter(results1);
+    auto pipeline2 = pipes::transform(func) >>= back_inserter(results2);
+    
+    pipeline2 = pipeline1;
+    send(pipeline2, 1);
+    REQUIRE(results1.size() == 1);
+    REQUIRE(results2.size() == 0);
+}

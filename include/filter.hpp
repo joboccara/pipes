@@ -1,6 +1,7 @@
 #ifndef output_pipe_maker_h
 #define output_pipe_maker_h
 
+#include "helpers/assignable.hpp"
 #include "helpers/meta.hpp"
 #include "output_iterator.hpp"
 
@@ -13,7 +14,7 @@ public:
     template<typename T>
     void onReceive(T const& value)
     {
-        if (predicate_(value))
+        if ((*predicate_)(value))
         {
             send(outputPipe_, value);
         }
@@ -23,10 +24,12 @@ public:
     
 private:
     OutputPipe outputPipe_;
-    Predicate predicate_;
+    detail::assignable<Predicate> predicate_;
 
 public: // but technical
     using OutputIteratorBase<filter_pipe<OutputPipe, Predicate>>::operator=;
+    filter_pipe& operator=(filter_pipe const&) = default;
+    filter_pipe& operator=(filter_pipe& other) { *this = const_cast<filter_pipe const&>(other); return *this; }
 };
 
 template<typename Predicate>

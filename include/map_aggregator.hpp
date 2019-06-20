@@ -1,8 +1,10 @@
 #ifndef MAP_AGGREGATOR_HPP
 #define MAP_AGGREGATOR_HPP
 
+#include <functional>
 #include <iterator>
 #include "output_iterator.hpp"
+#include "helpers/assignable.hpp"
 
 namespace pipes
 {
@@ -14,14 +16,14 @@ public:
     template<typename T>
     void onReceive(T const& keyValue)
     {
-        auto position = map_.find(keyValue.first);
-        if (position != map_.end())
+        auto position = map_.get().find(keyValue.first);
+        if (position != map_.get().end())
         {
-            position->second = aggregator_(position->second, keyValue.second);
+            position->second = (*aggregator_)(position->second, keyValue.second);
         }
         else
         {
-            map_.insert(keyValue);
+            map_.get().insert(keyValue);
         }
     }
     
@@ -29,11 +31,13 @@ public:
     map_aggregate_iterator(Map& map, Function aggregator) : map_(map), aggregator_(aggregator) {}
     
 private:
-    Map& map_;
-    Function aggregator_;
+    std::reference_wrapper<Map> map_;
+    detail::assignable<Function> aggregator_;
     
 public: // but technical
     using OutputIteratorBase<map_aggregate_iterator<Map, Function>>::operator=;
+    map_aggregate_iterator& operator=(map_aggregate_iterator const& other) = default;
+    map_aggregate_iterator& operator=(map_aggregate_iterator& other) { *this = const_cast<map_aggregate_iterator const&>(other); return *this; }
 };
 
 template<typename Map, typename Function>

@@ -1,6 +1,7 @@
 #ifndef output_switch_h
 #define output_switch_h
 
+#include "helpers/assignable.hpp"
 #include "helpers/meta.hpp"
 #include "output_iterator.hpp"
 
@@ -10,7 +11,7 @@ namespace pipes
 template<typename Predicate, typename OutputPipe>
 struct case_branch
 {
-    Predicate predicate;
+    detail::assignable<Predicate> predicate;
     OutputPipe outputPipe;
     case_branch(Predicate predicate, OutputPipe outputPipe) : predicate(predicate), outputPipe(outputPipe) {}
 };
@@ -22,7 +23,7 @@ public:
     template<typename T>
     void onReceive(T&& value)
     {
-        auto const firstSatisfyingBranchIndex = detail::find_if(branches_, [&value](auto&& branch){ return branch.predicate(value); });
+        auto const firstSatisfyingBranchIndex = detail::find_if(branches_, [&value](auto&& branch){ return (*branch.predicate)(value); });
         if (firstSatisfyingBranchIndex < sizeof...(CaseBranches))
         {
             detail::perform(branches_, firstSatisfyingBranchIndex, [&value](auto&& branch){ send(branch.outputPipe, value); });
@@ -36,7 +37,8 @@ private:
     
 public: // but technical
     using OutputIteratorBase<switch_pipe<CaseBranches...>>::operator=;
-    friend OutputIteratorBase<switch_pipe<CaseBranches...>>;
+    switch_pipe& operator=(switch_pipe const&) = default;
+    switch_pipe& operator=(switch_pipe& other) { *this = const_cast<switch_pipe const&>(other); return *this; }
 };
 
 template<typename... CaseBranches>

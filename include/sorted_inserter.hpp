@@ -30,6 +30,8 @@ protected:
     
 public: // but technical
     using OutputIteratorBase<sorted_insert_iterator<Container>>::operator=;
+    sorted_insert_iterator& operator=(sorted_insert_iterator const&) = default;
+    sorted_insert_iterator& operator=(sorted_insert_iterator& other){ *this = const_cast<sorted_insert_iterator const&>(other); return *this; }
 };
 
 template <typename Container>

@@ -91,3 +91,20 @@ TEST_CASE("unzip + transform")
     REQUIRE(keys == expectedKeys);
     REQUIRE(values == expectedValues);
 }
+
+TEST_CASE("unzip operator=")
+{
+    auto results1 = std::vector<int>{};
+    auto results2 = std::vector<std::string>{};
+    auto results3 = std::vector<int>{};
+    auto results4 = std::vector<std::string>{};
+    auto pipeline1 = pipes::unzip(back_inserter(results1), back_inserter(results2));
+    auto pipeline2 = pipes::unzip(back_inserter(results3), back_inserter(results4));
+    
+    pipeline2 = pipeline1;
+    send(pipeline2, std::make_pair(0, "zero"));
+    REQUIRE(results1.size() == 1);
+    REQUIRE(results2.size() == 1);
+    REQUIRE(results3.size() == 0);
+    REQUIRE(results4.size() == 0);
+}

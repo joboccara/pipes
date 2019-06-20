@@ -46,3 +46,17 @@ TEST_CASE("partition's iterator category should be std::output_iterator_tag")
                   "iterator category should be std::output_iterator_tag");
 }
 
+TEST_CASE("partition operator=")
+{
+    std::vector<int> results1, results2, results3, results4;
+    auto predicate = [](int i){ return i > 0; };
+    auto pipeline1 = pipes::partition(predicate)(back_inserter(results1), back_inserter(results2));
+    auto pipeline2 = pipes::partition(predicate)(back_inserter(results3), back_inserter(results4));
+    
+    pipeline2 = pipeline1;
+    send(pipeline2, 1);
+    REQUIRE(results1.size() == 1);
+    REQUIRE(results2.size() == 0);
+    REQUIRE(results3.size() == 0);
+    REQUIRE(results4.size() == 0);
+}

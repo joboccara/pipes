@@ -1,6 +1,7 @@
 #ifndef partition_pipe_maker_hpp
 #define partition_pipe_maker_hpp
 
+#include "helpers/assignable.hpp"
 #include "helpers/meta.hpp"
 #include "output_iterator.hpp"
 
@@ -14,7 +15,7 @@ public:
     template<typename T>
     void onReceive(T const& value)
     {
-        if (predicate_(value))
+        if ((*predicate_)(value))
         {
             send(outputPipeTrue_, value);
         }
@@ -29,10 +30,12 @@ public:
 private:
     OutputPipeTrue outputPipeTrue_;
     OutputPipeFalse outputPipeFalse_;
-    Predicate predicate_;
+    detail::assignable<Predicate> predicate_;
 
 public: // but technical
     using OutputIteratorBase<partition_pipe<OutputPipeTrue, OutputPipeFalse, Predicate>>::operator=;
+    partition_pipe& operator=(partition_pipe const&) = default;
+    partition_pipe& operator=(partition_pipe& other) { *this = const_cast<partition_pipe const&>(other); return *this; }
 };
 
 template<typename Predicate>
