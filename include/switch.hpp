@@ -23,7 +23,7 @@ public:
     template<typename T>
     void onReceive(T&& value)
     {
-        auto const firstSatisfyingBranchIndex = detail::find_if(branches_, [&value](auto&& branch){ return (*branch.predicate)(value); });
+        auto const firstSatisfyingBranchIndex = detail::find_if(branches_, [&value](auto&& branch){ return branch.predicate(value); });
         if (firstSatisfyingBranchIndex < sizeof...(CaseBranches))
         {
             detail::perform(branches_, firstSatisfyingBranchIndex, [&value](auto&& branch){ send(branch.outputPipe, value); });

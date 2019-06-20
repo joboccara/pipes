@@ -19,7 +19,7 @@ public:
     {
         detail::apply2([&input](auto&& function, auto&& outputPipe)
         {
-            send(outputPipe, (*function)(input));
+            send(outputPipe, function(input));
         }, transformFunctionTuple_, outputPipes_);
     }
 

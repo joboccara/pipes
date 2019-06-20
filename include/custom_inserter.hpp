@@ -14,7 +14,7 @@ public:
     template<typename T>
     void onReceive(T const& value)
     {
-        (*insertFunction_)(value);
+        insertFunction_(value);
     }
     
     explicit custom_insert_iterator(InsertFunction insertFunction) : insertFunction_(insertFunction) {}

@@ -14,7 +14,7 @@ public:
     template<typename T>
     void onReceive(T const& value)
     {
-        if ((*predicate_)(value))
+        if (predicate_(value))
         {
             send(outputPipe_, value);
         }

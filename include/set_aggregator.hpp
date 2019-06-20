@@ -21,7 +21,7 @@ public:
         {
             auto containedValue = *position;
             position = set_.get().erase(position);
-            set_.get().insert(position, (*aggregator_)(value, containedValue));
+            set_.get().insert(position, aggregator_(value, containedValue));
         }
         else
         {
