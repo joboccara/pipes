@@ -1,6 +1,6 @@
-#ifndef FWD_h
-#define FWD_h
+#ifndef PIPES_FWD_HPP
+#define PIPES_FWD_HPP
 
 #define FWD(value) std::forward<decltype(value)>(value)
 
-#endif /* FWD_h */
+#endif /* PIPES_FWD_HPP */

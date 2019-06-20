@@ -1,5 +1,5 @@
-#ifndef pipes_warnings_h
-#define pipes_warnings_h
+#ifndef PIPES_WARNINGS_HPP
+#define PIPES_WARNINGS_HPP
 
 #if defined(_MSC_VER)
     #define PIPES_DISABLE_WARNING_PUSH __pragma(warning( push ))
@@ -22,4 +22,4 @@
     #define PIPES_DISABLE_WARNING_MULTIPLE_ASSIGNMENT_OPERATORS_SPECIFIED
 #endif
 
-#endif /* pipes_warnings_h */
+#endif /* PIPES_WARNINGS_HPP */

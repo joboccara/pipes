@@ -1,5 +1,5 @@
-#ifndef output_pipe_maker_h
-#define output_pipe_maker_h
+#ifndef PIPES_FILTER_HPP
+#define PIPES_FILTER_HPP
 
 #include "helpers/assignable.hpp"
 #include "helpers/meta.hpp"
@@ -67,4 +67,4 @@ filter_pipe_maker<Predicate> filter(Predicate predicate)
 
 PIPES_DISABLE_WARNING_POP
 
-#endif /* output_transformer_h */
+#endif /* PIPES_FILTER_HPP */

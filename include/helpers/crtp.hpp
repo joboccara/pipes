@@ -1,5 +1,5 @@
-#ifndef crtp_hpp
-#define crtp_hpp
+#ifndef PIPES_CRTP_HPP
+#define PIPES_CRTP_HPP
 
 namespace pipes
 {
@@ -20,4 +20,4 @@ private:
 }
 
 
-#endif /* crtp_hpp */
+#endif /* PIPES_CRTP_HPP */

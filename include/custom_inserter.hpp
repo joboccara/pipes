@@ -1,5 +1,5 @@
-#ifndef custom_inserter_hpp
-#define custom_inserter_hpp
+#ifndef PIPES_CUSTOM_INSERTER_HPP
+#define PIPES_CUSTOM_INSERTER_HPP
 
 #include "output_iterator.hpp"
 #include "helpers/assignable.hpp"
@@ -42,4 +42,4 @@ custom_insert_iterator<InsertFunction> custom_inserter(InsertFunction insertFunc
 
 PIPES_DISABLE_WARNING_POP
 
-#endif /* custom_inserter_hpp */
+#endif /* PIPES_CUSTOM_INSERTER_HPP */

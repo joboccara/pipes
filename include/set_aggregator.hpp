@@ -1,5 +1,5 @@
-#ifndef SET_AGGREGATOR_HPP
-#define SET_AGGREGATOR_HPP
+#ifndef PIPES_SET_AGGREGATOR_HPP
+#define PIPES_SET_AGGREGATOR_HPP
 
 #include <functional>
 #include <iterator>
@@ -56,4 +56,4 @@ set_aggregate_iterator<Set, Function> set_aggregator(Set& set, Function aggregat
 
 PIPES_DISABLE_WARNING_POP
 
-#endif
+#endif // PIPES_SET_AGGREGATOR_HPP

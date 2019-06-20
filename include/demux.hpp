@@ -1,5 +1,5 @@
-#ifndef output_demux_h
-#define output_demux_h
+#ifndef PIPES_DEMUX_HPP
+#define PIPES_DEMUX_HPP
 
 #include "helpers/meta.hpp"
 #include "helpers/warnings.hpp"
@@ -42,4 +42,4 @@ demux_pipe<OutputPipes...> demux(OutputPipes const&... outputPipes)
 
 PIPES_DISABLE_WARNING_POP
 
-#endif /* output_demux_h */
+#endif /* PIPES_DEMUX_HPP */

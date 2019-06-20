@@ -1,5 +1,5 @@
-#ifndef output_iterator_hpp
-#define output_iterator_hpp
+#ifndef PIPES_OUTPUT_ITERATOR_HPP
+#define PIPES_OUTPUT_ITERATOR_HPP
 
 #include "helpers/crtp.hpp"
 #include "helpers/FWD.hpp"
@@ -37,4 +37,4 @@ struct OutputIteratorBase : detail::crtp<Derived, OutputIteratorBase>
 
 }
 
-#endif /* output_iterator_hpp */
+#endif /* PIPES_OUTPUT_ITERATOR_HPP */

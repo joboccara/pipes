@@ -1,5 +1,5 @@
-#ifndef pipes_meta_h
-#define pipes_meta_h
+#ifndef PIPES_META_HPP
+#define PIPES_META_HPP
 
 #include <iterator>
 #include <type_traits>
@@ -81,4 +81,4 @@ void perform(Tuple&& tuple, size_t index, Action action)
 }  // namespace pipes
 
 
-#endif /* pipes_meta */
+#endif /* PIPES_META_HPP */

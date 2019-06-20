@@ -1,5 +1,5 @@
-#ifndef output_iterator_h
-#define output_iterator_h
+#ifndef PIPES_FUNNEL_HPP
+#define PIPES_FUNNEL_HPP
 
 namespace pipes
 {
@@ -31,4 +31,4 @@ void operator>>=(Range&& range, pipe_entrance<Pipe> const& pipeEntrance)
 
 } // namespace pipes
 
-#endif /* output_demuxer_h */
+#endif /* PIPES_FUNNEL_HPP */

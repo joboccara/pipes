@@ -1,5 +1,5 @@
-#ifndef MAP_AGGREGATOR_HPP
-#define MAP_AGGREGATOR_HPP
+#ifndef PIPES_MAP_AGGREGATOR_HPP
+#define PIPES_MAP_AGGREGATOR_HPP
 
 #include <functional>
 #include <iterator>
@@ -55,4 +55,4 @@ map_aggregate_iterator<Map, Function> map_aggregator(Map& map, Function aggregat
 
 PIPES_DISABLE_WARNING_POP
 
-#endif
+#endif // PIPES_MAP_AGGREGATOR_HPP

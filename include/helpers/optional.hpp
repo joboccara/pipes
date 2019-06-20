@@ -1,5 +1,5 @@
-#ifndef pipes_optional_h
-#define pipes_optional_h
+#ifndef PIPES_OPTIONAL_HPP
+#define PIPES_OPTIONAL_HPP
 
 namespace pipes
 {
@@ -47,4 +47,4 @@ namespace detail
 } // namespace detail
 } // namespace pipes
 
-#endif /* pipes_optional_h */
+#endif /* PIPES_OPTIONAL_HPP */

@@ -1,5 +1,5 @@
-#ifndef do_several_things_hpp
-#define do_several_things_hpp
+#ifndef PIPES_DO_THEN_HPP
+#define PIPES_DO_THEN_HPP
 
 #include <functional>
 #include <vector>
@@ -60,4 +60,4 @@ Do_<Function> do_(Function&& function)
 }
 } // namespace pipes
 
-#endif /* do_several_things_hpp */
+#endif /* PIPES_DO_THEN_HPP */

@@ -1,5 +1,5 @@
-#ifndef SORTED_INSERTER_HPP
-#define SORTED_INSERTER_HPP
+#ifndef PIPES_SORTED_INSERTER_HPP
+#define PIPES_SORTED_INSERTER_HPP
 
 #include <iterator>
 #include "optional.hpp"
@@ -54,4 +54,4 @@ sorted_insert_iterator<Container> sorted_inserter(Container& container, typename
 
 PIPES_DISABLE_WARNING_POP
 
-#endif
+#endif // PIPES_SORTED_INSERTER_HPP
