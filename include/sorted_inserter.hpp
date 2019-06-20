@@ -4,6 +4,10 @@
 #include <iterator>
 #include "optional.hpp"
 #include "output_iterator.hpp"
+#include "helpers/warnings.hpp"
+
+PIPES_DISABLE_WARNING_PUSH
+PIPES_DISABLE_WARNING_MULTIPLE_ASSIGNMENT_OPERATORS_SPECIFIED
 
 namespace pipes
 {
@@ -47,5 +51,7 @@ sorted_insert_iterator<Container> sorted_inserter(Container& container, typename
 }
 
 } // namespace pipes
+
+PIPES_DISABLE_WARNING_POP
 
 #endif

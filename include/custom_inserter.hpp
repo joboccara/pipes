@@ -3,6 +3,10 @@
 
 #include "output_iterator.hpp"
 #include "helpers/assignable.hpp"
+#include "helpers/warnings.hpp"
+
+PIPES_DISABLE_WARNING_PUSH
+PIPES_DISABLE_WARNING_MULTIPLE_ASSIGNMENT_OPERATORS_SPECIFIED
 
 namespace pipes
 {
@@ -35,5 +39,7 @@ custom_insert_iterator<InsertFunction> custom_inserter(InsertFunction insertFunc
 }
     
 } // namespace pipes
+
+PIPES_DISABLE_WARNING_POP
 
 #endif /* custom_inserter_hpp */

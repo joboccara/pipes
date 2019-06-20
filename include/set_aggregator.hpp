@@ -5,6 +5,10 @@
 #include <iterator>
 #include "output_iterator.hpp"
 #include "helpers/assignable.hpp"
+#include "helpers/warnings.hpp"
+
+PIPES_DISABLE_WARNING_PUSH
+PIPES_DISABLE_WARNING_MULTIPLE_ASSIGNMENT_OPERATORS_SPECIFIED
 
 namespace pipes
 {
@@ -49,5 +53,7 @@ set_aggregate_iterator<Set, Function> set_aggregator(Set& set, Function aggregat
 }
     
 } // namespace pipes
+
+PIPES_DISABLE_WARNING_POP
 
 #endif

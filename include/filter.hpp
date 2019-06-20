@@ -3,7 +3,11 @@
 
 #include "helpers/assignable.hpp"
 #include "helpers/meta.hpp"
+#include "helpers/warnings.hpp"
 #include "output_iterator.hpp"
+
+PIPES_DISABLE_WARNING_PUSH
+PIPES_DISABLE_WARNING_MULTIPLE_ASSIGNMENT_OPERATORS_SPECIFIED
 
 namespace pipes
 {
@@ -60,5 +64,7 @@ filter_pipe_maker<Predicate> filter(Predicate predicate)
 }
 
 } // namespace pipes
+
+PIPES_DISABLE_WARNING_POP
 
 #endif /* output_transformer_h */

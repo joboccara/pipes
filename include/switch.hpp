@@ -3,7 +3,11 @@
 
 #include "helpers/assignable.hpp"
 #include "helpers/meta.hpp"
+#include "helpers/warnings.hpp"
 #include "output_iterator.hpp"
+
+PIPES_DISABLE_WARNING_PUSH
+PIPES_DISABLE_WARNING_MULTIPLE_ASSIGNMENT_OPERATORS_SPECIFIED
 
 namespace pipes
 {
@@ -72,5 +76,7 @@ case_branch<Predicate, OutputPipe> operator>>=(Case_<Predicate> const& casePredi
 }
 
 } // namespace pipes
+
+PIPES_DISABLE_WARNING_POP
 
 #endif /* output_switch_h */

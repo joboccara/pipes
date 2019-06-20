@@ -3,7 +3,11 @@
 
 #include "helpers/assignable.hpp"
 #include "helpers/meta.hpp"
+#include "helpers/warnings.hpp"
 #include "output_iterator.hpp"
+
+PIPES_DISABLE_WARNING_PUSH
+PIPES_DISABLE_WARNING_MULTIPLE_ASSIGNMENT_OPERATORS_SPECIFIED
 
 namespace pipes
 {
@@ -61,4 +65,6 @@ partition_pipe_maker<Predicate> partition(Predicate predicate)
 
 } // namespace pipes
     
+PIPES_DISABLE_WARNING_POP
+
 #endif /* partition_pipe_maker_hpp */

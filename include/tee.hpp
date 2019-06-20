@@ -2,6 +2,10 @@
 #define teehpp_hpp
 
 #include "output_iterator.hpp"
+#include "helpers/warnings.hpp"
+
+PIPES_DISABLE_WARNING_PUSH
+PIPES_DISABLE_WARNING_MULTIPLE_ASSIGNMENT_OPERATORS_SPECIFIED
 
 namespace pipes
 {
@@ -45,5 +49,7 @@ tee_pipe<NextOutputPipe, TeeOutputPipe> operator>>=(TeeOutputPipeWrapper<TeeOutp
 }
     
 } // namespace pipes
+
+PIPES_DISABLE_WARNING_POP
 
 #endif /* tee_hpp */
