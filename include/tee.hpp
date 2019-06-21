@@ -1,5 +1,5 @@
-#ifndef teehpp_hpp
-#define teehpp_hpp
+#ifndef PIPES_TEE_HPP
+#define PIPES_TEE_HPP
 
 #include "output_iterator.hpp"
 #include "helpers/warnings.hpp"
@@ -29,7 +29,12 @@ private:
 
 public: // but technical
     using OutputIteratorBase<tee_pipe<TeeOutputPipe, NextOutputPipe>>::operator=;
-    tee_pipe& operator=(tee_pipe const&) = default;
+    tee_pipe& operator=(tee_pipe const& other)
+    {
+        teeOutputPipe_ = other.teeOutputPipe_;
+        nextOutputPipe_ = other.nextOutputPipe_;
+        return *this;
+    }
     tee_pipe& operator=(tee_pipe& other) { *this = const_cast<tee_pipe const&>(other); return *this; }
 };
     
@@ -52,4 +57,4 @@ tee_pipe<NextOutputPipe, TeeOutputPipe> operator>>=(TeeOutputPipeWrapper<TeeOutp
 
 PIPES_DISABLE_WARNING_POP
 
-#endif /* tee_hpp */
+#endif /* PIPES_TEE_HPP */

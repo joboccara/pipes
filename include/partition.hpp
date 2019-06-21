@@ -1,5 +1,5 @@
-#ifndef partition_pipe_maker_hpp
-#define partition_pipe_maker_hpp
+#ifndef PIPES_PARTITION_HPP
+#define PIPES_PARTITION_HPP
 
 #include "helpers/assignable.hpp"
 #include "helpers/meta.hpp"
@@ -38,7 +38,13 @@ private:
 
 public: // but technical
     using OutputIteratorBase<partition_pipe<OutputPipeTrue, OutputPipeFalse, Predicate>>::operator=;
-    partition_pipe& operator=(partition_pipe const&) = default;
+    partition_pipe& operator=(partition_pipe const& other)
+    {
+        outputPipeTrue_ = other.outputPipeTrue_;
+        outputPipeFalse_ = other.outputPipeFalse_;
+        predicate_ = other.predicate_;
+        return *this;
+    }
     partition_pipe& operator=(partition_pipe& other) { *this = const_cast<partition_pipe const&>(other); return *this; }
 };
 
@@ -67,4 +73,4 @@ partition_pipe_maker<Predicate> partition(Predicate predicate)
     
 PIPES_DISABLE_WARNING_POP
 
-#endif /* partition_pipe_maker_hpp */
+#endif /* PIPES_PARTITION_HPP */

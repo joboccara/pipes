@@ -1,5 +1,5 @@
-#ifndef output_transform_h
-#define output_transform_h
+#ifndef PIPES_TRANSFORM_HPP
+#define PIPES_TRANSFORM_HPP
 
 #include "helpers/assignable.hpp"
 #include "helpers/FWD.hpp"
@@ -35,7 +35,12 @@ private:
 
 public: // but technical
     using OutputIteratorBase<transform_pipe<TransformFunctionTuple, OutputPipes...>>::operator=;
-    transform_pipe& operator=(transform_pipe const&) = default;
+    transform_pipe& operator=(transform_pipe const& other)
+    {
+        outputPipes_ = other.outputPipes_;
+        transformFunctionTuple_ = other.transformFunctionTuple_;
+        return *this;
+    }
     transform_pipe& operator=(transform_pipe& other) { *this = const_cast<transform_pipe const&>(other); return *this; }
 };
 
@@ -70,4 +75,4 @@ transform_pipe_maker<TransformFunctions...> transform(TransformFunctions... tran
 
 PIPES_DISABLE_WARNING_POP
 
-#endif /* output_transformer_h */
+#endif /* PIPES_TRANSFORM_HPP */

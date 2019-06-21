@@ -40,7 +40,12 @@ private:
     
 public: // but technical
     using OutputIteratorBase<map_aggregate_iterator<Map, Function>>::operator=;
-    map_aggregate_iterator& operator=(map_aggregate_iterator const& other) = default;
+    map_aggregate_iterator& operator=(map_aggregate_iterator const& other)
+    {
+        map_ = other.map_;
+        aggregator_ = other.aggregator_;
+        return *this;
+    }
     map_aggregate_iterator& operator=(map_aggregate_iterator& other) { *this = const_cast<map_aggregate_iterator const&>(other); return *this; }
 };
 

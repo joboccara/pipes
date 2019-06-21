@@ -28,7 +28,12 @@ private:
 
 public: // but technical
     using OutputIteratorBase<custom_insert_iterator<InsertFunction>>::operator=;
-    custom_insert_iterator& operator=(custom_insert_iterator const& other) = default;
+    custom_insert_iterator& operator=(custom_insert_iterator const& other)
+    {
+        insertFunction_ = other.insertFunction_;
+        return *this;
+    } // MSVC refuses "= default" for this overload of operator=, because of the presence of the other overload. Compile error message: multiple versions of a defaulted special member functions are not allowed
+
     custom_insert_iterator& operator=(custom_insert_iterator& other) { *this = const_cast<custom_insert_iterator const&>(other); return *this; } // since the base class has a template operator=, we need an operator= in the derived class that takes a non const parameter, otherwise X x; x2 = x; goes to the template one
 };
     

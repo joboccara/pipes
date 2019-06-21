@@ -42,7 +42,12 @@ private:
 
 public: // but technical
     using OutputIteratorBase<set_aggregate_iterator<Set, Function>>::operator=;
-    set_aggregate_iterator& operator=(set_aggregate_iterator const&) = default;
+    set_aggregate_iterator& operator=(set_aggregate_iterator const& other)
+    {
+        set_ = other.set_;
+        aggregator_ = other.aggregator_;
+        return *this;
+    }
     set_aggregate_iterator& operator=(set_aggregate_iterator& other) { *this = const_cast<set_aggregate_iterator const&>(other); return *this; }
 };
 

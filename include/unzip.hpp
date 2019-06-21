@@ -1,5 +1,5 @@
-#ifndef output_unzip_h
-#define output_unzip_h
+#ifndef PIPES_UNZIP_HPP
+#define PIPES_UNZIP_HPP
 
 #include "helpers/FWD.hpp"
 #include "helpers/meta.hpp"
@@ -25,4 +25,4 @@ auto unzip(OutputPipes... outputPipes)
     
 } // namespace pipes
 
-#endif /* output_unzipper_h */
+#endif /* PIPES_UNZIP_HPP */

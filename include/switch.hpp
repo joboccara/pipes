@@ -1,5 +1,5 @@
-#ifndef output_switch_h
-#define output_switch_h
+#ifndef PIPES_SWITCH_HPP
+#define PIPES_SWITCH_HPP
 
 #include "helpers/assignable.hpp"
 #include "helpers/meta.hpp"
@@ -41,7 +41,11 @@ private:
     
 public: // but technical
     using OutputIteratorBase<switch_pipe<CaseBranches...>>::operator=;
-    switch_pipe& operator=(switch_pipe const&) = default;
+    switch_pipe& operator=(switch_pipe const& other)
+    {
+        branches_ = other.branches_;
+        return *this;
+    }
     switch_pipe& operator=(switch_pipe& other) { *this = const_cast<switch_pipe const&>(other); return *this; }
 };
 
@@ -79,4 +83,4 @@ case_branch<Predicate, OutputPipe> operator>>=(Case_<Predicate> const& casePredi
 
 PIPES_DISABLE_WARNING_POP
 
-#endif /* output_switch_h */
+#endif /* PIPES_SWITCH_HPP */
