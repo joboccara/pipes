@@ -32,7 +32,12 @@ private:
 
 public: // but technical
     using OutputIteratorBase<filter_pipe<OutputPipe, Predicate>>::operator=;
-    filter_pipe& operator=(filter_pipe const&) = default;
+    filter_pipe& operator=(filter_pipe const& other)
+    {
+        outputPipe_ = other.outputPipe_;
+        predicate_ = other.predicate_;
+        return *this;
+    }
     filter_pipe& operator=(filter_pipe& other) { *this = const_cast<filter_pipe const&>(other); return *this; }
 };
 
