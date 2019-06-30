@@ -18,7 +18,7 @@ public:
     template<typename T>
     void onReceive(T&& value)
     {
-        detail::apply([&value](auto&& outputPipe){ send(outputPipe, value); }, outputPipes_);
+        detail::for_each([&value](auto&& outputPipe){ send(outputPipe, value); }, outputPipes_);
     }
 
     explicit demux_pipe(OutputPipes const&... outputPipes) : outputPipes_(outputPipes...) {}

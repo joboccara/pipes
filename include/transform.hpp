@@ -21,7 +21,7 @@ public:
     template<typename T>
     void onReceive(T&& input)
     {
-        detail::apply2([&input](auto&& function, auto&& outputPipe)
+        detail::for_each2([&input](auto&& function, auto&& outputPipe)
         {
             send(outputPipe, function(input));
         }, transformFunctionTuple_, outputPipes_);
