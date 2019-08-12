@@ -18,8 +18,8 @@ TEST_CASE("map_aggregator")
     std::map<int, std::string> expected = { {1, "a"}, {2, "bb"}, {3, "cc"}, {4, "dd"}, {5, "e"} };
     std::map<int, std::string> results;
     
-    std::copy(entries.begin(), entries.end(), fluent::map_aggregator(results, concatenateStrings));
-    std::copy(entries2.begin(), entries2.end(), fluent::map_aggregator(results, concatenateStrings));
+    std::copy(entries.begin(), entries.end(), pipes::map_aggregator(results, concatenateStrings));
+    std::copy(entries2.begin(), entries2.end(), pipes::map_aggregator(results, concatenateStrings));
     
     REQUIRE((results == expected));
 }
@@ -32,8 +32,8 @@ TEST_CASE("map_aggregator from vector of pairs")
     std::map<int, std::string> expected = { {1, "a"}, {2, "bb"}, {3, "cc"}, {4, "dd"}, {5, "e"} };
     std::map<int, std::string> results;
     
-    std::copy(entries.begin(), entries.end(), fluent::map_aggregator(results, concatenateStrings));
-    std::copy(entries2.begin(), entries2.end(), fluent::map_aggregator(results, concatenateStrings));
+    std::copy(entries.begin(), entries.end(), pipes::map_aggregator(results, concatenateStrings));
+    std::copy(entries2.begin(), entries2.end(), pipes::map_aggregator(results, concatenateStrings));
     
     REQUIRE((results == expected));
 }
@@ -41,7 +41,20 @@ TEST_CASE("map_aggregator from vector of pairs")
 TEST_CASE("map_aggregator's iterator category should be std::output_iterator_tag")
 {
     std::map<int, std::string> results;
-    static_assert(std::is_same<decltype(fluent::map_aggregator(results, concatenateStrings))::iterator_category,
+    static_assert(std::is_same<decltype(pipes::map_aggregator(results, concatenateStrings))::iterator_category,
                   std::output_iterator_tag>::value,
                   "iterator category should be std::output_iterator_tag");
+}
+
+TEST_CASE("map_aggregator::operator=")
+{
+    auto results1 = std::map<int, std::string>{};
+    auto map_aggregator1 = pipes::map_aggregator(results1, concatenateStrings);
+    auto results2 = std::map<int, std::string>{};
+    auto map_aggregator2 = pipes::map_aggregator(results2, concatenateStrings);
+    
+    map_aggregator2 = map_aggregator1;
+    pipes::send(map_aggregator2, std::make_pair(0, std::string{"zero"}));
+    REQUIRE(results1.size() == 1);
+    REQUIRE(results2.size() == 0);
 }

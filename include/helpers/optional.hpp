@@ -1,7 +1,7 @@
-#ifndef fluent_optional_h
-#define fluent_optional_h
+#ifndef PIPES_OPTIONAL_HPP
+#define PIPES_OPTIONAL_HPP
 
-namespace fluent
+namespace pipes
 {
 namespace detail
 {
@@ -18,26 +18,33 @@ namespace detail
         optional(const optional& other) : m_initialized(other.m_initialized) { if (other.m_initialized) new (m_object) T(*other); }
         optional& operator=(const optional& other)
         {
-            clear();
+            reset();
             new (m_object) T(*other);
             m_initialized = other.m_initialized;
             return *this;
         }
-        optional& operator=(nullopt_t) { clear(); return *this; }
-        ~optional() { clear(); }
+        optional& operator=(nullopt_t) { reset(); return *this; }
+        ~optional() { reset(); }
+        template<typename... Args>
+        void emplace(Args&&... args)
+        {
+            reset();
+            new (m_object) T(std::forward<Args>(args)...);
+            m_initialized = true;
+        }
         operator bool() const { return m_initialized; };
         T& operator*() { return *reinterpret_cast<T*>(m_object); };
         const T& operator*() const { return *reinterpret_cast<const T*>(m_object); };
         T* operator->() { return &**this; };
         const T* operator->() const { return &**this; };
     private:
-        void clear() { if (m_initialized) (&**this)->~T(); m_initialized = false; }
+        void reset() { if (m_initialized) (&**this)->~T(); m_initialized = false; }
     private:
         char m_object[sizeof(T)];
         bool m_initialized;
     };
 
 } // namespace detail
-} // namespace fluent
+} // namespace pipes
 
-#endif /* fluent_optional_h */
+#endif /* PIPES_OPTIONAL_HPP */
