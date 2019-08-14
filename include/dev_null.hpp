@@ -7,7 +7,7 @@
 namespace pipes
 {
     
-    class dead_end_iterator : public OutputIteratorBase<dead_end_iterator>
+    class dev_null : public OutputIteratorBase<dev_null>
     {
     public:
         template<typename T>
@@ -17,7 +17,7 @@ namespace pipes
         }
         
     public: // but technical
-        using OutputIteratorBase<dead_end_iterator>::operator=;
+        using OutputIteratorBase<dev_null>::operator=;
     };
     
 } // namespace fluent
