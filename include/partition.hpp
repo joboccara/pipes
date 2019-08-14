@@ -2,6 +2,7 @@
 #define PIPES_PARTITION_HPP
 
 #include "helpers/assignable.hpp"
+#include "helpers/FWD.hpp"
 #include "helpers/meta.hpp"
 #include "helpers/warnings.hpp"
 #include "output_iterator.hpp"
@@ -48,25 +49,10 @@ public: // but technical
     partition_pipe& operator=(partition_pipe& other) { *this = const_cast<partition_pipe const&>(other); return *this; }
 };
 
-template<typename Predicate>
-class partition_pipe_maker
+template<typename Predicate, typename OutputPipeTrue, typename OutputPipeFalse>
+partition_pipe<OutputPipeTrue, OutputPipeFalse, Predicate> partition(Predicate predicate, OutputPipeTrue&& outputPipeTrue, OutputPipeFalse&& outputPipeFalse)
 {
-public:
-    explicit partition_pipe_maker(Predicate predicate) : predicate_(predicate) {}
-    template<typename OutputPipeTrue, typename OutputPipeFalse>
-    partition_pipe<OutputPipeTrue, OutputPipeFalse, Predicate> operator()(OutputPipeTrue outputPipeTrue, OutputPipeFalse outputPipeFalse) const
-    {
-        return partition_pipe<OutputPipeTrue, OutputPipeFalse, Predicate>(outputPipeTrue, outputPipeFalse, predicate_);
-    }
-    
-private:
-    Predicate predicate_;
-};
-
-template<typename Predicate>
-partition_pipe_maker<Predicate> partition(Predicate predicate)
-{
-    return partition_pipe_maker<Predicate>(predicate);
+    return partition_pipe<OutputPipeTrue, OutputPipeFalse, Predicate>(FWD(outputPipeTrue), FWD(outputPipeFalse), predicate);
 }
 
 } // namespace pipes

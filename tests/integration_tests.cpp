@@ -28,15 +28,14 @@ TEST_CASE("Mix of various output iterators")
 
     auto const times2 = pipes::transform([](int i) { return i*2; });
     auto const divideBy2 = pipes::transform([](int i) { return i/2; });
-    auto const isEvenPartition = pipes::partition([](int n){ return n % 2 == 0; });
     auto const pairUpWithA = pipes::transform([](int i) { return std::make_pair(i, 'A'); });
 
 
     std::copy(begin(numbers), end(numbers), pipes::switch_(pipes::case_([](int n){ return n % 3 == 0; }) >>= times2(back_inserter(output1)),
                                                            pipes::case_([](int n){ return n % 2 == 0; }) >>= divideBy2(
-                                                                                                                       isEvenPartition(
-                                                                                                                                       back_inserter(output2),
-                                                                                                                                       times2(back_inserter(output3))
+                                                                                                                       pipes::partition([](int n){ return n % 2 == 0; },
+                                                                                                                                         back_inserter(output2),
+                                                                                                                                         times2(back_inserter(output3))
                                                                                                                                       )
                                                                                                                       ),
                                                            pipes::case_( [](int n){ return n % 1 == 0; } ) >>= pairUpWithA(
@@ -72,12 +71,11 @@ TEST_CASE("Mix of various output iterators with pipe")
     
     auto const times2 = pipes::transform([](int i) { return i*2; });
     auto const divideBy2 = pipes::transform([](int i) { return i/2; });
-    auto const isEvenPartition = pipes::partition([](int n){ return n % 2 == 0; });
     auto const pairUpWithA = pipes::transform([](int i) { return std::make_pair(i, 'A'); });
     
     
     std::copy(begin(numbers), end(numbers), pipes::switch_(pipes::case_( [](int n){ return n % 3 == 0; } ) >>= times2 >>= back_inserter(output1),
-                                                           pipes::case_( [](int n){ return n % 2 == 0; } ) >>= divideBy2 >>= isEvenPartition(
+                                                           pipes::case_( [](int n){ return n % 2 == 0; } ) >>= divideBy2 >>= pipes::partition([](int n){ return n % 2 == 0; },
                                                                                                                                              back_inserter(output2),
                                                                                                                                              times2 >>= back_inserter(output3)
                                                                                                                                             ),
