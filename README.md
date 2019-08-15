@@ -1,8 +1,19 @@
+ <a href="https://www.patreon.com/bePatron?u=10076953" data-patreon-widget-type="become-patron-button">Become a Patron!</a><script async src="https://c6.patreon.com/becomePatronButton.bundle.js"></script>
+ 
  <p align="center"><img src="https://github.com/joboccara/pipes/blob/readme/doc/pipeline.png"/></p>
 
 Pipes are small components for writing expressive code when working on collections. Pipes chain together into a pipeline that receives data from a source, operates on that data, and send the results to a destination.
 
 This is a header-only library, implemented in C++14.
+
+- [A First Example](#a-first-example)
+- [A Second Example](#a-second-example)
+- [Doesn't it look like ranges?](#doesn-t-it-look-like-ranges-)
+- [End pipes](#end-pipes)
+- [Easy integration with STL algorithms](#easy-integration-with-stl-algorithms)
+- [List of available pipes](#list-of-available-pipes)
+* [General pipes](#general-pipes)
+* [End pipes](#end-pipes-1)
 
 # A First Example
 
@@ -108,6 +119,21 @@ std::set_difference(begin(setA), end(setA),
 <p align="center"><img src="https://github.com/joboccara/pipes/blob/readme/doc/pipes-STL-algos.png"/></p>
 
 # List of available pipes
+
+* [General pipes](#general-pipes)
++ [`demux`](#-demux-)
++ [`dev_null`](#-dev-null-)
++ [`filter`](#-filter-)
++ [`partition`](#-partition-)
++ [`switch`](#-switch-)
++ [`tee`](#-tee-)
++ [`transform`](#-transform-)
++ [`unzip`](#-unzip-)
+* [End pipes](#end-pipes-1)
++ [`custom`](#-custom-)
++ [`map_aggregator`](#-map-aggregator-)
++ [`set_aggregator`](#-set-aggregator-)
++ [`sorted_inserter`](#-sorted-inserter-)
 
 ## General pipes
 
