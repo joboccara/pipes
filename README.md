@@ -1,6 +1,6 @@
- <p align="center"><img src="https://github.com/joboccara/pipes/blob/readme/doc/cpp_pipes.png"/></p>
- 
 <a href="https://www.patreon.com/join/fluentcpp?"><img alt="become a patron" src="https://c5.patreon.com/external/logo/become_a_patron_button.png" height="35px"></a>
+
+ <p align="center"><img src="https://github.com/joboccara/pipes/blob/readme/docs/cpp_pipes.png"/></p>
  
 Pipes are small components for writing expressive code when working on collections. Pipes chain together into a pipeline that receives data from a source, operates on that data, and send the results to a destination.
 
@@ -56,7 +56,7 @@ Here, `unzip` takes the `std::pair`s or `std::tuple`s it receives and breaks the
 
 Since data circulates through pipes, real life pipes and plumbing provide a nice analogy (which gave its names to the library). For example, the above pipeline can be graphically represented like this:
  
- <p align="center"><img src="https://github.com/joboccara/pipes/blob/readme/doc/pipeline.png"/></p>
+ <p align="center"><img src="https://github.com/joboccara/pipes/blob/readme/docs/pipeline.png"/></p>
 
 # Doesn't it look like ranges?
 
@@ -116,7 +116,7 @@ std::set_difference(begin(setA), end(setA),
                     transform(f) >>= filter(p) >>= map_aggregator(results, addValues));
 ```
 
-<p align="center"><img src="https://github.com/joboccara/pipes/blob/readme/doc/pipes-STL-algos.png"/></p>
+<p align="center"><img src="https://github.com/joboccara/pipes/blob/readme/docs/pipes-STL-algos.png"/></p>
 
 # List of available pipes
 
@@ -139,7 +139,7 @@ std::set_difference(begin(setA), end(setA),
 
 ### `demux`
 
-<p align="center"><img src="https://github.com/joboccara/pipes/blob/readme/doc/demux_pipe.png"/></p>
+<p align="center"><img src="https://github.com/joboccara/pipes/blob/readme/docs/demux_pipe.png"/></p>
 
 `demux` is a pipe that takes any number of pipes, and sends a copy of the values it receives to each of those pipes.
 
@@ -182,7 +182,7 @@ sets::set_seggregate(setA, setB,
 
 ### `filter`
 
-<p align="center"><img src="https://github.com/joboccara/pipes/blob/readme/doc/filter_pipe.png"/></p>
+<p align="center"><img src="https://github.com/joboccara/pipes/blob/readme/docs/filter_pipe.png"/></p>
 
 `filter` is a pipe that takes a predicate `p` and, when it receives a value `x`, sends the result on to the next pipe iif `p(x)` is `true`.
 
@@ -199,7 +199,7 @@ input >>= pipes::funnel
 
 ### `partition`
 
-<p align="center"><img src="https://github.com/joboccara/pipes/blob/readme/doc/partition_pipe.png"/></p>
+<p align="center"><img src="https://github.com/joboccara/pipes/blob/readme/docs/partition_pipe.png"/></p>
 
 `partition` is a pipe that takes a predicate `p` and two other pipes. When it receives a value `x`, sends the result on to the first pipe iif `p(x)` is `true`, and to the second pipe if `p(x)` is `false`.
 
@@ -240,7 +240,7 @@ numbers >>= pipes::funnel
 
 ### `tee`
 
-<p align="center"><img src="https://github.com/joboccara/pipes/blob/readme/doc/tee_pipe.png"/></p>
+<p align="center"><img src="https://github.com/joboccara/pipes/blob/readme/docs/tee_pipe.png"/></p>
 
 `tee` is a pipe that takes one other pipe, and sends a copy of the values it receives to of this pipes before sending in on to the next pipe.
 Like the `tee` command on UNIX, this pipe is useful to take a peek at intermediary results.
@@ -260,7 +260,7 @@ inputs >>= pipes::funnel
 
 ### `transform`
 
-<p align="center"><img src="https://github.com/joboccara/pipes/blob/readme/doc/transform_pipe.png"/></p>
+<p align="center"><img src="https://github.com/joboccara/pipes/blob/readme/docs/transform_pipe.png"/></p>
 
 `transform` is a pipe that takes a function `f` and, when it receives a value, applies `f` on it and sends the result on to the next pipe.
 
@@ -277,7 +277,7 @@ input >>= pipes::funnel
 
 ### `unzip`
 
-<p align="center"><img src="https://github.com/joboccara/pipes/blob/readme/doc/unzip_pipe.png"/></p>
+<p align="center"><img src="https://github.com/joboccara/pipes/blob/readme/docs/unzip_pipe.png"/></p>
 
 `unzip` is a pipe that takes N other pipes. When it receives a `std::pair` or `std::tuple` of size N (for `std::pair` N is 2), it sends each of its components to the corresponding output pipe:
 
