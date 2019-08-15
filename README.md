@@ -1,6 +1,8 @@
+# C++ Pipes
+
 <a href="https://www.patreon.com/join/fluentcpp?"><img alt="become a patron" src="https://c5.patreon.com/external/logo/become_a_patron_button.png" height="35px"></a>
  
- <p align="center"><img src="https://github.com/joboccara/pipes/blob/readme/doc/pipeline.png"/></p>
+ <p align="center"><img src="https://github.com/joboccara/pipes/blob/readme/doc/cpp_pipes.png"/></p>
 
 Pipes are small components for writing expressive code when working on collections. Pipes chain together into a pipeline that receives data from a source, operates on that data, and send the results to a destination.
 
