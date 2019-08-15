@@ -1,4 +1,4 @@
-![pipeline](https://github.com/joboccara/pipes/doc/images/pipeline.png "Pipeline")
+![pipeline](doc/images/pipeline.png "Pipeline")
 
 Pipes are small components for writing expressive code when working on collections. Pipes chain together into a pipeline that receives data from a source, operates on that data, and send the results to a destination.
 
@@ -45,7 +45,7 @@ Here, `unzip` takes the `std::pair`s or `std::tuple`s it receives and breaks the
 
 Since data circulates through pipes, real life pipes and plumbing provide a nice analogy (which gave its names to the library). For example, the above pipeline can be graphically represented like this:
  
-![pipeline](https://github.com/joboccara/pipes/doc/images/pipeline.png "Pipeline")
+![pipeline](doc/images/pipeline.png "Pipeline")
 
 
 # Doesn't it look like ranges?
@@ -106,7 +106,7 @@ std::set_difference(begin(setA), end(setA),
                     transform(f) >>= filter(p) >>= map_aggregator(results, addValues));
 ```
 
-![Pipes with STL Algorithms](https://github.com/joboccara/pipes/doc/images/pipes_STL_algos.png "Pipes with STL Algorithms")
+![Pipes with STL Algorithms](doc/images/pipes_STL_algos.png "Pipes with STL Algorithms")
 
 # List of available pipes
 
@@ -114,7 +114,7 @@ std::set_difference(begin(setA), end(setA),
 
 ### `demux`
 
-![demux](https://github.com/joboccara/pipes/doc/images/demux_pipe.png "demux")
+![demux](doc/images/demux_pipe.png "demux")
 
 `demux` is a pipe that takes any number of pipes, and sends a copy of the values it receives to each of those pipes.
 
@@ -157,7 +157,7 @@ dev_null{});
 
 ### `filter`
 
-![filter](https://github.com/joboccara/pipes/doc/images/filter_pipe.png "filter")
+![filter](doc/images/filter_pipe.png "filter")
 
 `filter` is a pipe that takes a predicate `p` and, when it receives a value `x`, sends the result on to the next pipe iif `p(x)` is `true`.
 
@@ -174,7 +174,7 @@ input >>= pipes::funnel
 
 ### `partition`
 
-![partition](https://github.com/joboccara/pipes/doc/images/partition_pipe.png "partition")
+![partition](doc/images/partition_pipe.png "partition")
 
 `partition` is a pipe that takes a predicate `p` and two other pipes. When it receives a value `x`, sends the result on to the first pipe iif `p(x)` is `true`, and to the second pipe if `p(x)` is `false`.
 
@@ -215,7 +215,7 @@ pipes::default_ >>= back_inserter(rest) ));
 
 ### `tee`
 
-![tee](https://github.com/joboccara/pipes/doc/images/tee_pipe.png "tee")
+![tee](doc/images/tee_pipe.png "tee")
 
 `tee` is a pipe that takes one other pipe, and sends a copy of the values it receives to of this pipes before sending in on to the next pipe.
 Like the `tee` command on UNIX, this pipe is useful to take a peek at intermediary results.
@@ -235,7 +235,7 @@ inputs >>= pipes::funnel
 
 ### `transform`
 
-![transform](https://github.com/joboccara/pipes/doc/images/transform_pipe.png "transform")
+![transform](doc/images/transform_pipe.png "transform")
 
 `transform` is a pipe that takes a function `f` and, when it receives a value, applies `f` on it and sends the result on to the next pipe.
 
@@ -252,7 +252,7 @@ input >>= pipes::funnel
 
 ### `unzip`
 
-![unzip](https://github.com/joboccara/pipes/doc/images/unzip_pipe.png "unzip")
+![unzip](doc/images/unzip_pipe.png "unzip")
 
 `unzip` is a pipe that takes N other pipes. When it receives a `std::pair` or `std::tuple` of size N (for `std::pair` N is 2), it sends each of its components to the corresponding output pipe:
 
