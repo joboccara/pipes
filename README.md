@@ -1,7 +1,7 @@
+ <p><img src="https://github.com/joboccara/pipes/blob/readme/docs/cpp_pipes.png"/></p>
+ 
 <a href="https://www.patreon.com/join/fluentcpp?"><img alt="become a patron" src="https://c5.patreon.com/external/logo/become_a_patron_button.png" height="35px"></a>
 
- <p align="center"><img src="https://github.com/joboccara/pipes/blob/readme/docs/cpp_pipes.png"/></p>
- 
 Pipes are small components for writing expressive code when working on collections. Pipes chain together into a pipeline that receives data from a source, operates on that data, and send the results to a destination.
 
 This is a header-only library, implemented in C++14.
@@ -121,19 +121,19 @@ std::set_difference(begin(setA), end(setA),
 # List of available pipes
 
 * [General pipes](#general-pipes)
- * [`demux`](#-demux-)
- * [`dev_null`](#-dev-null-)
- * [`filter`](#-filter-)
- * [`partition`](#-partition-)
- * [`switch`](#-switch-)
- * [`tee`](#-tee-)
- * [`transform`](#-transform-)
- * [`unzip`](#-unzip-)
+    * [`demux`](#-demux-)
+    * [`dev_null`](#-dev-null-)
+    * [`filter`](#-filter-)
+    * [`partition`](#-partition-)
+    * [`switch`](#-switch-)
+    * [`tee`](#-tee-)
+    * [`transform`](#-transform-)
+    * [`unzip`](#-unzip-)
 * [End pipes](#end-pipes-1)
- * [`custom`](#-custom-)
- * [`map_aggregator`](#-map-aggregator-)
- * [`set_aggregator`](#-set-aggregator-)
- * [`sorted_inserter`](#-sorted-inserter-)
+    * [`custom`](#-custom-)
+    * [`map_aggregator`](#-map-aggregator-)
+    * [`set_aggregator`](#-set-aggregator-)
+    * [`sorted_inserter`](#-sorted-inserter-)
 
 ## General pipes
 
