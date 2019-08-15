@@ -114,7 +114,7 @@ std::set_difference(begin(setA), end(setA),
 
 ### `demux`
 
-![demux](https://github.com/joboccara/pipes/blob/readme/doc/demux_pipe.png "demux")
+<p align="center"><img src="https://github.com/joboccara/pipes/blob/readme/doc/demux_pipe.png"/></p>
 
 `demux` is a pipe that takes any number of pipes, and sends a copy of the values it receives to each of those pipes.
 
