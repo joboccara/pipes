@@ -1,10 +1,10 @@
 #include "catch.hpp"
-#include "custom_inserter.hpp"
+#include "custom.hpp"
 
 #include <algorithm>
 #include <vector>
 
-TEST_CASE("custom_inserter")
+TEST_CASE("custom")
 {
     std::vector<int> input = {1, 2, 3, 4, 5, 6, 7 ,8, 9, 10};
     std::vector<int> expected = input;
@@ -12,20 +12,20 @@ TEST_CASE("custom_inserter")
     std::vector<int> results;
     auto legacyInsertion = [&results](int number) { results.push_back(number); };
     
-    std::copy(begin(input), end(input), pipes::custom_inserter(legacyInsertion));
+    std::copy(begin(input), end(input), pipes::custom(legacyInsertion));
     
     REQUIRE(results == expected);
 }
 
-TEST_CASE("custom_inserter's iterator category should be std::output_iterator_tag")
+TEST_CASE("custom's iterator category should be std::output_iterator_tag")
 {
     auto inserter = [](){};
-    static_assert(std::is_same<decltype(pipes::custom_inserter(inserter))::iterator_category,
+    static_assert(std::is_same<decltype(pipes::custom(inserter))::iterator_category,
                   std::output_iterator_tag>::value,
                   "iterator category should be std::output_iterator_tag");
 }
 
-TEST_CASE("custom_inserter::operator= (called in the _Recheck function of Visual Studio's STL)")
+TEST_CASE("custom::operator= (called in the _Recheck function of Visual Studio's STL)")
 {
     struct IncrementContext
     {
@@ -35,12 +35,12 @@ TEST_CASE("custom_inserter::operator= (called in the _Recheck function of Visual
     };
 
     auto context1 = 42;
-    auto custom_inserter1 = pipes::custom_inserter(IncrementContext{context1});
+    auto custom1 = pipes::custom(IncrementContext{context1});
     auto context2 = 42;
-    auto custom_inserter2 = pipes::custom_inserter(IncrementContext{context2});
+    auto custom2 = pipes::custom(IncrementContext{context2});
     
-    custom_inserter2 = custom_inserter1;
-    pipes::send(custom_inserter2, 0);
+    custom2 = custom1;
+    pipes::send(custom2, 0);
     REQUIRE(context1 == 43);
     REQUIRE(context2 == 42);
 }

@@ -2,9 +2,9 @@
 #include <vector>
 #include "catch.hpp"
 
+#include "custom.hpp"
 #include "do_then.hpp"
 #include "funnel.hpp"
-#include "custom_inserter.hpp"
 
 TEST_CASE("several operations in custom_inserter")
 {
@@ -17,9 +17,9 @@ TEST_CASE("several operations in custom_inserter")
     auto results2 = std::vector<int>{};
     auto results3 = std::vector<int>{};
     
-    inputs >>= pipes::funnel >>= pipes::custom_inserter(pipes::do_([&](int i){ results1.push_back(i*2);}).
-                                                               then_([&](int i){ results2.push_back(i+1);}).
-                                                               then_([&](int i){ results3.push_back(-i);}));
+    inputs >>= pipes::funnel >>= pipes::custom(pipes::do_([&](int i){ results1.push_back(i*2);}).
+                                                      then_([&](int i){ results2.push_back(i+1);}).
+                                                      then_([&](int i){ results3.push_back(-i);}));
     
     REQUIRE((results1 == expected1));
     REQUIRE((results2 == expected2));
