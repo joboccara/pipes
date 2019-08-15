@@ -31,10 +31,10 @@ Value concatenateValues(Value const& value1, Value const& value2)
 
 TEST_CASE("set_aggregator")
 {
-    std::vector<Value> entries = { {1, "a"}, {2, "b"}, {3, "c"}, {4, "d"} };
-    std::vector<Value> entries2 = { {2, "b"}, {3, "c"}, {4, "d"}, {5, "e"} };
+    std::vector<Value> entries = { Value{1, "a"}, Value{2, "b"}, Value{3, "c"}, Value{4, "d"} };
+    std::vector<Value> entries2 = { Value{2, "b"}, Value{3, "c"}, Value{4, "d"}, Value{5, "e"} };
     
-    std::set<Value> expected = { {1, "a"}, {2, "bb"}, {3, "cc"}, {4, "dd"}, {5, "e"} };
+    std::set<Value> expected = { Value{1, "a"}, Value{2, "bb"}, Value{3, "cc"}, Value{4, "dd"}, Value{5, "e"} };
     std::set<Value> results;
     
     std::copy(entries.begin(), entries.end(), pipes::set_aggregator(results, concatenateValues));
