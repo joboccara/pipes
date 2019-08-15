@@ -1,4 +1,4 @@
- <a href="https://www.patreon.com/bePatron?u=10076953" data-patreon-widget-type="become-patron-button">Become a Patron!</a><script async src="https://c6.patreon.com/becomePatronButton.bundle.js"></script>
+<a href="https://www.patreon.com/join/fluentcpp?"><img alt="become a patron" src="https://c5.patreon.com/external/logo/become_a_patron_button.png" height="35px"></a>
  
  <p align="center"><img src="https://github.com/joboccara/pipes/blob/readme/doc/pipeline.png"/></p>
 
@@ -6,14 +6,14 @@ Pipes are small components for writing expressive code when working on collectio
 
 This is a header-only library, implemented in C++14.
 
-- [A First Example](#a-first-example)
-- [A Second Example](#a-second-example)
-- [Doesn't it look like ranges?](#doesn-t-it-look-like-ranges-)
-- [End pipes](#end-pipes)
-- [Easy integration with STL algorithms](#easy-integration-with-stl-algorithms)
-- [List of available pipes](#list-of-available-pipes)
-* [General pipes](#general-pipes)
-* [End pipes](#end-pipes-1)
+# Contents
+
+* [A First Example](#a-first-example)
+* [A Second Example](#a-second-example)
+* [Doesn't it look like ranges?](#doesn-t-it-look-like-ranges-)
+* [End pipes](#end-pipes)
+* [Easy integration with STL algorithms](#easy-integration-with-stl-algorithms)
+* [List of available pipes](#list-of-available-pipes)
 
 # A First Example
 
@@ -24,9 +24,9 @@ auto const source = std::vector<int>{0, 1, 2, 3, 4, 5, 6, 7, 8, 9};
 auto destination = std::vector<int>{};
 
 source >>= pipes::funnel
->>= pipes::filter([](int i){ return i % 2 == 0; }
->>= pipes::transform([](int i){ return i * 2; })
->>= std::back_inserter(destination);
+       >>= pipes::filter([](int i){ return i % 2 == 0; }
+       >>= pipes::transform([](int i){ return i * 2; })
+       >>= std::back_inserter(destination);
 
 // destination contains {0, 4, 8, 12, 16};
 ```
@@ -42,12 +42,12 @@ Here is a more elaborate example with a pipeline that branches out in several di
 
 ```cpp
 A >>= pipes::funnel
->>= pipes::transform(f)
->>= pipes::filter(p)
->>= pipes::unzip(back_inserter(B),
-pipes::demux(back_inserter(C),
-pipes::filter(q) >>= back_inserter(D),
-pipes::filter(r) >>= back_inserter(E));
+  >>= pipes::transform(f)
+  >>= pipes::filter(p)
+  >>= pipes::unzip(back_inserter(B),
+                   pipes::demux(back_inserter(C),
+                                pipes::filter(q) >>= back_inserter(D),
+                                pipes::filter(r) >>= back_inserter(E));
 ```
 
 Here, `unzip` takes the `std::pair`s or `std::tuple`s it receives and breaks them down into individual elements. It sends each element to the pipes it takes (here `back_inserter` and `demux`).
@@ -71,10 +71,10 @@ It is possible to use ranges and pipes in the same expression though:
 
 ```cpp
 ranges::view::zip(dadChromosome, momChromosome)
->>= pipes::funnel
->>= pipes::transform(crossover)
->>= pipes::unzip(back_inserter(gameteChromosome1),
-back_inserter(gameteChromosome2));
+    >>= pipes::funnel
+    >>= pipes::transform(crossover)
+    >>= pipes::unzip(back_inserter(gameteChromosome1),
+                     back_inserter(gameteChromosome2));
 ```
 
 # End pipes
@@ -121,19 +121,19 @@ std::set_difference(begin(setA), end(setA),
 # List of available pipes
 
 * [General pipes](#general-pipes)
-+ [`demux`](#-demux-)
-+ [`dev_null`](#-dev-null-)
-+ [`filter`](#-filter-)
-+ [`partition`](#-partition-)
-+ [`switch`](#-switch-)
-+ [`tee`](#-tee-)
-+ [`transform`](#-transform-)
-+ [`unzip`](#-unzip-)
+ * [`demux`](#-demux-)
+ * [`dev_null`](#-dev-null-)
+ * [`filter`](#-filter-)
+ * [`partition`](#-partition-)
+ * [`switch`](#-switch-)
+ * [`tee`](#-tee-)
+ * [`transform`](#-transform-)
+ * [`unzip`](#-unzip-)
 * [End pipes](#end-pipes-1)
-+ [`custom`](#-custom-)
-+ [`map_aggregator`](#-map-aggregator-)
-+ [`set_aggregator`](#-set-aggregator-)
-+ [`sorted_inserter`](#-sorted-inserter-)
+ * [`custom`](#-custom-)
+ * [`map_aggregator`](#-map-aggregator-)
+ * [`set_aggregator`](#-set-aggregator-)
+ * [`sorted_inserter`](#-sorted-inserter-)
 
 ## General pipes
 
@@ -150,9 +150,9 @@ std::vector<int> results2;
 std::vector<int> results3;
 
 input >>= pipes::funnel
->>= pipes::demux(back_inserter(results1),
-back_inserter(results2),
-back_inserter(results3));
+      >>= pipes::demux(back_inserter(results1),
+                       back_inserter(results2),
+                       back_inserter(results3));
 
 // results1 contains {1, 2, 3, 4, 5}
 // results2 contains {1, 2, 3, 4, 5}
@@ -166,15 +166,15 @@ An example of such algorithm is [`set_segregate`](https://github.com/joboccara/s
 
 ```cpp
 std::set<int> setA = {1, 2, 3, 4, 5};
-std::set<int> setB =       {3, 4, 5, 6, 7};
+std::set<int> setB = {3, 4, 5, 6, 7};
 
 std::vector<int> inAOnly;
 std::vector<int> inBoth;
 
 sets::set_seggregate(setA, setB,
-back_inserter(inAOnly),
-back_inserter(inBoth),
-dev_null{});
+                     back_inserter(inAOnly),
+                     back_inserter(inBoth),
+                     dev_null{});
 
 // inAOnly contains {1, 2}
 // inBoth contains {3, 4, 5}
@@ -191,8 +191,8 @@ std::vector<int> input = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
 std::vector<int> results;
 
 input >>= pipes::funnel
->>= pipes::filter([](int i){ return i % 2 == 0; })
->>= back_inserter(results);
+      >>= pipes::filter([](int i){ return i % 2 == 0; })
+      >>= back_inserter(results);
 
 // results contains {2, 4, 6, 8, 10}
 ```
@@ -209,9 +209,9 @@ std::vector<int> evens;
 std::vector<int> odds;
 
 input >>= pipes::funnel
->>= pipes::partition([](int n){ return n % 2 == 0; },
-back_inserter(evens),
-back_inserter(odds));
+      >>= pipes::partition([](int n){ return n % 2 == 0; },
+                           back_inserter(evens),
+                           back_inserter(odds));
 
 // evens contains {2, 4, 6, 8, 10}
 // odds contains {1, 3, 5, 7, 9}
@@ -229,9 +229,9 @@ std::vector<int> multiplesOf3;
 std::vector<int> rest;
 
 numbers >>= pipes::funnel
->>= pipes::switch_(pipes::case_([](int n){ return n % 4 == 0; }) >>= back_inserter(multiplesOf4),
-pipes::case_([](int n){ return n % 3 == 0; }) >>= back_inserter(multiplesOf3),
-pipes::default_ >>= back_inserter(rest) ));
+        >>= pipes::switch_(pipes::case_([](int n){ return n % 4 == 0; }) >>= back_inserter(multiplesOf4),
+                           pipes::case_([](int n){ return n % 3 == 0; }) >>= back_inserter(multiplesOf3),
+                           pipes::default_ >>= back_inserter(rest) ));
 
 // multiplesOf4 contains {4, 8};
 // multiplesOf3 contains {3, 6, 9};
@@ -251,8 +251,8 @@ auto intermediaryResults = std::vector<int>{};
 auto results = std::vector<int>{};
 
 inputs >>= pipes::funnel
->>= pipes::tee(back_inserter(intermediaryResults))
->>= back_inserter(results);
+       >>= pipes::tee(back_inserter(intermediaryResults))
+       >>= back_inserter(results);
 
 // intermediaryResults contains {2, 4, 6, 8, 10, 12, 14, 16, 18, 20}
 // results contains {12, 14, 16, 18, 20}
@@ -269,8 +269,8 @@ std::vector<int> input = {1, 2, 3, 4, 5};
 std::vector<int> results;
 
 input >>= pipes::funnel
->>= pipes::transform([](int i) { return i*2; })
->>= back_inserter(results);
+      >>= pipes::transform([](int i) { return i*2; })
+      >>= back_inserter(results);
 
 // results contains {2, 4, 6, 8, 10}
 ```
@@ -287,8 +287,8 @@ std::vector<int> keys;
 std::vector<std::string> values;
 
 entries >>= pipes::funnel
->>= pipes::unzip(back_inserter(keys),
-back_inserter(values)));
+        >>= pipes::unzip(back_inserter(keys),
+                         back_inserter(values)));
 
 // keys contains {1, 2, 3, 4, 5};
 // values contains {"one", "two", "three", "four", "five"};
@@ -316,8 +316,8 @@ Note that `custom` goes along with a helper function object, `do_`, that allows 
 
 ```cpp
 std::copy(begin(input), end(input), pipes::custom(pipes::do_([&](int i){ results1.push_back(i*2);}).
-then_([&](int i){ results2.push_back(i+1);}).
-then_([&](int i){ results3.push_back(-i);})));
+                                                         then_([&](int i){ results2.push_back(i+1);}).
+                                                         then_([&](int i){ results3.push_back(-i);})));
 
 ```
 
