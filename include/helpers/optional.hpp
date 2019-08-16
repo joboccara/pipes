@@ -1,6 +1,8 @@
 #ifndef PIPES_OPTIONAL_HPP
 #define PIPES_OPTIONAL_HPP
 
+#include <type_traits>
+
 namespace pipes
 {
 namespace detail
@@ -40,7 +42,7 @@ namespace detail
     private:
         void reset() { if (m_initialized) (&**this)->~T(); m_initialized = false; }
     private:
-        char m_object[sizeof(T)];
+        std::aligned_storage_t<sizeof(T)> m_object[1];
         bool m_initialized;
     };
 
