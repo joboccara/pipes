@@ -2,8 +2,8 @@
 #define PIPES_SORTED_INSERTER_HPP
 
 #include <iterator>
-#include "optional.hpp"
 #include "output_iterator.hpp"
+#include "helpers/optional.hpp"
 #include "helpers/warnings.hpp"
 
 PIPES_DISABLE_WARNING_PUSH
