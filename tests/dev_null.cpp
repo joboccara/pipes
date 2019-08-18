@@ -12,5 +12,5 @@ TEST_CASE("dead_end_iterator")
 
 TEST_CASE("dead_end_iterator::operator=")
 {
-    pipes::dev_null{} = pipes::dev_null{}; // should copmile
+    pipes::dev_null() = pipes::dev_null(); // should compile
 }
