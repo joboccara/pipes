@@ -1,2 +1,3 @@
 *.xc*
 .DS_Store
+build/
