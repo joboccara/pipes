@@ -23,15 +23,14 @@ Here is a simple example of a pipeline made of two pipes: `transform` and `filte
 auto const source = std::vector<int>{0, 1, 2, 3, 4, 5, 6, 7, 8, 9};
 auto destination = std::vector<int>{};
 
-source >>= pipes::funnel
-       >>= pipes::filter([](int i){ return i % 2 == 0; }
+source >>= pipes::filter([](int i){ return i % 2 == 0; }
        >>= pipes::transform([](int i){ return i * 2; })
        >>= std::back_inserter(destination);
 
 // destination contains {0, 4, 8, 12, 16};
 ```
 ### What's going on here:
-* `funnel` traverses the `source` and sends each elements to the next pipe (here, `filter`).
+* Each elements of  `source` is sent to `filter`.
 * Every time `filter` receives a piece of data, it sends its to the next pipe (here, `transform`) only if that piece of data satisfies `filter`'s' predicate.
 * `transform` then applies its function on the data its gets and sends the result to the next pipe (here, `std::back_inserter`).
 * `std::back_inserter` is a standard component that `push_back`s the data it receives to its `vector` (here, `destination`).
@@ -41,8 +40,7 @@ source >>= pipes::funnel
 Here is a more elaborate example with a pipeline that branches out in several directions:
 
 ```cpp
-A >>= pipes::funnel
-  >>= pipes::transform(f)
+A >>= pipes::transform(f)
   >>= pipes::filter(p)
   >>= pipes::unzip(back_inserter(B),
                    pipes::demux(back_inserter(C),
@@ -71,7 +69,6 @@ It is possible to use ranges and pipes in the same expression though:
 
 ```cpp
 ranges::view::zip(dadChromosome, momChromosome)
-    >>= pipes::funnel
     >>= pipes::transform(crossover)
     >>= pipes::unzip(back_inserter(gameteChromosome1),
                      back_inserter(gameteChromosome2));
@@ -92,13 +89,11 @@ std::map<int, std::string> results;
 
 // results is empty
 
-entries >>= pipes::funnel
-        >>= pipes::map_aggregator(results, concatenateStrings);
+entries >>= pipes::map_aggregator(results, concatenateStrings);
 
 // the elements of entries have been inserted into results
 
-entries2 >>= pipes::funnel
-         >>= pipes::map_aggregator(results, concatenateStrings);
+entries2 >>= pipes::map_aggregator(results, concatenateStrings);
 
 // the new elements of entries2 have been inserter into results, the existing ones have been concatenated with the new values 
 // results contains { {1, "a"}, {2, "bb"}, {3, "cc"}, {4, "dd"}, {5, "e"} }
@@ -149,8 +144,7 @@ std::vector<int> results1;
 std::vector<int> results2;
 std::vector<int> results3;
 
-input >>= pipes::funnel
-      >>= pipes::demux(back_inserter(results1),
+input >>= pipes::demux(back_inserter(results1),
                        back_inserter(results2),
                        back_inserter(results3));
 
@@ -190,8 +184,7 @@ sets::set_seggregate(setA, setB,
 std::vector<int> input = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
 std::vector<int> results;
 
-input >>= pipes::funnel
-      >>= pipes::filter([](int i){ return i % 2 == 0; })
+input >>= pipes::filter([](int i){ return i % 2 == 0; })
       >>= back_inserter(results);
 
 // results contains {2, 4, 6, 8, 10}
@@ -208,8 +201,7 @@ std::vector<int> input = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
 std::vector<int> evens;
 std::vector<int> odds;
 
-input >>= pipes::funnel
-      >>= pipes::partition([](int n){ return n % 2 == 0; },
+input >>= pipes::partition([](int n){ return n % 2 == 0; },
                            back_inserter(evens),
                            back_inserter(odds));
 
@@ -228,8 +220,7 @@ std::vector<int> multiplesOf4;
 std::vector<int> multiplesOf3;
 std::vector<int> rest;
 
-numbers >>= pipes::funnel
-        >>= pipes::switch_(pipes::case_([](int n){ return n % 4 == 0; }) >>= back_inserter(multiplesOf4),
+numbers >>= pipes::switch_(pipes::case_([](int n){ return n % 4 == 0; }) >>= back_inserter(multiplesOf4),
                            pipes::case_([](int n){ return n % 3 == 0; }) >>= back_inserter(multiplesOf3),
                            pipes::default_ >>= back_inserter(rest) ));
 
@@ -250,8 +241,7 @@ auto const inputs = std::vector<int>{1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
 auto intermediaryResults = std::vector<int>{};
 auto results = std::vector<int>{};
 
-inputs >>= pipes::funnel
-       >>= pipes::tee(back_inserter(intermediaryResults))
+inputs >>= pipes::tee(back_inserter(intermediaryResults))
        >>= back_inserter(results);
 
 // intermediaryResults contains {2, 4, 6, 8, 10, 12, 14, 16, 18, 20}
@@ -268,8 +258,7 @@ inputs >>= pipes::funnel
 std::vector<int> input = {1, 2, 3, 4, 5};
 std::vector<int> results;
 
-input >>= pipes::funnel
-      >>= pipes::transform([](int i) { return i*2; })
+input >>= pipes::transform([](int i) { return i*2; })
       >>= back_inserter(results);
 
 // results contains {2, 4, 6, 8, 10}
@@ -286,8 +275,7 @@ std::map<int, std::string> entries = { {1, "one"}, {2, "two"}, {3, "three"}, {4,
 std::vector<int> keys;
 std::vector<std::string> values;
 
-entries >>= pipes::funnel
-        >>= pipes::unzip(back_inserter(keys),
+entries >>= pipes::unzip(back_inserter(keys),
                          back_inserter(values)));
 
 // keys contains {1, 2, 3, 4, 5};

@@ -4,7 +4,6 @@
 #include "partition.hpp"
 #include "unzip.hpp"
 #include "switch.hpp"
-#include "funnel.hpp"
 
 #include <algorithm>
 #include <utility>
@@ -104,8 +103,7 @@ TEST_CASE("Transform and filter")
     
     SECTION("chaining with >>=")
     {
-        input >>= pipes::funnel
-              >>= pipes::filter(isEven)
+        input >>= pipes::filter(isEven)
               >>= pipes::transform(times2)
               >>= pipes::transform(times2)
               >>= back_inserter(results);
@@ -121,7 +119,7 @@ TEST_CASE("Sequence of output iterators, no algorithms")
     auto const times2 = pipes::transform([](int n){ return n * 2; });
     std::vector<int> results;
     
-    numbers >>= pipes::funnel >>= times2(times2(back_inserter(results)));
+    numbers >>= times2(times2(back_inserter(results)));
     
     REQUIRE(results == expected);
 }
@@ -134,7 +132,7 @@ TEST_CASE("Sequence of output iterators, no algorithms, with pipes")
     auto const times2 = [](int n){ return n * 2; };
     std::vector<int> results;
     
-    numbers >>= pipes::funnel >>= pipes::transform(times2) >>= pipes::transform(times2) >>= back_inserter(results);
+    numbers >>= pipes::transform(times2) >>= pipes::transform(times2) >>= back_inserter(results);
     
     REQUIRE(results == expected);
 }
@@ -152,7 +150,7 @@ TEST_CASE("Sequence of input ranges and output iterators, with pipes")
     auto const times2 = [](int n){ return n * 2; };
     std::vector<int> results;
     
-    numbers | numbers | numbers >>= pipes::funnel >>= pipes::transform(times2) >>= pipes::transform(times2) >>= back_inserter(results);
+    numbers | numbers | numbers >>= pipes::transform(times2) >>= pipes::transform(times2) >>= back_inserter(results);
     
     REQUIRE(results == expected);
 }
