@@ -28,7 +28,8 @@ private:
     NextOutputPipe nextOutputPipe_;
 
 public: // but technical
-    using OutputIteratorBase<tee_pipe<TeeOutputPipe, NextOutputPipe>>::operator=;
+    using base = OutputIteratorBase<tee_pipe<TeeOutputPipe, NextOutputPipe>>;
+    using base::operator=;
     tee_pipe& operator=(tee_pipe const& other)
     {
         teeOutputPipe_ = other.teeOutputPipe_;

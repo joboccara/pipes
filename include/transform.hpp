@@ -34,7 +34,8 @@ private:
     TransformFunctionTuple transformFunctionTuple_;
 
 public: // but technical
-    using OutputIteratorBase<transform_pipe<TransformFunctionTuple, OutputPipes...>>::operator=;
+    using base = OutputIteratorBase<transform_pipe<TransformFunctionTuple, OutputPipes...>>;
+    using base::operator=;
     transform_pipe& operator=(transform_pipe const& other)
     {
         outputPipes_ = other.outputPipes_;

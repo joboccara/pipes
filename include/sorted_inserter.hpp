@@ -33,7 +33,8 @@ protected:
     detail::optional<typename Container::iterator> hint_;
     
 public: // but technical
-    using OutputIteratorBase<sorted_insert_iterator<Container>>::operator=;
+    using base = OutputIteratorBase<sorted_insert_iterator<Container>>;
+    using base::operator=;
     sorted_insert_iterator& operator=(sorted_insert_iterator const& other)
     {
         container_ = other.container_;

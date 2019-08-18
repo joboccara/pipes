@@ -38,7 +38,8 @@ private:
     detail::assignable<Predicate> predicate_;
 
 public: // but technical
-    using OutputIteratorBase<partition_pipe<OutputPipeTrue, OutputPipeFalse, Predicate>>::operator=;
+    using base = OutputIteratorBase<partition_pipe<OutputPipeTrue, OutputPipeFalse, Predicate>>;
+    using base::operator=;
     partition_pipe& operator=(partition_pipe const& other)
     {
         outputPipeTrue_ = other.outputPipeTrue_;

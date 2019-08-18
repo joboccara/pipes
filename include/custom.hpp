@@ -27,7 +27,8 @@ private:
     detail::assignable<InsertFunction> insertFunction_;
 
 public: // but technical
-    using OutputIteratorBase<custom_iterator<InsertFunction>>::operator=;
+    using base = OutputIteratorBase<custom_iterator<InsertFunction>>;
+    using base::operator=;
     custom_iterator& operator=(custom_iterator const& other)
     {
         insertFunction_ = other.insertFunction_;

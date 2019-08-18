@@ -39,7 +39,8 @@ private:
     detail::assignable<Function> aggregator_;
     
 public: // but technical
-    using OutputIteratorBase<map_aggregate_iterator<Map, Function>>::operator=;
+    using base = OutputIteratorBase<map_aggregate_iterator<Map, Function>>;
+    using base::operator=;
     map_aggregate_iterator& operator=(map_aggregate_iterator const& other)
     {
         map_ = other.map_;

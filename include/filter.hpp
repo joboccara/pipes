@@ -31,7 +31,8 @@ private:
     detail::assignable<Predicate> predicate_;
 
 public: // but technical
-    using OutputIteratorBase<filter_pipe<OutputPipe, Predicate>>::operator=;
+    using base = OutputIteratorBase<filter_pipe<OutputPipe, Predicate>>;
+    using base::operator=;
     filter_pipe& operator=(filter_pipe const& other)
     {
         outputPipe_ = other.outputPipe_;

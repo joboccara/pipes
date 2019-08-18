@@ -40,7 +40,8 @@ private:
     std::tuple<CaseBranches...> branches_;
     
 public: // but technical
-    using OutputIteratorBase<switch_pipe<CaseBranches...>>::operator=;
+    using base = OutputIteratorBase<switch_pipe<CaseBranches...>>;
+    using base::operator=;
     switch_pipe& operator=(switch_pipe const& other)
     {
         branches_ = other.branches_;

@@ -27,7 +27,8 @@ private:
     std::tuple<OutputPipes...> outputPipes_;
     
 public: // but technical
-    using OutputIteratorBase<demux_pipe<OutputPipes...>>::operator=;
+    using base = OutputIteratorBase<demux_pipe<OutputPipes...>>;
+    using base::operator=;
     demux_pipe& operator=(demux_pipe const& other)
     {
         outputPipes_ = other.outputPipes_;

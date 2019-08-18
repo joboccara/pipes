@@ -17,7 +17,8 @@ namespace pipes
         }
         
     public: // but technical
-        using OutputIteratorBase<dev_null>::operator=;
+        using base = OutputIteratorBase<dev_null>;
+        using base::operator=;
     };
     
 } // namespace fluent
