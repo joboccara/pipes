@@ -101,9 +101,16 @@ TEST_CASE("Transform and filter")
     auto const times2 = [](int n){ return n * 2; };
 
     std::vector<int> results;
-    std::copy(begin(input), end(input), pipes::filter(isEven)(pipes::transform(times2)(pipes::transform(times2)(back_inserter(results)))));
-
-    REQUIRE(results == expected);
+    
+    SECTION("chaining with >>=")
+    {
+        input >>= pipes::funnel
+              >>= pipes::filter(isEven)
+              >>= pipes::transform(times2)
+              >>= pipes::transform(times2)
+              >>= back_inserter(results);
+        REQUIRE(results == expected);
+    }
 }
 
 TEST_CASE("Sequence of output iterators, no algorithms")
