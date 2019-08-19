@@ -1,6 +1,8 @@
 #ifndef DETECT_HPP
 #define DETECT_HPP
 
+#include <type_traits>
+
 namespace pipes
 {
 namespace detail
