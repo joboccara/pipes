@@ -3,9 +3,9 @@
 
 #include <functional>
 #include <iterator>
-#include "output_iterator.hpp"
-#include "helpers/assignable.hpp"
-#include "helpers/warnings.hpp"
+#include "pipes/output_iterator.hpp"
+#include "pipes/helpers/assignable.hpp"
+#include "pipes/helpers/warnings.hpp"
 
 PIPES_DISABLE_WARNING_PUSH
 PIPES_DISABLE_WARNING_MULTIPLE_ASSIGNMENT_OPERATORS_SPECIFIED
@@ -41,7 +41,8 @@ private:
     detail::assignable<Function> aggregator_;
 
 public: // but technical
-    using OutputIteratorBase<set_aggregate_iterator<Set, Function>>::operator=;
+    using base = OutputIteratorBase<set_aggregate_iterator<Set, Function>>;
+    using base::operator=;
     set_aggregate_iterator& operator=(set_aggregate_iterator const& other)
     {
         set_ = other.set_;

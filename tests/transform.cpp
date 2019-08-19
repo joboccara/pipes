@@ -1,6 +1,6 @@
 #include "catch.hpp"
-#include "helpers/FWD.hpp"
-#include "transform.hpp"
+#include "pipes/helpers/FWD.hpp"
+#include "pipes/transform.hpp"
 
 #include <algorithm>
 #include <vector>
@@ -19,9 +19,15 @@ TEST_CASE("transform")
         REQUIRE(results == expected);
     }
     
-    SECTION("operator>>=")
+    SECTION("STL algorithm operator>>=")
     {
         std::copy(begin(input), end(input), pipes::transform([](int i) { return i*2; }) >>= std::back_inserter(results));
+        REQUIRE(results == expected);
+    }
+    
+    SECTION("operator>>=")
+    {
+        input >>= pipes::transform([](int i) { return i*2; }) >>= back_inserter(results);
         REQUIRE(results == expected);
     }
 }

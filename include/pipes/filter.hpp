@@ -1,10 +1,10 @@
 #ifndef PIPES_FILTER_HPP
 #define PIPES_FILTER_HPP
 
-#include "helpers/assignable.hpp"
-#include "helpers/meta.hpp"
-#include "helpers/warnings.hpp"
-#include "output_iterator.hpp"
+#include "pipes/helpers/assignable.hpp"
+#include "pipes/helpers/meta.hpp"
+#include "pipes/helpers/warnings.hpp"
+#include "pipes/output_iterator.hpp"
 
 PIPES_DISABLE_WARNING_PUSH
 PIPES_DISABLE_WARNING_MULTIPLE_ASSIGNMENT_OPERATORS_SPECIFIED
@@ -31,7 +31,8 @@ private:
     detail::assignable<Predicate> predicate_;
 
 public: // but technical
-    using OutputIteratorBase<filter_pipe<OutputPipe, Predicate>>::operator=;
+    using base = OutputIteratorBase<filter_pipe<OutputPipe, Predicate>>;
+    using base::operator=;
     filter_pipe& operator=(filter_pipe const& other)
     {
         outputPipe_ = other.outputPipe_;

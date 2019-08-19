@@ -2,9 +2,9 @@
 #define PIPES_SORTED_INSERTER_HPP
 
 #include <iterator>
-#include "optional.hpp"
-#include "output_iterator.hpp"
-#include "helpers/warnings.hpp"
+#include "pipes/output_iterator.hpp"
+#include "pipes/helpers/optional.hpp"
+#include "pipes/helpers/warnings.hpp"
 
 PIPES_DISABLE_WARNING_PUSH
 PIPES_DISABLE_WARNING_MULTIPLE_ASSIGNMENT_OPERATORS_SPECIFIED
@@ -33,7 +33,8 @@ protected:
     detail::optional<typename Container::iterator> hint_;
     
 public: // but technical
-    using OutputIteratorBase<sorted_insert_iterator<Container>>::operator=;
+    using base = OutputIteratorBase<sorted_insert_iterator<Container>>;
+    using base::operator=;
     sorted_insert_iterator& operator=(sorted_insert_iterator const& other)
     {
         container_ = other.container_;

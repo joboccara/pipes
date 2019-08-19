@@ -1,7 +1,7 @@
 #include "catch.hpp"
-#include "demux.hpp"
-#include "filter.hpp"
-#include "transform.hpp"
+#include "pipes/demux.hpp"
+#include "pipes/filter.hpp"
+#include "pipes/transform.hpp"
 
 #include <algorithm>
 #include <utility>

@@ -3,9 +3,9 @@
 
 #include <functional>
 #include <iterator>
-#include "output_iterator.hpp"
-#include "helpers/assignable.hpp"
-#include "helpers/warnings.hpp"
+#include "pipes/output_iterator.hpp"
+#include "pipes/helpers/assignable.hpp"
+#include "pipes/helpers/warnings.hpp"
 
 PIPES_DISABLE_WARNING_PUSH
 PIPES_DISABLE_WARNING_MULTIPLE_ASSIGNMENT_OPERATORS_SPECIFIED
@@ -39,7 +39,8 @@ private:
     detail::assignable<Function> aggregator_;
     
 public: // but technical
-    using OutputIteratorBase<map_aggregate_iterator<Map, Function>>::operator=;
+    using base = OutputIteratorBase<map_aggregate_iterator<Map, Function>>;
+    using base::operator=;
     map_aggregate_iterator& operator=(map_aggregate_iterator const& other)
     {
         map_ = other.map_;

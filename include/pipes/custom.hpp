@@ -1,9 +1,9 @@
 #ifndef PIPES_CUSTOM_INSERTER_HPP
 #define PIPES_CUSTOM_INSERTER_HPP
 
-#include "output_iterator.hpp"
-#include "helpers/assignable.hpp"
-#include "helpers/warnings.hpp"
+#include "pipes/output_iterator.hpp"
+#include "pipes/helpers/assignable.hpp"
+#include "pipes/helpers/warnings.hpp"
 
 PIPES_DISABLE_WARNING_PUSH
 PIPES_DISABLE_WARNING_MULTIPLE_ASSIGNMENT_OPERATORS_SPECIFIED
@@ -27,7 +27,8 @@ private:
     detail::assignable<InsertFunction> insertFunction_;
 
 public: // but technical
-    using OutputIteratorBase<custom_iterator<InsertFunction>>::operator=;
+    using base = OutputIteratorBase<custom_iterator<InsertFunction>>;
+    using base::operator=;
     custom_iterator& operator=(custom_iterator const& other)
     {
         insertFunction_ = other.insertFunction_;

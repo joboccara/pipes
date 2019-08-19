@@ -1,9 +1,9 @@
 #ifndef PIPES_DEMUX_HPP
 #define PIPES_DEMUX_HPP
 
-#include "helpers/meta.hpp"
-#include "helpers/warnings.hpp"
-#include "output_iterator.hpp"
+#include "pipes/helpers/meta.hpp"
+#include "pipes/helpers/warnings.hpp"
+#include "pipes/output_iterator.hpp"
 
 PIPES_DISABLE_WARNING_PUSH
 PIPES_DISABLE_WARNING_MULTIPLE_ASSIGNMENT_OPERATORS_SPECIFIED
@@ -27,7 +27,8 @@ private:
     std::tuple<OutputPipes...> outputPipes_;
     
 public: // but technical
-    using OutputIteratorBase<demux_pipe<OutputPipes...>>::operator=;
+    using base = OutputIteratorBase<demux_pipe<OutputPipes...>>;
+    using base::operator=;
     demux_pipe& operator=(demux_pipe const& other)
     {
         outputPipes_ = other.outputPipes_;

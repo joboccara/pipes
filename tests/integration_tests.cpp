@@ -1,10 +1,9 @@
 #include "catch.hpp"
-#include "transform.hpp"
-#include "filter.hpp"
-#include "partition.hpp"
-#include "unzip.hpp"
-#include "switch.hpp"
-#include "funnel.hpp"
+#include "pipes/transform.hpp"
+#include "pipes/filter.hpp"
+#include "pipes/partition.hpp"
+#include "pipes/unzip.hpp"
+#include "pipes/switch.hpp"
 
 #include <algorithm>
 #include <utility>
@@ -101,9 +100,15 @@ TEST_CASE("Transform and filter")
     auto const times2 = [](int n){ return n * 2; };
 
     std::vector<int> results;
-    std::copy(begin(input), end(input), pipes::filter(isEven)(pipes::transform(times2)(pipes::transform(times2)(back_inserter(results)))));
-
-    REQUIRE(results == expected);
+    
+    SECTION("chaining with >>=")
+    {
+        input >>= pipes::filter(isEven)
+              >>= pipes::transform(times2)
+              >>= pipes::transform(times2)
+              >>= back_inserter(results);
+        REQUIRE(results == expected);
+    }
 }
 
 TEST_CASE("Sequence of output iterators, no algorithms")
@@ -114,7 +119,7 @@ TEST_CASE("Sequence of output iterators, no algorithms")
     auto const times2 = pipes::transform([](int n){ return n * 2; });
     std::vector<int> results;
     
-    numbers >>= pipes::funnel >>= times2(times2(back_inserter(results)));
+    numbers >>= times2(times2(back_inserter(results)));
     
     REQUIRE(results == expected);
 }
@@ -127,7 +132,7 @@ TEST_CASE("Sequence of output iterators, no algorithms, with pipes")
     auto const times2 = [](int n){ return n * 2; };
     std::vector<int> results;
     
-    numbers >>= pipes::funnel >>= pipes::transform(times2) >>= pipes::transform(times2) >>= back_inserter(results);
+    numbers >>= pipes::transform(times2) >>= pipes::transform(times2) >>= back_inserter(results);
     
     REQUIRE(results == expected);
 }
@@ -145,7 +150,7 @@ TEST_CASE("Sequence of input ranges and output iterators, with pipes")
     auto const times2 = [](int n){ return n * 2; };
     std::vector<int> results;
     
-    numbers | numbers | numbers >>= pipes::funnel >>= pipes::transform(times2) >>= pipes::transform(times2) >>= back_inserter(results);
+    numbers | numbers | numbers >>= pipes::transform(times2) >>= pipes::transform(times2) >>= back_inserter(results);
     
     REQUIRE(results == expected);
 }

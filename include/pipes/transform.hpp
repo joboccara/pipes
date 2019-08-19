@@ -1,12 +1,12 @@
 #ifndef PIPES_TRANSFORM_HPP
 #define PIPES_TRANSFORM_HPP
 
-#include "helpers/assignable.hpp"
-#include "helpers/FWD.hpp"
-#include "helpers/meta.hpp"
-#include "helpers/warnings.hpp"
+#include "pipes/helpers/assignable.hpp"
+#include "pipes/helpers/FWD.hpp"
+#include "pipes/helpers/meta.hpp"
+#include "pipes/helpers/warnings.hpp"
 
-#include "output_iterator.hpp"
+#include "pipes/output_iterator.hpp"
 
 PIPES_DISABLE_WARNING_PUSH
 PIPES_DISABLE_WARNING_MULTIPLE_ASSIGNMENT_OPERATORS_SPECIFIED
@@ -34,7 +34,8 @@ private:
     TransformFunctionTuple transformFunctionTuple_;
 
 public: // but technical
-    using OutputIteratorBase<transform_pipe<TransformFunctionTuple, OutputPipes...>>::operator=;
+    using base = OutputIteratorBase<transform_pipe<TransformFunctionTuple, OutputPipes...>>;
+    using base::operator=;
     transform_pipe& operator=(transform_pipe const& other)
     {
         outputPipes_ = other.outputPipes_;

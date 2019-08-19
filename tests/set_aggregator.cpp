@@ -3,7 +3,7 @@
 #include <vector>
 
 #include "catch.hpp"
-#include "set_aggregator.hpp"
+#include "pipes/set_aggregator.hpp"
 
 struct Value
 {

@@ -3,8 +3,7 @@
 #include <vector>
 
 #include "catch.hpp"
-#include "funnel.hpp"
-#include "map_aggregator.hpp"
+#include "pipes/map_aggregator.hpp"
 
 std::string concatenateStrings(std::string const& s1, std::string const& s2)
 {
@@ -33,11 +32,9 @@ TEST_CASE("map_aggregator with operator>>=")
     std::map<int, std::string> expected = { {1, "a"}, {2, "bb"}, {3, "cc"}, {4, "dd"}, {5, "e"} };
     std::map<int, std::string> results;
     
-    entries >>= pipes::funnel
-            >>= pipes::map_aggregator(results, concatenateStrings);
+    entries >>= pipes::map_aggregator(results, concatenateStrings);
     
-    entries2 >>= pipes::funnel
-             >>= pipes::map_aggregator(results, concatenateStrings);
+    entries2 >>= pipes::map_aggregator(results, concatenateStrings);
     
     REQUIRE((results == expected));
 }

@@ -1,6 +1,5 @@
 #include "catch.hpp"
-#include "funnel.hpp"
-#include "partition.hpp"
+#include "pipes/partition.hpp"
 
 TEST_CASE("partition")
 {
@@ -57,8 +56,7 @@ TEST_CASE("partition operator>>=")
     std::vector<int> evens;
     std::vector<int> odds;
     
-    input >>= pipes::funnel
-          >>= pipes::partition([](int n){ return n % 2 == 0; },
+    input >>= pipes::partition([](int n){ return n % 2 == 0; },
                                back_inserter(evens),
                                back_inserter(odds));
     
