@@ -23,7 +23,7 @@ Here is a simple example of a pipeline made of two pipes: `transform` and `filte
 auto const source = std::vector<int>{0, 1, 2, 3, 4, 5, 6, 7, 8, 9};
 auto destination = std::vector<int>{};
 
-source >>= pipes::filter([](int i){ return i % 2 == 0; }
+source >>= pipes::filter([](int i){ return i % 2 == 0; })
        >>= pipes::transform([](int i){ return i * 2; })
        >>= std::back_inserter(destination);
 
@@ -233,7 +233,7 @@ numbers >>= pipes::switch_(pipes::case_([](int n){ return n % 4 == 0; }) >>= bac
 
 <p align="center"><img src="https://github.com/joboccara/pipes/blob/readme/docs/tee_pipe.png"/></p>
 
-`tee` is a pipe that takes one other pipe, and sends a copy of the values it receives to of this pipes before sending in on to the next pipe.
+`tee` is a pipe that takes one other pipe, and sends a copy of the values it receives to each of these pipes before sending them on to the next pipe.
 Like the `tee` command on UNIX, this pipe is useful to take a peek at intermediary results.
 
 ```cpp
@@ -372,7 +372,7 @@ int main()
 
 ### `sorted_inserter`
 
-In the majority of cases where it is used in algoritms, `std::inserter` forces its user to provide a position. It makes sense for un-sorted containers such as `std::vector`, but for sorted containers such as `std::set` we end up choosing begin or end by defult, which doesn't make sense:
+In the majority of cases where it is used in algoritms, `std::inserter` forces its user to provide a position. It makes sense for un-sorted containers such as `std::vector`, but for sorted containers such as `std::set` we end up choosing begin or end by default, which doesn't make sense:
 
 ```cpp
 std::vector<int> v = {1, 3, -4, 2, 7, 10, 8};
