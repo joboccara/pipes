@@ -55,12 +55,15 @@ template<typename OutputIterator>
 using IsAnOutputIterator = std::enable_if_t<std::is_same<typename OutputIterator::iterator_category, std::output_iterator_tag>::value, bool>;
 } // namespace detail
     
-template<typename Range, typename OutputIterator, detail::IsARange<Range> = true, detail::IsAnOutputIterator<OutputIterator> = true>
+template<typename Range, typename OutputIterator,
+detail::IsARange<std::remove_reference_t<Range>> = true,
+detail::IsAnOutputIterator<std::remove_reference_t<OutputIterator>> = true>
 void operator>>=(Range&& range, OutputIterator&& outputIterator)
 {
     std::copy(begin(range), end(range), outputIterator);
 }
-    
+
+
 } // namespace pipes
 
 #endif /* PIPES_OUTPUT_ITERATOR_HPP */
