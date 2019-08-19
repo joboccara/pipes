@@ -10,8 +10,10 @@
 #include "pipes/set_aggregator.hpp"
 #include "pipes/sorted_inserter.hpp"
 #include "pipes/partition.hpp"
+#include "pipes/read_in_stream.hpp"
 #include "pipes/switch.hpp"
 #include "pipes/tee.hpp"
+#include "pipes/to_out_stream.hpp"
 #include "pipes/transform.hpp"
 #include "pipes/unzip.hpp"
 
