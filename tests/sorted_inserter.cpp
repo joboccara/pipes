@@ -3,7 +3,7 @@
 #include <vector>
 #include "catch.hpp"
 
-#include "sorted_inserter.hpp"
+#include "pipes/sorted_inserter.hpp"
 
 TEST_CASE("sorted_inserter")
 {

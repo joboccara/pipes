@@ -1,9 +1,9 @@
 #ifndef PIPES_OUTPUT_ITERATOR_HPP
 #define PIPES_OUTPUT_ITERATOR_HPP
 
-#include "helpers/crtp.hpp"
-#include "helpers/detect.hpp"
-#include "helpers/FWD.hpp"
+#include "pipes/helpers/crtp.hpp"
+#include "pipes/helpers/detect.hpp"
+#include "pipes/helpers/FWD.hpp"
 
 #include <algorithm>
 #include <type_traits>

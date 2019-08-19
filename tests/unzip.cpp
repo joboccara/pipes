@@ -1,6 +1,6 @@
 #include "catch.hpp"
-#include "unzip.hpp"
-#include "transform.hpp"
+#include "pipes/unzip.hpp"
+#include "pipes/transform.hpp"
 
 #include <algorithm>
 #include <map>

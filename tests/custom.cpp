@@ -1,5 +1,5 @@
 #include "catch.hpp"
-#include "custom.hpp"
+#include "pipes/custom.hpp"
 
 #include <algorithm>
 #include <vector>

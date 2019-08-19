@@ -3,7 +3,7 @@
 #include <vector>
 
 #include "catch.hpp"
-#include "map_aggregator.hpp"
+#include "pipes/map_aggregator.hpp"
 
 std::string concatenateStrings(std::string const& s1, std::string const& s2)
 {

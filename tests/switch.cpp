@@ -1,5 +1,5 @@
 #include "catch.hpp"
-#include "switch.hpp"
+#include "pipes/switch.hpp"
 
 #include <algorithm>
 #include <utility>

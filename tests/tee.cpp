@@ -1,7 +1,7 @@
 #include "catch.hpp"
-#include "filter.hpp"
-#include "tee.hpp"
-#include "transform.hpp"
+#include "pipes/filter.hpp"
+#include "pipes/tee.hpp"
+#include "pipes/transform.hpp"
 
 TEST_CASE("tee outuputs to the next pipe as well as the one it takes in argument")
 {

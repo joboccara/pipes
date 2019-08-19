@@ -1,9 +1,9 @@
 #include "catch.hpp"
-#include "transform.hpp"
-#include "filter.hpp"
-#include "partition.hpp"
-#include "unzip.hpp"
-#include "switch.hpp"
+#include "pipes/transform.hpp"
+#include "pipes/filter.hpp"
+#include "pipes/partition.hpp"
+#include "pipes/unzip.hpp"
+#include "pipes/switch.hpp"
 
 #include <algorithm>
 #include <utility>

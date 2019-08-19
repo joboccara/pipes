@@ -13,6 +13,7 @@ add_executable(${PROJECT_NAME}
     demux.cpp
     filter.cpp
     partition.cpp
+    streams.cpp
     switch.cpp
     tee.cpp
     transform.cpp

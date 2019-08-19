@@ -1,7 +1,7 @@
 #include <algorithm>
 
 #include "catch.hpp"
-#include "filter.hpp"
+#include "pipes/filter.hpp"
 
 TEST_CASE("filter")
 {

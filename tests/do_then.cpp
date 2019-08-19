@@ -2,8 +2,8 @@
 #include <vector>
 #include "catch.hpp"
 
-#include "custom.hpp"
-#include "do_then.hpp"
+#include "pipes/custom.hpp"
+#include "pipes/do_then.hpp"
 
 TEST_CASE("several operations in custom_inserter")
 {

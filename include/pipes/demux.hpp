@@ -1,9 +1,9 @@
 #ifndef PIPES_DEMUX_HPP
 #define PIPES_DEMUX_HPP
 
-#include "helpers/meta.hpp"
-#include "helpers/warnings.hpp"
-#include "output_iterator.hpp"
+#include "pipes/helpers/meta.hpp"
+#include "pipes/helpers/warnings.hpp"
+#include "pipes/output_iterator.hpp"
 
 PIPES_DISABLE_WARNING_PUSH
 PIPES_DISABLE_WARNING_MULTIPLE_ASSIGNMENT_OPERATORS_SPECIFIED

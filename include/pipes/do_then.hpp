@@ -4,7 +4,7 @@
 #include <functional>
 #include <vector>
 
-#include <helpers/FWD.hpp>
+#include "pipes/helpers/FWD.hpp"
 
 namespace pipes
 {

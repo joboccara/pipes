@@ -1,9 +1,9 @@
 #ifndef PIPES_UNZIP_HPP
 #define PIPES_UNZIP_HPP
 
-#include "helpers/FWD.hpp"
-#include "helpers/meta.hpp"
-#include "transform.hpp"
+#include "pipes/helpers/FWD.hpp"
+#include "pipes/helpers/meta.hpp"
+#include "pipes/transform.hpp"
 
 #include <tuple>
 #include <utility>

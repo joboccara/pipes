@@ -2,7 +2,7 @@
 #define PIPES_DEAD_END_ITERATOR_HPP
 
 #include <iterator>
-#include "output_iterator.hpp"
+#include "pipes/output_iterator.hpp"
 
 namespace pipes
 {

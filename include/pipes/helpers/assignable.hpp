@@ -1,7 +1,7 @@
 #ifndef PIPES_ASSIGNABLE_HPP
 #define PIPES_ASSIGNABLE_HPP
 
-#include "helpers/optional.hpp"
+#include "pipes/helpers/optional.hpp"
 #include <functional>
 
 namespace pipes

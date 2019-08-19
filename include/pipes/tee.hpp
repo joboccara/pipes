@@ -1,8 +1,8 @@
 #ifndef PIPES_TEE_HPP
 #define PIPES_TEE_HPP
 
-#include "output_iterator.hpp"
-#include "helpers/warnings.hpp"
+#include "pipes/output_iterator.hpp"
+#include "pipes/helpers/warnings.hpp"
 
 PIPES_DISABLE_WARNING_PUSH
 PIPES_DISABLE_WARNING_MULTIPLE_ASSIGNMENT_OPERATORS_SPECIFIED

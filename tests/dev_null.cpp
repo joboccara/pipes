@@ -1,5 +1,5 @@
 #include "catch.hpp"
-#include "dev_null.hpp"
+#include "pipes/dev_null.hpp"
 
 #include <vector>
 

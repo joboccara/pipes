@@ -1,11 +1,11 @@
 #ifndef PIPES_PARTITION_HPP
 #define PIPES_PARTITION_HPP
 
-#include "helpers/assignable.hpp"
-#include "helpers/FWD.hpp"
-#include "helpers/meta.hpp"
-#include "helpers/warnings.hpp"
-#include "output_iterator.hpp"
+#include "pipes/helpers/assignable.hpp"
+#include "pipes/helpers/FWD.hpp"
+#include "pipes/helpers/meta.hpp"
+#include "pipes/helpers/warnings.hpp"
+#include "pipes/output_iterator.hpp"
 
 PIPES_DISABLE_WARNING_PUSH
 PIPES_DISABLE_WARNING_MULTIPLE_ASSIGNMENT_OPERATORS_SPECIFIED

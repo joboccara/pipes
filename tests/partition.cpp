@@ -1,5 +1,5 @@
 #include "catch.hpp"
-#include "partition.hpp"
+#include "pipes/partition.hpp"
 
 TEST_CASE("partition")
 {
