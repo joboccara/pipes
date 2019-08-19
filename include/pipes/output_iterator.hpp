@@ -6,6 +6,8 @@
 #include "pipes/helpers/FWD.hpp"
 
 #include <algorithm>
+#include <iostream>
+#include <string>
 #include <type_traits>
 
 namespace pipes
@@ -53,6 +55,9 @@ using IsARange = std::enable_if_t<range_expression_detected<Range>, bool>;
     
 template<typename OutputIterator>
 using IsAnOutputIterator = std::enable_if_t<std::is_same<typename OutputIterator::iterator_category, std::output_iterator_tag>::value, bool>;
+
+template<typename InStream>
+using IsAnInStream = std::enable_if_t<std::is_base_of<std::istream, InStream>::value, bool>;
 } // namespace detail
     
 template<typename Range, typename OutputIterator, detail::IsARange<Range> = true, detail::IsAnOutputIterator<OutputIterator> = true>
@@ -60,7 +65,15 @@ void operator>>=(Range&& range, OutputIterator&& outputIterator)
 {
     std::copy(begin(range), end(range), outputIterator);
 }
-    
+
+template<typename InStream, typename OutputIterator, detail::IsAnInStream<InStream> = true, detail::IsAnOutputIterator<OutputIterator> = true>
+void operator>>=(InStream&& inStream, OutputIterator&& outputIterator)
+{
+    for (auto value = std::istream_iterator<std::string>{inStream}; value != std::istream_iterator<std::string>{}; ++value)
+    {
+        pipes::send(outputIterator, *value);
+    }
+}
 } // namespace pipes
 
 #endif /* PIPES_OUTPUT_ITERATOR_HPP */
