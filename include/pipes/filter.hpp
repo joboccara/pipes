@@ -11,8 +11,8 @@ PIPES_DISABLE_WARNING_MULTIPLE_ASSIGNMENT_OPERATORS_SPECIFIED
 
 namespace pipes
 {
-template<typename OutputPipe, typename Predicate>
-    class filter_pipe : public OutputIteratorBase<filter_pipe<OutputPipe, Predicate>>
+template<typename Predicate, typename NextPipe>
+class filter_pipe : public OutputIteratorBase<filter_pipe<Predicate, NextPipe>>
 {
 public:    
     template<typename T>
@@ -20,53 +20,41 @@ public:
     {
         if (predicate_(value))
         {
-            send(outputPipe_, value);
+            send(nextPipe_, value);
         }
     }
 
-    explicit filter_pipe(OutputPipe outputPipe, Predicate predicate) : outputPipe_(outputPipe), predicate_(predicate) {}
+    explicit filter_pipe(Predicate predicate, NextPipe nextPipe) : predicate_(predicate), nextPipe_(nextPipe) {}
     
 private:
-    OutputPipe outputPipe_;
     detail::assignable<Predicate> predicate_;
+    NextPipe nextPipe_;
 
 public: // but technical
-    using base = OutputIteratorBase<filter_pipe<OutputPipe, Predicate>>;
+    using base = OutputIteratorBase<filter_pipe<Predicate, NextPipe>>;
     using base::operator=;
     filter_pipe& operator=(filter_pipe const& other)
     {
-        outputPipe_ = other.outputPipe_;
         predicate_ = other.predicate_;
+        nextPipe_ = other.nextPipe_;
         return *this;
     }
     filter_pipe& operator=(filter_pipe& other) { *this = const_cast<filter_pipe const&>(other); return *this; }
 };
 
 template<typename Predicate>
-class filter_pipe_maker
-{
-public:
-    explicit filter_pipe_maker(Predicate predicate) : predicate_(predicate) {}
-    template<typename OutputPipe>
-    filter_pipe<OutputPipe, Predicate> operator()(OutputPipe outputPipe) const
-    {
-        return filter_pipe<OutputPipe, Predicate>(outputPipe, predicate_);
-    }
-    
-private:
-    Predicate predicate_;
-};
-
-template<typename FilterFunction, typename OutputPipe>
-filter_pipe<OutputPipe, FilterFunction> operator>>=(filter_pipe_maker<FilterFunction> const& outputFilter, OutputPipe outputPipe)
-{
-    return outputFilter(outputPipe);
-}
+struct FilterPredicateWrapper{ Predicate const& predicate; };
 
 template<typename Predicate>
-filter_pipe_maker<Predicate> filter(Predicate predicate)
+FilterPredicateWrapper<Predicate> filter(Predicate const& predicate)
 {
-    return filter_pipe_maker<Predicate>(predicate);
+    return FilterPredicateWrapper<Predicate>{predicate};
+}
+
+template<typename Predicate, typename NextPipe>
+filter_pipe<Predicate, NextPipe> operator>>= (FilterPredicateWrapper<Predicate> const& filterPredicateWrapper, NextPipe const& nextPipe)
+{
+    return filter_pipe<Predicate, NextPipe>{filterPredicateWrapper.predicate, nextPipe};
 }
 
 } // namespace pipes

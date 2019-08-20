@@ -11,7 +11,7 @@ TEST_CASE("filter")
     std::vector<int> expected = {2, 4, 6, 8, 10};
     
     std::vector<int> results;
-    std::copy(begin(input), end(input), ifIsEven(std::back_inserter(results)));
+    std::copy(begin(input), end(input), ifIsEven >>= std::back_inserter(results));
     
     REQUIRE(results == expected);
 }
@@ -24,7 +24,7 @@ TEST_CASE("filter can override existing results")
     std::vector<int> expected = {2, 4, 6, 8, 10, 0, 0, 0, 0, 0};
     
     std::vector<int> results = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
-    std::copy(begin(input), end(input), ifIsEven(begin(results)));
+    std::copy(begin(input), end(input), ifIsEven>>= begin(results));
     
     REQUIRE(results == expected);
 }
@@ -33,7 +33,7 @@ TEST_CASE("filter's iterator category should be std::output_iterator_tag")
 {
     auto const isEven = pipes::filter([](int i) { return i % 2 == 0; });
     std::vector<int> output;
-    static_assert(std::is_same<decltype(isEven(std::back_inserter(output)))::iterator_category,
+    static_assert(std::is_same<decltype(isEven >>= std::back_inserter(output))::iterator_category,
                   std::output_iterator_tag>::value,
                   "iterator category should be std::output_iterator_tag");
 }
