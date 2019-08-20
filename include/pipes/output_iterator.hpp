@@ -6,6 +6,8 @@
 #include "pipes/helpers/FWD.hpp"
 
 #include <algorithm>
+#include <iostream>
+#include <string>
 #include <type_traits>
 
 namespace pipes
@@ -41,12 +43,17 @@ struct OutputIteratorBase : detail::crtp<Derived, OutputIteratorBase>
 
 namespace detail
 {
-template<typename T>
-using begin_expression = decltype(std::begin(std::declval<T>()));
-template<typename T>
-using end_expression = decltype(std::end(std::declval<T>()));
+namespace adl
+{
+    using std::begin;
+    using std::end;
+    template<typename T>
+    using begin_expression = decltype(begin(std::declval<T>()));
+    template<typename T>
+    using end_expression = decltype(end(std::declval<T>()));
+}
 template<typename Range>
-constexpr bool range_expression_detected = detail::is_detected<begin_expression, Range> && detail::is_detected<end_expression, Range>;
+    constexpr bool range_expression_detected = detail::is_detected<adl::begin_expression, Range> && detail::is_detected<adl::end_expression, Range>;
     
 template<typename Range>
 using IsARange = std::enable_if_t<range_expression_detected<Range>, bool>;
@@ -62,8 +69,6 @@ void operator>>=(Range&& range, OutputIterator&& outputIterator)
 {
     std::copy(begin(range), end(range), outputIterator);
 }
-
-
 } // namespace pipes
 
 #endif /* PIPES_OUTPUT_ITERATOR_HPP */

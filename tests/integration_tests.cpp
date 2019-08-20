@@ -154,3 +154,22 @@ TEST_CASE("Sequence of input ranges and output iterators, with pipes")
     
     REQUIRE(results == expected);
 }
+
+struct MyCollection
+{
+    std::vector<int> data_;
+};
+
+auto begin(MyCollection const& myCollection) { return begin(myCollection.data_); }
+auto end(MyCollection const& myCollection) { return end(myCollection.data_); }
+
+TEST_CASE("Reading from a collection with ADL begin and end")
+{
+    auto input = MyCollection{std::vector<int>{1, 2, 3, 4, 5}};
+    auto const expected = std::vector<int>{2, 4, 6, 8, 10};
+    auto results = std::vector<int>{};
+
+    input >>= pipes::transform([](int i){ return i *2; }) >>= back_inserter(results);
+    
+    REQUIRE(results == expected);
+}

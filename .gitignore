@@ -1,3 +1,4 @@
 *.xc*
 .DS_Store
 build/
+install/

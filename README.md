@@ -6,6 +6,8 @@ Pipes are small components for writing expressive code when working on collectio
 
 This is a header-only library, implemented in C++14.
 
+The library is under development and subject to change. Contributions are welcome. You can also [log an issue](https://github.com/joboccara/pipes/issues) if you have a wish for enhancement or if you spot a bug.
+
 # Contents
 
 * [A First Example](#a-first-example)
@@ -13,6 +15,7 @@ This is a header-only library, implemented in C++14.
 * [Doesn't it look like ranges?](#doesn-t-it-look-like-ranges-)
 * [End pipes](#end-pipes)
 * [Easy integration with STL algorithms](#easy-integration-with-stl-algorithms)
+* [Streams support](#streams-support)
 * [List of available pipes](#list-of-available-pipes)
 
 # A First Example
@@ -113,6 +116,23 @@ std::set_difference(begin(setA), end(setA),
 
 <p align="center"><img src="https://github.com/joboccara/pipes/blob/readme/docs/pipes-STL-algos.png"/></p>
 
+# Streams support
+
+The contents of an input stream can be sent to a pipe by using `read_in_stream`.
+The end pipe `to_out_stream` sends data to an output stream.
+
+The following example reads strings from the standard input, transforms them to upper case, and sends them to the standard output:
+
+```cpp
+auto const input = std::string{};
+auto const expected = std::vector<std::string>{};
+auto results = std::vector<std::string>{};
+
+std::cin >>= pipes::read_in_stream<std::string>{}
+         >>= pipes::transform(toUpper)
+         >>= pipes::to_out_stream(std::cout);
+```
+
 # List of available pipes
 
 * [General pipes](#general-pipes)
@@ -120,6 +140,7 @@ std::set_difference(begin(setA), end(setA),
     * [`dev_null`](#-dev-null-)
     * [`filter`](#-filter-)
     * [`partition`](#-partition-)
+    * [`read_in_stream`](#-read-in-stream-)
     * [`switch`](#-switch-)
     * [`tee`](#-tee-)
     * [`transform`](#-transform-)
@@ -129,6 +150,7 @@ std::set_difference(begin(setA), end(setA),
     * [`map_aggregator`](#-map-aggregator-)
     * [`set_aggregator`](#-set-aggregator-)
     * [`sorted_inserter`](#-sorted-inserter-)
+    * [`to_out_stream`](#-to-out-stream-)
 
 ## General pipes
 
@@ -207,6 +229,20 @@ input >>= pipes::partition([](int n){ return n % 2 == 0; },
 
 // evens contains {2, 4, 6, 8, 10}
 // odds contains {1, 3, 5, 7, 9}
+```
+
+### `read_in_stream`
+
+`read_in_stream` is a template pipe that reads from an input stream. The template parameter indicates what type of data to request from the stream:
+
+```cpp
+auto const input = std::string{"1.1 2.2 3.3"};
+
+std::istringstream(input) >>= pipes::read_in_stream<double>{}
+                          >>= pipes::transform([](double d){ return d * 10; })
+                          >>= back_inserter(results);
+
+// results contain {11, 22, 33};
 ```
 
 ### `switch`
@@ -390,3 +426,16 @@ std::copy(begin(v), end(v), sorted_inserter(results));
 //results contains { -4, 1, 2, 3, 7, 8, 10 }
 ```
 Read the [full story](https://www.fluentcpp.com/2017/03/17/smart-iterators-for-inserting-into-sorted-container/) about `sorted_inserter`.
+
+### `to_out_stream`
+
+`to_out_stream` takes an output stream and sends incoming to it:
+
+```cpp
+auto const input = std::vector<std::string>{"word1", "word2", "word3"};
+
+input >>= pipes::transform(toUpper)
+      >>= pipes::to_out_stream(std::cout);
+
+// sends "WORD1WORD2WORD3" to the standard output
+```
