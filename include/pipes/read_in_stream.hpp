@@ -23,7 +23,7 @@ template<typename Value>
 struct read_in_stream
 {
     template<typename Pipeline>
-    read_in_stream_pipeline<Value, std::remove_reference_t<Pipeline>> create_pipeline(Pipeline&& pipeline)
+    auto create_pipeline(Pipeline&& pipeline)
     {
         return read_in_stream_pipeline<Value, std::remove_reference_t<Pipeline>>(FWD(pipeline));
     }
