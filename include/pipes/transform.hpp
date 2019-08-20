@@ -43,30 +43,18 @@ public: // but technical
 };
 
 template<typename Function>
-class transform_pipe_maker
-{
-public:
-    explicit transform_pipe_maker(Function function) : function_(function) {}
-    template<typename NextPipe>
-    transform_pipe<Function, NextPipe> operator()(NextPipe nextPipe) const
-    {
-        return transform_pipe<Function, NextPipe>(function_, nextPipe);
-    }
-    
-private:
-    Function function_;
-};
-    
-template<typename Function, typename NextPipe>
-    transform_pipe<Function, NextPipe> operator>>=(transform_pipe_maker<Function> const& outputTransformer, NextPipe nextPipe)
-{
-    return outputTransformer(nextPipe);
-}
+struct TransformFunctionWrapper{ Function function; };
 
 template<typename Function>
-transform_pipe_maker<Function> transform(Function function)
+TransformFunctionWrapper<Function> transform(Function&& function)
 {
-    return transform_pipe_maker<Function>(function);
+    return TransformFunctionWrapper<Function>{function};
+}
+
+template<typename Function, typename NextPipe>
+transform_pipe<Function, NextPipe> operator>>= (TransformFunctionWrapper<Function> const& transformFunctionWrapper, NextPipe const& nextPipe)
+{
+    return transform_pipe<Function, NextPipe>{transformFunctionWrapper.function, nextPipe};
 }
 
 } // namespace pipes

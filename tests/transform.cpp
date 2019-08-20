@@ -15,7 +15,7 @@ TEST_CASE("transform")
     {
         auto const times2 = pipes::transform([](int i) { return i*2; });
         
-        std::copy(begin(input), end(input), times2(std::back_inserter(results)));
+        std::copy(begin(input), end(input), times2 >>= std::back_inserter(results));
         REQUIRE(results == expected);
     }
     
@@ -36,7 +36,7 @@ TEST_CASE("transform's iterator category should be std::output_iterator_tag")
 {
     auto const times2 = pipes::transform([](int i) { return i*2; });
     std::vector<int> output;
-    static_assert(std::is_same<decltype(times2(std::back_inserter(output)))::iterator_category,
+    static_assert(std::is_same<decltype(times2 >>= std::back_inserter(output))::iterator_category,
                   std::output_iterator_tag>::value,
                   "iterator category should be std::output_iterator_tag");
 }
@@ -49,7 +49,7 @@ TEST_CASE("transform can override existing contents")
     auto const times2 = pipes::transform([](int i) { return i*2; });
     
     std::vector<int> results = {0, 0, 0, 0, 0};
-    std::copy(begin(input), end(input), times2(begin(results)));
+    std::copy(begin(input), end(input), times2 >>= begin(results));
     
     REQUIRE(results == expected);
 }

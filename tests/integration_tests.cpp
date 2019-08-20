@@ -76,7 +76,7 @@ TEST_CASE("Sequence of output iterators, no algorithms")
     auto const times2 = pipes::transform([](int n){ return n * 2; });
     std::vector<int> results;
     
-    numbers >>= times2(times2(back_inserter(results)));
+    numbers >>= times2 >>= times2 >>= back_inserter(results);
     
     REQUIRE(results == expected);
 }

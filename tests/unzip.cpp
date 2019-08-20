@@ -86,7 +86,7 @@ TEST_CASE("unzip + transform")
     
     std::copy(begin(entries), end(entries),
               pipes::unzip(back_inserter(keys),
-                                    toUpper(back_inserter(values))));
+                           toUpper >>= back_inserter(values)));
     
     REQUIRE(keys == expectedKeys);
     REQUIRE(values == expectedValues);
