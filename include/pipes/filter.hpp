@@ -49,7 +49,7 @@ class filter_pipe
 {
 public:
     template<typename Pipeline>
-    auto create_pipeline(Pipeline&& pipeline) const
+    auto plug_to_pipeline(Pipeline&& pipeline) const
     {
         return filter_pipeline<Predicate, std::remove_reference_t<Pipeline>>{predicate_, pipeline};
     }

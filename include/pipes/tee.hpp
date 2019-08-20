@@ -48,7 +48,7 @@ class tee_pipe
 {
 public:
     template<typename Pipeline>
-    auto create_pipeline(Pipeline&& pipeline) const
+    auto plug_to_pipeline(Pipeline&& pipeline) const
     {
         return tee_pipeline<TeePipeline, std::remove_reference_t<Pipeline>>{teePipeline_, pipeline};
     }

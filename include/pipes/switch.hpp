@@ -63,7 +63,7 @@ class case_pipe
 {
 public:
     template<typename Pipeline>
-    auto create_pipeline(Pipeline&& pipeline) const
+    auto plug_to_pipeline(Pipeline&& pipeline) const
     {
         return case_branch<Predicate, std::remove_reference_t<Pipeline>>{predicate_, pipeline};
     }

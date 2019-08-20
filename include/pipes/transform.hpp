@@ -48,7 +48,7 @@ class transform_pipe
 {
 public:
     template<typename Pipeline>
-    auto create_pipeline(Pipeline&& pipeline) const
+    auto plug_to_pipeline(Pipeline&& pipeline) const
     {
         return transform_pipeline<Function, std::remove_reference_t<Pipeline>>{function_, pipeline};
     }
