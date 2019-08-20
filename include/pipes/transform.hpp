@@ -48,9 +48,9 @@ class transform_pipe
 {
 public:
     template<typename Pipeline>
-    transform_pipeline<Function, Pipeline> create_pipeline(Pipeline&& pipeline) const
+    transform_pipeline<Function, std::remove_reference_t<Pipeline>> create_pipeline(Pipeline&& pipeline) const
     {
-        return transform_pipeline<Function, Pipeline>{function_, pipeline};
+        return transform_pipeline<Function, std::remove_reference_t<Pipeline>>{function_, pipeline};
     }
     
     explicit transform_pipe(Function function) : function_(function){}

@@ -49,9 +49,9 @@ class filter_pipe
 {
 public:
     template<typename Pipeline>
-    filter_pipeline<Predicate, Pipeline> create_pipeline(Pipeline&& pipeline) const
+    filter_pipeline<Predicate, std::remove_reference_t<Pipeline>> create_pipeline(Pipeline&& pipeline) const
     {
-        return filter_pipeline<Predicate, Pipeline>{predicate_, pipeline};
+        return filter_pipeline<Predicate, std::remove_reference_t<Pipeline>>{predicate_, pipeline};
     }
     
     explicit filter_pipe(Predicate predicate) : predicate_(predicate){}
