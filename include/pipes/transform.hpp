@@ -14,62 +14,59 @@ PIPES_DISABLE_WARNING_MULTIPLE_ASSIGNMENT_OPERATORS_SPECIFIED
 namespace pipes
 {
 
-template<typename TransformFunctionTuple, typename... OutputPipes>
-class transform_pipe : public OutputIteratorBase<transform_pipe<TransformFunctionTuple, OutputPipes...>>
+template<typename Function, typename NextPipe>
+class transform_pipe : public OutputIteratorBase<transform_pipe<Function, NextPipe>>
 {
 public:
     template<typename T>
     void onReceive(T&& input)
     {
-        detail::for_each2([&input](auto&& function, auto&& outputPipe)
-        {
-            send(outputPipe, function(input));
-        }, transformFunctionTuple_, outputPipes_);
+        send(nextPipe_, function_(input));
     }
 
-    explicit transform_pipe(TransformFunctionTuple transformFunctionTuple, OutputPipes... outputPipes) : outputPipes_(outputPipes...), transformFunctionTuple_(transformFunctionTuple) {}
+    explicit transform_pipe(Function function, NextPipe nextPipe) : function_(function), nextPipe_(nextPipe) {}
     
 private:
-    std::tuple<OutputPipes...> outputPipes_;
-    TransformFunctionTuple transformFunctionTuple_;
+    detail::assignable<Function> function_;
+    NextPipe nextPipe_;
 
 public: // but technical
-    using base = OutputIteratorBase<transform_pipe<TransformFunctionTuple, OutputPipes...>>;
+    using base = OutputIteratorBase<transform_pipe<Function, NextPipe>>;
     using base::operator=;
     transform_pipe& operator=(transform_pipe const& other)
     {
-        outputPipes_ = other.outputPipes_;
-        transformFunctionTuple_ = other.transformFunctionTuple_;
+        function_ = other.function_;
+        nextPipe_ = other.nextPipe_;
         return *this;
     }
     transform_pipe& operator=(transform_pipe& other) { *this = const_cast<transform_pipe const&>(other); return *this; }
 };
 
-template<typename... TransformFunctions>
+template<typename Function>
 class transform_pipe_maker
 {
 public:
-    explicit transform_pipe_maker(TransformFunctions... transformFunctions) : transformFunctionsTuple_(transformFunctions...) {}
-    template<typename... OutputPipes>
-    transform_pipe<std::tuple<detail::assignable<TransformFunctions>...>, OutputPipes...> operator()(OutputPipes... outputPipes) const
+    explicit transform_pipe_maker(Function function) : function_(function) {}
+    template<typename NextPipe>
+    transform_pipe<Function, NextPipe> operator()(NextPipe nextPipe) const
     {
-        return transform_pipe<std::tuple<detail::assignable<TransformFunctions>...>, OutputPipes...>(transformFunctionsTuple_, outputPipes...);
+        return transform_pipe<Function, NextPipe>(function_, nextPipe);
     }
     
 private:
-    std::tuple<detail::assignable<TransformFunctions>...> transformFunctionsTuple_;
+    Function function_;
 };
     
-template<typename TransformFunction, typename OutputPipe>
-    transform_pipe<std::tuple<detail::assignable<TransformFunction>>, OutputPipe> operator>>=(transform_pipe_maker<TransformFunction> const& outputTransformer, OutputPipe outputPipe)
+template<typename Function, typename NextPipe>
+    transform_pipe<Function, NextPipe> operator>>=(transform_pipe_maker<Function> const& outputTransformer, NextPipe nextPipe)
 {
-    return outputTransformer(outputPipe);
+    return outputTransformer(nextPipe);
 }
 
-template<typename... TransformFunctions>
-transform_pipe_maker<TransformFunctions...> transform(TransformFunctions... transformFunctions)
+template<typename Function>
+transform_pipe_maker<Function> transform(Function function)
 {
-    return transform_pipe_maker<TransformFunctions...>(transformFunctions...);
+    return transform_pipe_maker<Function>(function);
 }
 
 } // namespace pipes

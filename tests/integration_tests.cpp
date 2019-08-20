@@ -9,50 +9,7 @@
 #include <utility>
 #include <vector>
 
-TEST_CASE("Mix of various output iterators")
-{
-    std::vector<int> numbers = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
-    
-    std::vector<int> expectedOutput1 = {6, 12, 18};
-    std::vector<int> expectedOutput2 = {2, 4};
-    std::vector<int> expectedOutput3 = {2, 10};
-    std::vector<int> expectedOutput4 = {1, 5, 7};
-    std::vector<char> expectedOutput5 = {'A', 'A', 'A'};
-    
-    std::vector<int> output1;
-    std::vector<int> output2;
-    std::vector<int> output3;
-    std::vector<int> output4;
-    std::vector<char> output5;
-
-    auto const times2 = pipes::transform([](int i) { return i*2; });
-    auto const divideBy2 = pipes::transform([](int i) { return i/2; });
-    auto const pairUpWithA = pipes::transform([](int i) { return std::make_pair(i, 'A'); });
-
-
-    std::copy(begin(numbers), end(numbers), pipes::switch_(pipes::case_([](int n){ return n % 3 == 0; }) >>= times2(back_inserter(output1)),
-                                                           pipes::case_([](int n){ return n % 2 == 0; }) >>= divideBy2(
-                                                                                                                       pipes::partition([](int n){ return n % 2 == 0; },
-                                                                                                                                         back_inserter(output2),
-                                                                                                                                         times2(back_inserter(output3))
-                                                                                                                                      )
-                                                                                                                      ),
-                                                           pipes::case_( [](int n){ return n % 1 == 0; } ) >>= pairUpWithA(
-                                                                                                                           pipes::unzip(
-                                                                                                                                        back_inserter(output4),
-                                                                                                                                        back_inserter(output5)
-                                                                                                                                       )
-                                                                                                                          )
-                                                                                                                     ));
-    
-    REQUIRE(output1 == expectedOutput1);
-    REQUIRE(output2 == expectedOutput2);
-    REQUIRE(output3 == expectedOutput3);
-    REQUIRE(output4 == expectedOutput4);
-    REQUIRE(output5 == expectedOutput5);
-}
-
-TEST_CASE("Mix of various output iterators with pipe")
+TEST_CASE("Mix of various pipes")
 {
     std::vector<int> numbers = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
     
@@ -172,4 +129,33 @@ TEST_CASE("Reading from a collection with ADL begin and end")
     input >>= pipes::transform([](int i){ return i *2; }) >>= back_inserter(results);
     
     REQUIRE(results == expected);
+}
+
+TEST_CASE("Aggregation of pipes into reusable components")
+{
+    auto const input = std::vector<int>{1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
+    auto const expected = std::vector<int>{4, 8, 12, 16, 20};
+    auto results = std::vector<int>{};
+    
+    SECTION("End of pipeline aggregated")
+    {
+        auto pipeline = pipes::filter([](int i) { return i % 2 == 0; })
+                    >>= pipes::transform([](int i ){ return i * 2;})
+                    >>= back_inserter(results);
+        
+        input >>= pipeline;
+        
+        REQUIRE(results == expected);
+    }
+    /*
+    SECTION("Middle of pipeline aggregated")
+    {
+        auto pipeline = pipes::filter([](int i) { return i % 2 == 0; })
+                    >>= pipes::transform([](int i ){ return i * 2;});
+        
+        input >>= pipeline >>= back_inserter(results);
+        
+        REQUIRE(results == expected);
+    }
+     */
 }
