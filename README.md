@@ -124,10 +124,6 @@ The end pipe `to_out_stream` sends data to an output stream.
 The following example reads strings from the standard input, transforms them to upper case, and sends them to the standard output:
 
 ```cpp
-auto const input = std::string{};
-auto const expected = std::vector<std::string>{};
-auto results = std::vector<std::string>{};
-
 std::cin >>= pipes::read_in_stream<std::string>{}
          >>= pipes::transform(toUpper)
          >>= pipes::to_out_stream(std::cout);
