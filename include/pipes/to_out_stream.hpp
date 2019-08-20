@@ -1,6 +1,8 @@
 #ifndef TO_OUT_STREAM_HPP
 #define TO_OUT_STREAM_HPP
 
+#include "pipes/operator.hpp"
+
 #include "pipes/output_iterator.hpp"
 #include <functional>
 

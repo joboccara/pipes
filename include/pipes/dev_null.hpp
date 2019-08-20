@@ -1,8 +1,10 @@
 #ifndef PIPES_DEAD_END_ITERATOR_HPP
 #define PIPES_DEAD_END_ITERATOR_HPP
 
-#include <iterator>
+#include "pipes/operator.hpp"
+
 #include "pipes/output_iterator.hpp"
+#include <iterator>
 
 namespace pipes
 {

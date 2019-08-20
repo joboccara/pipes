@@ -1,6 +1,8 @@
 #ifndef PIPES_DEMUX_HPP
 #define PIPES_DEMUX_HPP
 
+#include "pipes/operator.hpp"
+
 #include "pipes/helpers/meta.hpp"
 #include "pipes/helpers/warnings.hpp"
 #include "pipes/output_iterator.hpp"

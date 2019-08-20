@@ -1,6 +1,8 @@
 #ifndef PIPES_PARTITION_HPP
 #define PIPES_PARTITION_HPP
 
+#include "pipes/operator.hpp"
+
 #include "pipes/helpers/assignable.hpp"
 #include "pipes/helpers/FWD.hpp"
 #include "pipes/helpers/meta.hpp"

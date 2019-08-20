@@ -1,11 +1,14 @@
 #ifndef PIPES_MAP_AGGREGATOR_HPP
 #define PIPES_MAP_AGGREGATOR_HPP
 
-#include <functional>
-#include <iterator>
+#include "pipes/operator.hpp"
+
 #include "pipes/output_iterator.hpp"
 #include "pipes/helpers/assignable.hpp"
 #include "pipes/helpers/warnings.hpp"
+
+#include <functional>
+#include <iterator>
 
 PIPES_DISABLE_WARNING_PUSH
 PIPES_DISABLE_WARNING_MULTIPLE_ASSIGNMENT_OPERATORS_SPECIFIED

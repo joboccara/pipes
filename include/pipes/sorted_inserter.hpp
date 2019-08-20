@@ -1,10 +1,13 @@
 #ifndef PIPES_SORTED_INSERTER_HPP
 #define PIPES_SORTED_INSERTER_HPP
 
-#include <iterator>
+#include "pipes/operator.hpp"
+
 #include "pipes/output_iterator.hpp"
 #include "pipes/helpers/optional.hpp"
 #include "pipes/helpers/warnings.hpp"
+
+#include <iterator>
 
 PIPES_DISABLE_WARNING_PUSH
 PIPES_DISABLE_WARNING_MULTIPLE_ASSIGNMENT_OPERATORS_SPECIFIED

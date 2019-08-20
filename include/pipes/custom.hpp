@@ -1,6 +1,8 @@
 #ifndef PIPES_CUSTOM_INSERTER_HPP
 #define PIPES_CUSTOM_INSERTER_HPP
 
+#include "pipes/operator.hpp"
+
 #include "pipes/output_iterator.hpp"
 #include "pipes/helpers/assignable.hpp"
 #include "pipes/helpers/warnings.hpp"
