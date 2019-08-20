@@ -1,8 +1,12 @@
 #ifndef PIPES_TEE_HPP
 #define PIPES_TEE_HPP
 
+#include "pipes/operator.hpp"
+
 #include "pipes/output_iterator.hpp"
 #include "pipes/helpers/warnings.hpp"
+
+#include <type_traits>
 
 PIPES_DISABLE_WARNING_PUSH
 PIPES_DISABLE_WARNING_MULTIPLE_ASSIGNMENT_OPERATORS_SPECIFIED
@@ -10,48 +14,55 @@ PIPES_DISABLE_WARNING_MULTIPLE_ASSIGNMENT_OPERATORS_SPECIFIED
 namespace pipes
 {
     
-template<typename TeeOutputPipe, typename NextOutputPipe>
-class tee_pipe : public OutputIteratorBase<tee_pipe<TeeOutputPipe, NextOutputPipe>>
+template<typename TeePipeline, typename Pipeline>
+class tee_pipeline : public OutputIteratorBase<tee_pipeline<TeePipeline, Pipeline>>
 {
 public:
     template<typename T>
     void onReceive(T const& value)
     {
-        send(teeOutputPipe_, value);
-        send(nextOutputPipe_, value);
+        send(teePipeline_, value);
+        send(pipeline_, value);
     }
     
-    tee_pipe(TeeOutputPipe const& teeOutputPipe, NextOutputPipe const& nextOutputPipe) : teeOutputPipe_(teeOutputPipe), nextOutputPipe_(nextOutputPipe){}
+    tee_pipeline(TeePipeline const& teePipeline, Pipeline const& pipeline) : teePipeline_(teePipeline), pipeline_(pipeline){}
 
 private:
-    TeeOutputPipe teeOutputPipe_;
-    NextOutputPipe nextOutputPipe_;
+    TeePipeline teePipeline_;
+    Pipeline pipeline_;
 
 public: // but technical
-    using base = OutputIteratorBase<tee_pipe<TeeOutputPipe, NextOutputPipe>>;
+    using base = OutputIteratorBase<tee_pipeline<TeePipeline, Pipeline>>;
     using base::operator=;
-    tee_pipe& operator=(tee_pipe const& other)
+    tee_pipeline& operator=(tee_pipeline const& other)
     {
-        teeOutputPipe_ = other.teeOutputPipe_;
-        nextOutputPipe_ = other.nextOutputPipe_;
+        teePipeline_ = other.teePipeline_;
+        pipeline_ = other.pipeline_;
         return *this;
     }
-    tee_pipe& operator=(tee_pipe& other) { *this = const_cast<tee_pipe const&>(other); return *this; }
+    tee_pipeline& operator=(tee_pipeline& other) { *this = const_cast<tee_pipeline const&>(other); return *this; }
 };
     
-template<typename TeeOutputPipe>
-struct TeeOutputPipeWrapper{ TeeOutputPipe const& teeOutputPipe;};
-
-template<typename TeeOutputPipe>
-TeeOutputPipeWrapper<TeeOutputPipe> tee(TeeOutputPipe const& teeOutputPipe)
+template<typename TeePipeline>
+class tee_pipe
 {
-    return TeeOutputPipeWrapper<TeeOutputPipe>{teeOutputPipe};
-}
+public:
+    template<typename Pipeline>
+    tee_pipeline<TeePipeline, std::remove_reference_t<Pipeline>> create_pipeline(Pipeline&& pipeline) const
+    {
+        return tee_pipeline<TeePipeline, std::remove_reference_t<Pipeline>>{teePipeline_, pipeline};
+    }
     
-template<typename NextOutputPipe, typename TeeOutputPipe>
-tee_pipe<NextOutputPipe, TeeOutputPipe> operator>>=(TeeOutputPipeWrapper<TeeOutputPipe> const& teeOutputPipeWrapper, NextOutputPipe const& nextOutputPipe)
+    explicit tee_pipe(TeePipeline teePipeline) : teePipeline_(teePipeline){}
+    
+private:
+    TeePipeline teePipeline_;
+};
+    
+template<typename TeePipeline>
+tee_pipe<TeePipeline> tee(TeePipeline const& teePipeline)
 {
-    return tee_pipe<NextOutputPipe, TeeOutputPipe>(nextOutputPipe, teeOutputPipeWrapper.teeOutputPipe);
+    return tee_pipe<TeePipeline>{teePipeline};
 }
     
 } // namespace pipes
