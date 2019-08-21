@@ -27,7 +27,7 @@ namespace pipes
         }
         
         template<typename Pipe>
-        using IsAPipe = impl::IsPipe<std::remove_reference_t<Pipe>>;
+        using IsAPipe = impl::IsAPipe<std::remove_reference_t<Pipe>>;
         
     } //  namespace detail
     
