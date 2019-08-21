@@ -1,5 +1,6 @@
 #include "catch.hpp"
 #include "pipes/partition.hpp"
+#include "pipes/push_back.hpp"
 
 TEST_CASE("partition")
 {
@@ -12,8 +13,8 @@ TEST_CASE("partition")
     std::vector<int> odds;
     
     std::copy(begin(input), end(input), pipes::partition([](int n){ return n % 2 == 0; },
-                                                         back_inserter(evens),
-                                                         back_inserter(odds)));
+                                                         pipes::push_back(evens),
+                                                         pipes::push_back(odds)));
     
     REQUIRE(evens == expectedEvens);
     REQUIRE(odds == expectedOdds);
@@ -41,7 +42,7 @@ TEST_CASE("partition's iterator category should be std::output_iterator_tag")
 {
     std::vector<int> output1, output2;
     auto predicate = [](int n){ return n % 2 == 0; };
-    static_assert(std::is_same<decltype(pipes::partition(predicate, std::back_inserter(output1), std::back_inserter(output2)))::iterator_category,
+    static_assert(std::is_same<decltype(pipes::partition(predicate, pipes::push_back(output1), pipes::push_back(output2)))::iterator_category,
                   std::output_iterator_tag>::value,
                   "iterator category should be std::output_iterator_tag");
 }
@@ -57,8 +58,8 @@ TEST_CASE("partition operator>>=")
     std::vector<int> odds;
     
     input >>= pipes::partition([](int n){ return n % 2 == 0; },
-                               back_inserter(evens),
-                               back_inserter(odds));
+                               pipes::push_back(evens),
+                               pipes::push_back(odds));
     
     REQUIRE(evens == expectedEvens);
     REQUIRE(odds == expectedOdds);
@@ -68,8 +69,8 @@ TEST_CASE("partition operator=")
 {
     std::vector<int> results1, results2, results3, results4;
     auto predicate = [](int i){ return i > 0; };
-    auto pipeline1 = pipes::partition(predicate, back_inserter(results1), back_inserter(results2));
-    auto pipeline2 = pipes::partition(predicate, back_inserter(results3), back_inserter(results4));
+    auto pipeline1 = pipes::partition(predicate, pipes::push_back(results1), pipes::push_back(results2));
+    auto pipeline2 = pipes::partition(predicate, pipes::push_back(results3), pipes::push_back(results4));
     
     pipeline2 = pipeline1;
     send(pipeline2, 1);

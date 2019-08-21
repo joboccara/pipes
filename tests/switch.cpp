@@ -1,5 +1,6 @@
 #include "catch.hpp"
 #include "pipes/switch.hpp"
+#include "pipes/push_back.hpp"
 
 #include <algorithm>
 #include <utility>
@@ -17,9 +18,9 @@ TEST_CASE("switch dispatches an input to the first matching destination")
     std::vector<int> multiplesOf2Only;
     std::vector<int> multiplesOf1Only;
     
-    std::copy(begin(numbers), end(numbers), pipes::switch_(pipes::case_([](int n){ return n % 3 == 0; }) >>= back_inserter(multiplesOf3),
-                                                           pipes::case_([](int n){ return n % 2 == 0; }) >>= back_inserter(multiplesOf2Only),
-                                                           pipes::case_([](int n){ return n % 1 == 0; }) >>= back_inserter(multiplesOf1Only) ));
+    std::copy(begin(numbers), end(numbers), pipes::switch_(pipes::case_([](int n){ return n % 3 == 0; }) >>= pipes::push_back(multiplesOf3),
+                                                           pipes::case_([](int n){ return n % 2 == 0; }) >>= pipes::push_back(multiplesOf2Only),
+                                                           pipes::case_([](int n){ return n % 1 == 0; }) >>= pipes::push_back(multiplesOf1Only) ));
     
     REQUIRE(multiplesOf3 == expectedMultiplesOf3);
     REQUIRE(multiplesOf2Only == expectedMultiplesOf2Only);
@@ -38,9 +39,9 @@ TEST_CASE("switch dispatches to default_ what it couldn't match with the other c
     std::vector<int> multiplesOf3;
     std::vector<int> rest;
     
-    std::copy(begin(numbers), end(numbers), pipes::switch_(pipes::case_([](int n){ return n % 4 == 0; }) >>= back_inserter(multiplesOf4),
-                                                           pipes::case_([](int n){ return n % 3 == 0; }) >>= back_inserter(multiplesOf3),
-                                                           pipes::default_ >>= back_inserter(rest) ));
+    std::copy(begin(numbers), end(numbers), pipes::switch_(pipes::case_([](int n){ return n % 4 == 0; }) >>= pipes::push_back(multiplesOf4),
+                                                           pipes::case_([](int n){ return n % 3 == 0; }) >>= pipes::push_back(multiplesOf3),
+                                                           pipes::default_ >>= pipes::push_back(rest) ));
     
     REQUIRE(multiplesOf4 == expectedMultiplesOf4);
     REQUIRE(multiplesOf3 == expectedMultiplesOf3);
@@ -59,9 +60,9 @@ TEST_CASE("a intermediate default_ short circuits the following cases (even thou
     std::vector<int> multiplesOf3;
     std::vector<int> rest;
     
-    std::copy(begin(numbers), end(numbers), pipes::switch_(pipes::case_([](int n){ return n % 4 == 0; }) >>= back_inserter(multiplesOf4),
-                                                           pipes::default_ >>= back_inserter(rest),
-                                                           pipes::case_([](int n){ return n % 3 == 0; }) >>= back_inserter(multiplesOf3)));
+    std::copy(begin(numbers), end(numbers), pipes::switch_(pipes::case_([](int n){ return n % 4 == 0; }) >>= pipes::push_back(multiplesOf4),
+                                                           pipes::default_ >>= pipes::push_back(rest),
+                                                           pipes::case_([](int n){ return n % 3 == 0; }) >>= pipes::push_back(multiplesOf3)));
     
     REQUIRE(multiplesOf4 == expectedMultiplesOf4);
     REQUIRE(multiplesOf3 == expectedMultiplesOf3);
@@ -93,7 +94,7 @@ TEST_CASE("switch's iterator category should be std::output_iterator_tag")
 {
     std::vector<int> output;
     bool isMultipleOf3(int n);
-    static_assert(std::is_same<decltype(pipes::switch_(pipes::case_(isMultipleOf3) >>= back_inserter(output)))::iterator_category,
+    static_assert(std::is_same<decltype(pipes::switch_(pipes::case_(isMultipleOf3) >>= pipes::push_back(output)))::iterator_category,
                   std::output_iterator_tag>::value,
                   "iterator category should be std::output_iterator_tag");
 }
@@ -104,11 +105,11 @@ TEST_CASE("switch operator=")
     auto multipleOf3 = [](int n){ return n % 3 == 0; };
     auto multipleOf2 = [](int n){ return n % 2 == 0; };
     
-    auto switch1 = pipes::switch_(pipes::case_(multipleOf3) >>= back_inserter(results1),
-                                  pipes::case_(multipleOf2) >>= back_inserter(results2));
+    auto switch1 = pipes::switch_(pipes::case_(multipleOf3) >>= pipes::push_back(results1),
+                                  pipes::case_(multipleOf2) >>= pipes::push_back(results2));
     
-    auto switch2 = pipes::switch_(pipes::case_(multipleOf3) >>= back_inserter(results3),
-                                  pipes::case_(multipleOf2) >>= back_inserter(results4));
+    auto switch2 = pipes::switch_(pipes::case_(multipleOf3) >>= pipes::push_back(results3),
+                                  pipes::case_(multipleOf2) >>= pipes::push_back(results4));
     
     switch2 = switch1;
     pipes::send(switch2, 4);

@@ -20,7 +20,7 @@ TEST_CASE("streaming strings in")
     
     std::istringstream(input) >>= pipes::read_in_stream<std::string>{}
                               >>= pipes::transform(toUpper)
-                              >>= back_inserter(results);
+                              >>= pipes::push_back(results);
     
     REQUIRE(results == expected);
 }
@@ -33,7 +33,7 @@ TEST_CASE("streaming doubles in")
     
     std::istringstream(input) >>= pipes::read_in_stream<double>{}
                               >>= pipes::transform([](double d){ return d * 10; })
-                              >>= back_inserter(results);
+                              >>= pipes::push_back(results);
     
     REQUIRE(results == expected);
 }
@@ -46,7 +46,7 @@ TEST_CASE("empty stream in")
     
     std::istringstream(input) >>= pipes::read_in_stream<std::string>{}
                               >>= pipes::transform(toUpper)
-                              >>= back_inserter(results);
+                              >>= pipes::push_back(results);
     
     REQUIRE(results == expected);
 }

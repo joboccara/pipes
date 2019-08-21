@@ -4,6 +4,7 @@
 #include "pipes/partition.hpp"
 #include "pipes/unzip.hpp"
 #include "pipes/switch.hpp"
+#include "pipes/push_back.hpp"
 
 #include <algorithm>
 #include <utility>
@@ -30,14 +31,14 @@ TEST_CASE("Mix of various pipes")
     auto const pairUpWithA = pipes::transform([](int i) { return std::make_pair(i, 'A'); });
     
     
-    std::copy(begin(numbers), end(numbers), pipes::switch_(pipes::case_( [](int n){ return n % 3 == 0; } ) >>= times2 >>= back_inserter(output1),
+    std::copy(begin(numbers), end(numbers), pipes::switch_(pipes::case_( [](int n){ return n % 3 == 0; } ) >>= times2 >>= pipes::push_back(output1),
                                                            pipes::case_( [](int n){ return n % 2 == 0; } ) >>= divideBy2 >>= pipes::partition([](int n){ return n % 2 == 0; },
-                                                                                                                                             back_inserter(output2),
-                                                                                                                                             times2 >>= back_inserter(output3)
+                                                                                                                                             pipes::push_back(output2),
+                                                                                                                                             times2 >>= pipes::push_back(output3)
                                                                                                                                             ),
                                                            pipes::case_( [](int n){ return n % 1 == 0; } ) >>= pairUpWithA >>= pipes::unzip(
-                                                                                                                                            back_inserter(output4),
-                                                                                                                                            back_inserter(output5)
+                                                                                                                                            pipes::push_back(output4),
+                                                                                                                                            pipes::push_back(output5)
                                                                                                                                            )
                                                                                                                       ));
     
@@ -63,7 +64,7 @@ TEST_CASE("Transform and filter")
         input >>= pipes::filter(isEven)
               >>= pipes::transform(times2)
               >>= pipes::transform(times2)
-              >>= back_inserter(results);
+              >>= pipes::push_back(results);
         REQUIRE(results == expected);
     }
 }
@@ -76,7 +77,7 @@ TEST_CASE("Sequence of output iterators, no algorithms")
     auto const times2 = pipes::transform([](int n){ return n * 2; });
     std::vector<int> results;
     
-    numbers >>= times2 >>= times2 >>= back_inserter(results);
+    numbers >>= times2 >>= times2 >>= pipes::push_back(results);
     
     REQUIRE(results == expected);
 }
@@ -89,7 +90,7 @@ TEST_CASE("Sequence of output iterators, no algorithms, with pipes")
     auto const times2 = [](int n){ return n * 2; };
     std::vector<int> results;
     
-    numbers >>= pipes::transform(times2) >>= pipes::transform(times2) >>= back_inserter(results);
+    numbers >>= pipes::transform(times2) >>= pipes::transform(times2) >>= pipes::push_back(results);
     
     REQUIRE(results == expected);
 }
@@ -107,7 +108,7 @@ TEST_CASE("Sequence of input ranges and output iterators, with pipes")
     auto const times2 = [](int n){ return n * 2; };
     std::vector<int> results;
     
-    numbers | numbers | numbers >>= pipes::transform(times2) >>= pipes::transform(times2) >>= back_inserter(results);
+    numbers | numbers | numbers >>= pipes::transform(times2) >>= pipes::transform(times2) >>= pipes::push_back(results);
     
     REQUIRE(results == expected);
 }
@@ -126,7 +127,7 @@ TEST_CASE("Reading from a collection with ADL begin and end")
     auto const expected = std::vector<int>{2, 4, 6, 8, 10};
     auto results = std::vector<int>{};
 
-    input >>= pipes::transform([](int i){ return i *2; }) >>= back_inserter(results);
+    input >>= pipes::transform([](int i){ return i *2; }) >>= pipes::push_back(results);
     
     REQUIRE(results == expected);
 }
@@ -141,7 +142,7 @@ TEST_CASE("Aggregation of pipes into reusable components")
     {
         auto pipeline = pipes::filter([](int i) { return i % 2 == 0; })
                     >>= pipes::transform([](int i ){ return i * 2;})
-                    >>= back_inserter(results);
+                    >>= pipes::push_back(results);
         
         input >>= pipeline;
         
@@ -153,7 +154,7 @@ TEST_CASE("Aggregation of pipes into reusable components")
         auto pipeline = pipes::filter([](int i) { return i % 2 == 0; })
                     >>= pipes::transform([](int i ){ return i * 2;});
         
-        input >>= pipeline >>= back_inserter(results);
+        input >>= pipeline >>= pipes::push_back(results);
         
         REQUIRE(results == expected);
     }

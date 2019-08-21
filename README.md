@@ -28,15 +28,15 @@ auto destination = std::vector<int>{};
 
 source >>= pipes::filter([](int i){ return i % 2 == 0; })
        >>= pipes::transform([](int i){ return i * 2; })
-       >>= std::back_inserter(destination);
+       >>= pipes::push_back(destination);
 
 // destination contains {0, 4, 8, 12, 16};
 ```
 ### What's going on here:
 * Each elements of  `source` is sent to `filter`.
 * Every time `filter` receives a piece of data, it sends its to the next pipe (here, `transform`) only if that piece of data satisfies `filter`'s' predicate.
-* `transform` then applies its function on the data its gets and sends the result to the next pipe (here, `std::back_inserter`).
-* `std::back_inserter` is a standard component that `push_back`s the data it receives to its `vector` (here, `destination`).
+* `transform` then applies its function on the data its gets and sends the result to the next pipe (here, `pipes::push_back`).
+* `pipes::push_back` `push_back`s the data it receives to its `vector` (here, `destination`).
 
 # A Second Example
 
@@ -45,13 +45,13 @@ Here is a more elaborate example with a pipeline that branches out in several di
 ```cpp
 A >>= pipes::transform(f)
   >>= pipes::filter(p)
-  >>= pipes::unzip(back_inserter(B),
-                   pipes::demux(back_inserter(C),
-                                pipes::filter(q) >>= back_inserter(D),
-                                pipes::filter(r) >>= back_inserter(E));
+  >>= pipes::unzip(pipes::push_back(B),
+                   pipes::demux(pipes::push_back(C),
+                                pipes::filter(q) >>= pipes::push_back(D),
+                                pipes::filter(r) >>= pipes::push_back(E));
 ```
 
-Here, `unzip` takes the `std::pair`s or `std::tuple`s it receives and breaks them down into individual elements. It sends each element to the pipes it takes (here `back_inserter` and `demux`).
+Here, `unzip` takes the `std::pair`s or `std::tuple`s it receives and breaks them down into individual elements. It sends each element to the pipes it takes (here `pipes::push_back` and `demux`).
 
 `demux` takes any number of pipes and sends the data it receives to each of them.
 
@@ -73,8 +73,8 @@ It is possible to use ranges and pipes in the same expression though:
 ```cpp
 ranges::view::zip(dadChromosome, momChromosome)
     >>= pipes::transform(crossover)
-    >>= pipes::unzip(back_inserter(gameteChromosome1),
-                     back_inserter(gameteChromosome2));
+    >>= pipes::unzip(pipes::push_back(gameteChromosome1),
+                     pipes::push_back(gameteChromosome2));
 ```
 
 # End pipes
@@ -144,6 +144,7 @@ std::cin >>= pipes::read_in_stream<std::string>{}
 * [End pipes](#end-pipes-1)
     * [`custom`](#-custom-)
     * [`map_aggregator`](#-map-aggregator-)
+    * [`push_back`](#-push-back-)
     * [`set_aggregator`](#-set-aggregator-)
     * [`sorted_inserter`](#-sorted-inserter-)
     * [`to_out_stream`](#-to-out-stream-)
@@ -162,9 +163,9 @@ std::vector<int> results1;
 std::vector<int> results2;
 std::vector<int> results3;
 
-input >>= pipes::demux(back_inserter(results1),
-                       back_inserter(results2),
-                       back_inserter(results3));
+input >>= pipes::demux(pipes::push_back(results1),
+                       pipes::push_back(results2),
+                       pipes::push_back(results3));
 
 // results1 contains {1, 2, 3, 4, 5}
 // results2 contains {1, 2, 3, 4, 5}
@@ -184,8 +185,8 @@ std::vector<int> inAOnly;
 std::vector<int> inBoth;
 
 sets::set_seggregate(setA, setB,
-                     back_inserter(inAOnly),
-                     back_inserter(inBoth),
+                     pipes::push_back(inAOnly),
+                     pipes::push_back(inBoth),
                      dev_null{});
 
 // inAOnly contains {1, 2}
@@ -203,7 +204,7 @@ std::vector<int> input = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
 std::vector<int> results;
 
 input >>= pipes::filter([](int i){ return i % 2 == 0; })
-      >>= back_inserter(results);
+      >>= pipes::push_back(results);
 
 // results contains {2, 4, 6, 8, 10}
 ```
@@ -220,8 +221,8 @@ std::vector<int> evens;
 std::vector<int> odds;
 
 input >>= pipes::partition([](int n){ return n % 2 == 0; },
-                           back_inserter(evens),
-                           back_inserter(odds));
+                           pipes::push_back(evens),
+                           pipes::push_back(odds));
 
 // evens contains {2, 4, 6, 8, 10}
 // odds contains {1, 3, 5, 7, 9}
@@ -236,7 +237,7 @@ auto const input = std::string{"1.1 2.2 3.3"};
 
 std::istringstream(input) >>= pipes::read_in_stream<double>{}
                           >>= pipes::transform([](double d){ return d * 10; })
-                          >>= back_inserter(results);
+                          >>= pipes::push_back(results);
 
 // results contain {11, 22, 33};
 ```
@@ -252,9 +253,9 @@ std::vector<int> multiplesOf4;
 std::vector<int> multiplesOf3;
 std::vector<int> rest;
 
-numbers >>= pipes::switch_(pipes::case_([](int n){ return n % 4 == 0; }) >>= back_inserter(multiplesOf4),
-                           pipes::case_([](int n){ return n % 3 == 0; }) >>= back_inserter(multiplesOf3),
-                           pipes::default_ >>= back_inserter(rest) ));
+numbers >>= pipes::switch_(pipes::case_([](int n){ return n % 4 == 0; }) >>= pipes::push_back(multiplesOf4),
+                           pipes::case_([](int n){ return n % 3 == 0; }) >>= pipes::push_back(multiplesOf3),
+                           pipes::default_ >>= pipes::push_back(rest) ));
 
 // multiplesOf4 contains {4, 8};
 // multiplesOf3 contains {3, 6, 9};
@@ -273,8 +274,8 @@ auto const inputs = std::vector<int>{1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
 auto intermediaryResults = std::vector<int>{};
 auto results = std::vector<int>{};
 
-inputs >>= pipes::tee(back_inserter(intermediaryResults))
-       >>= back_inserter(results);
+inputs >>= pipes::tee(pipes::push_back(intermediaryResults))
+       >>= pipes::push_back(results);
 
 // intermediaryResults contains {2, 4, 6, 8, 10, 12, 14, 16, 18, 20}
 // results contains {12, 14, 16, 18, 20}
@@ -291,7 +292,7 @@ std::vector<int> input = {1, 2, 3, 4, 5};
 std::vector<int> results;
 
 input >>= pipes::transform([](int i) { return i*2; })
-      >>= back_inserter(results);
+      >>= pipes::push_back(results);
 
 // results contains {2, 4, 6, 8, 10}
 ```
@@ -307,8 +308,8 @@ std::map<int, std::string> entries = { {1, "one"}, {2, "two"}, {3, "three"}, {4,
 std::vector<int> keys;
 std::vector<std::string> values;
 
-entries >>= pipes::unzip(back_inserter(keys),
-                         back_inserter(values)));
+entries >>= pipes::unzip(pipes::push_back(keys),
+                         pipes::push_back(values)));
 
 // keys contains {1, 2, 3, 4, 5};
 // values contains {"one", "two", "three", "four", "five"};
@@ -359,6 +360,10 @@ std::copy(entries2.begin(), entries2.end(), map_aggregator(results, concatenateS
 `set_aggreagator` provides a similar functionality for aggregating elements into sets.
 
 Read the [full story](https://www.fluentcpp.com/2017/03/21/smart-iterator-aggregating-new-elements-existing-ones-map-set/) about `map_aggregator` and `set_aggregator`.
+
+### `push_back`
+
+`push_back` is a pipe that is equivalent to `std::back_inserter`. It takes a collection that has a `push_back` member function, such as a `std::vector`, and `push_back`s the values it receives into that collection.
 
 ### `set_aggregator`
 
