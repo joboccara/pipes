@@ -48,6 +48,17 @@ TEST_CASE("Mix of various pipes")
     REQUIRE(output5 == expectedOutput5);
 }
 
+TEST_CASE("Compatibility with STL algorithms")
+{
+    std::vector<int> input = {1, 2, 3, 4, 5};
+    std::vector<int> expected = {2, 4, 6, 8, 10};
+    std::vector<int> results;
+
+    std::copy(begin(input), end(input), pipes::transform([](int i){ return i * 2; }) >>= back_inserter(results));
+    
+    REQUIRE(expected == results);
+}
+
 TEST_CASE("Transform and filter")
 {
     std::vector<int> input = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
