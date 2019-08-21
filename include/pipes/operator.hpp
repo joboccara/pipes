@@ -13,25 +13,26 @@ namespace pipes
 
     namespace detail
     {
-        template<typename Pipe, typename Pipeline>
-        using plug_to_pipeline_expression = decltype(std::declval<Pipe&>().plug_to_pipeline(std::declval<Pipeline&>()));
+        struct aPipeline{};
+        template<typename Pipe>
+        using pipe_expression = decltype(std::declval<Pipe&>().plug_to_pipeline(aPipeline{}));
 
-        template<typename Pipe, typename Pipeline>
-        constexpr bool plug_to_pipeline_detected = detail::is_detected<plug_to_pipeline_expression, Pipe, Pipeline>;
+        template<typename Pipe>
+        constexpr bool pipe_expression_detected = detail::is_detected<pipe_expression, Pipe>;
 
-        template<typename Pipe, typename Pipeline>
-        using CanCreatePipeline = std::enable_if_t<plug_to_pipeline_detected<Pipe, Pipeline>, bool>;
-
+        template<typename Pipe>
+        using IsPipe = std::enable_if_t<pipe_expression_detected<Pipe>, bool>;
+        
     } //  namespace detail
     
     template<typename Pipe, typename Pipeline,
-        detail::CanCreatePipeline<std::remove_reference_t<Pipe>, std::remove_reference_t<Pipeline>> = true>
+        detail::IsPipe<std::remove_reference_t<Pipe>> = true>
     auto operator>>=(Pipe&& pipe, Pipeline&& pipeline)
     {
         return pipe.plug_to_pipeline(pipeline);
     }
     
-// input >>= pipeline
+// range >>= pipeline
     
     namespace detail
     {
