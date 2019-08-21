@@ -2,6 +2,7 @@
 
 #include "catch.hpp"
 #include "pipes/filter.hpp"
+#include "pipes/override.hpp"
 #include "pipes/push_back.hpp"
 
 TEST_CASE("filter")
@@ -25,7 +26,7 @@ TEST_CASE("filter can override existing results")
     std::vector<int> expected = {2, 4, 6, 8, 10, 0, 0, 0, 0, 0};
     
     std::vector<int> results = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
-    std::copy(begin(input), end(input), ifIsEven>>= begin(results));
+    std::copy(begin(input), end(input), ifIsEven >>= pipes::override(results));
     
     REQUIRE(results == expected);
 }

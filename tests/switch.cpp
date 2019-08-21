@@ -1,6 +1,7 @@
 #include "catch.hpp"
 #include "pipes/switch.hpp"
 #include "pipes/push_back.hpp"
+#include "pipes/override.hpp"
 
 #include <algorithm>
 #include <utility>
@@ -81,9 +82,9 @@ TEST_CASE("switch can override existing results")
     std::vector<int> multiplesOf2Only = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
     std::vector<int> multiplesOf1Only = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
     
-    std::copy(begin(numbers), end(numbers), pipes::switch_(pipes::case_([](int n){ return n % 3 == 0; }) >>= begin(multiplesOf3),
-                                                           pipes::case_([](int n){ return n % 2 == 0; }) >>= begin(multiplesOf2Only),
-                                                           pipes::case_([](int n){ return n % 1 == 0; }) >>= begin(multiplesOf1Only) ));
+    std::copy(begin(numbers), end(numbers), pipes::switch_(pipes::case_([](int n){ return n % 3 == 0; }) >>= pipes::override(multiplesOf3),
+                                                           pipes::case_([](int n){ return n % 2 == 0; }) >>= pipes::override(multiplesOf2Only),
+                                                           pipes::case_([](int n){ return n % 1 == 0; }) >>= pipes::override(multiplesOf1Only) ));
     
     REQUIRE(multiplesOf3 == expectedMultiplesOf3);
     REQUIRE(multiplesOf2Only == expectedMultiplesOf2Only);

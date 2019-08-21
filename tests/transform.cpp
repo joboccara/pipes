@@ -2,6 +2,7 @@
 #include "pipes/helpers/FWD.hpp"
 #include "pipes/transform.hpp"
 #include "pipes/push_back.hpp"
+#include "pipes/override.hpp"
 
 #include <algorithm>
 #include <vector>
@@ -50,7 +51,7 @@ TEST_CASE("transform can override existing contents")
     auto const times2 = pipes::transform([](int i) { return i*2; });
     
     std::vector<int> results = {0, 0, 0, 0, 0};
-    std::copy(begin(input), end(input), times2 >>= begin(results));
+    std::copy(begin(input), end(input), times2 >>= pipes::override(results));
     
     REQUIRE(results == expected);
 }

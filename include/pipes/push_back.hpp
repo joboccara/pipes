@@ -20,7 +20,7 @@ namespace pipes
             container_.get().push_back(value);
         }
         
-        push_back_pipeline(Container& container) : container_(container) {}
+        explicit push_back_pipeline(Container& container) : container_(container) {}
         
     private:
         std::reference_wrapper<Container> container_;
