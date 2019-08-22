@@ -3,7 +3,7 @@
 
 #include "pipes/operator.hpp"
 
-#include "pipes/output_iterator.hpp"
+#include "pipes/pipeline_base.hpp"
 #include "pipes/helpers/assignable.hpp"
 #include "pipes/helpers/warnings.hpp"
 
@@ -17,7 +17,7 @@ namespace pipes
 {
 
 template<typename Map, typename Function>
-class map_aggregate_iterator : public OutputIteratorBase<map_aggregate_iterator<Map, Function>>
+class map_aggregate_iterator : public pipeline_base<map_aggregate_iterator<Map, Function>>
 {
 public:
     template<typename T>
@@ -42,7 +42,7 @@ private:
     detail::assignable<Function> aggregator_;
     
 public: // but technical
-    using base = OutputIteratorBase<map_aggregate_iterator<Map, Function>>;
+    using base = pipeline_base<map_aggregate_iterator<Map, Function>>;
     using base::operator=;
     map_aggregate_iterator& operator=(map_aggregate_iterator const& other)
     {

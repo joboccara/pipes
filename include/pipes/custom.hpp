@@ -3,7 +3,7 @@
 
 #include "pipes/operator.hpp"
 
-#include "pipes/output_iterator.hpp"
+#include "pipes/pipeline_base.hpp"
 #include "pipes/helpers/assignable.hpp"
 #include "pipes/helpers/warnings.hpp"
 
@@ -14,7 +14,7 @@ namespace pipes
 {
     
 template<typename InsertFunction>
-class custom_iterator : public OutputIteratorBase<custom_iterator<InsertFunction>>
+class custom_iterator : public pipeline_base<custom_iterator<InsertFunction>>
 {
 public:
     template<typename T>
@@ -29,7 +29,7 @@ private:
     detail::assignable<InsertFunction> insertFunction_;
 
 public: // but technical
-    using base = OutputIteratorBase<custom_iterator<InsertFunction>>;
+    using base = pipeline_base<custom_iterator<InsertFunction>>;
     using base::operator=;
     custom_iterator& operator=(custom_iterator const& other)
     {

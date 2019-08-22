@@ -7,7 +7,7 @@
 #include "pipes/helpers/FWD.hpp"
 #include "pipes/helpers/meta.hpp"
 #include "pipes/helpers/warnings.hpp"
-#include "pipes/output_iterator.hpp"
+#include "pipes/pipeline_base.hpp"
 
 PIPES_DISABLE_WARNING_PUSH
 PIPES_DISABLE_WARNING_MULTIPLE_ASSIGNMENT_OPERATORS_SPECIFIED
@@ -16,7 +16,7 @@ namespace pipes
 {
 
 template<typename OutputPipeTrue, typename OutputPipeFalse, typename Predicate>
-class partition_pipe : public OutputIteratorBase<partition_pipe<OutputPipeTrue, OutputPipeFalse, Predicate>>
+class partition_pipe : public pipeline_base<partition_pipe<OutputPipeTrue, OutputPipeFalse, Predicate>>
 {
 public:
     template<typename T>
@@ -40,7 +40,7 @@ private:
     detail::assignable<Predicate> predicate_;
 
 public: // but technical
-    using base = OutputIteratorBase<partition_pipe<OutputPipeTrue, OutputPipeFalse, Predicate>>;
+    using base = pipeline_base<partition_pipe<OutputPipeTrue, OutputPipeFalse, Predicate>>;
     using base::operator=;
     partition_pipe& operator=(partition_pipe const& other)
     {

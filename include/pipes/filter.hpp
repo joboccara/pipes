@@ -6,7 +6,7 @@
 #include "pipes/helpers/assignable.hpp"
 #include "pipes/helpers/meta.hpp"
 #include "pipes/helpers/warnings.hpp"
-#include "pipes/output_iterator.hpp"
+#include "pipes/pipeline_base.hpp"
 
 PIPES_DISABLE_WARNING_PUSH
 PIPES_DISABLE_WARNING_MULTIPLE_ASSIGNMENT_OPERATORS_SPECIFIED
@@ -14,7 +14,7 @@ PIPES_DISABLE_WARNING_MULTIPLE_ASSIGNMENT_OPERATORS_SPECIFIED
 namespace pipes
 {
 template<typename Predicate, typename Pipeline>
-class filter_pipeline : public OutputIteratorBase<filter_pipeline<Predicate, Pipeline>>
+class filter_pipeline : public pipeline_base<filter_pipeline<Predicate, Pipeline>>
 {
 public:    
     template<typename T>
@@ -33,7 +33,7 @@ private:
     Pipeline pipeline_;
 
 public: // but technical
-    using base = OutputIteratorBase<filter_pipeline<Predicate, Pipeline>>;
+    using base = pipeline_base<filter_pipeline<Predicate, Pipeline>>;
     using base::operator=;
     filter_pipeline& operator=(filter_pipeline const& other)
     {

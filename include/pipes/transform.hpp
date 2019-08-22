@@ -3,7 +3,7 @@
 
 #include "pipes/operator.hpp"
 
-#include "pipes/output_iterator.hpp"
+#include "pipes/pipeline_base.hpp"
 #include "pipes/helpers/assignable.hpp"
 #include "pipes/helpers/FWD.hpp"
 #include "pipes/helpers/meta.hpp"
@@ -16,7 +16,7 @@ namespace pipes
 {
 
 template<typename Function, typename Pipeline>
-class transform_pipeline : public OutputIteratorBase<transform_pipeline<Function, Pipeline>>
+class transform_pipeline : public pipeline_base<transform_pipeline<Function, Pipeline>>
 {
 public:
     template<typename T>
@@ -32,7 +32,7 @@ private:
     Pipeline pipeline_;
 
 public: // but technical
-    using base = OutputIteratorBase<transform_pipeline<Function, Pipeline>>;
+    using base = pipeline_base<transform_pipeline<Function, Pipeline>>;
     using base::operator=;
     transform_pipeline& operator=(transform_pipeline const& other)
     {

@@ -18,7 +18,7 @@ void send(OutputIterator& outputIterator, T&& value)
 }
 
 template<typename Derived>
-struct OutputIteratorBase : detail::crtp<Derived, OutputIteratorBase>
+struct pipeline_base : detail::crtp<Derived, pipeline_base>
 {
     using iterator_category = std::output_iterator_tag;
     using value_type = void;

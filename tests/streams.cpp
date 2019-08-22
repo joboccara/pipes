@@ -64,17 +64,3 @@ TEST_CASE("streaming out")
     
     REQUIRE(results == expected);
 }
-
-TEST_CASE("streaming out with ostream_iterator")
-{
-    auto const input = std::vector<std::string>{"word1", "word2", "word3"};
-    auto const expected = std::string{"WORD1WORD2WORD3"};
-    auto resultStream = std::ostringstream{};
-    
-    input >>= pipes::transform(toUpper)
-          >>= std::ostream_iterator<std::string>(resultStream);
-    
-    auto const results = resultStream.str();
-    
-    REQUIRE(results == expected);
-}

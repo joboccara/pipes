@@ -148,7 +148,7 @@ TEST_CASE("Aggregation of pipes into reusable components")
         
         REQUIRE(results == expected);
     }
-    /*
+    
     SECTION("Middle of pipeline aggregated")
     {
         auto pipeline = pipes::filter([](int i) { return i % 2 == 0; })
@@ -158,5 +158,4 @@ TEST_CASE("Aggregation of pipes into reusable components")
         
         REQUIRE(results == expected);
     }
-     */
 }

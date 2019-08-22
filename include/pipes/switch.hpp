@@ -6,7 +6,7 @@
 #include "pipes/helpers/assignable.hpp"
 #include "pipes/helpers/meta.hpp"
 #include "pipes/helpers/warnings.hpp"
-#include "pipes/output_iterator.hpp"
+#include "pipes/pipeline_base.hpp"
 
 PIPES_DISABLE_WARNING_PUSH
 PIPES_DISABLE_WARNING_MULTIPLE_ASSIGNMENT_OPERATORS_SPECIFIED
@@ -23,7 +23,7 @@ struct case_branch
 };
 
 template<typename... CaseBranches>
-class switch_pipeline : public OutputIteratorBase<switch_pipeline<CaseBranches...>>
+class switch_pipeline : public pipeline_base<switch_pipeline<CaseBranches...>>
 {
 public:
     template<typename T>
@@ -42,7 +42,7 @@ private:
     std::tuple<CaseBranches...> branches_;
     
 public: // but technical
-    using base = OutputIteratorBase<switch_pipeline<CaseBranches...>>;
+    using base = pipeline_base<switch_pipeline<CaseBranches...>>;
     using base::operator=;
     switch_pipeline& operator=(switch_pipeline const& other)
     {

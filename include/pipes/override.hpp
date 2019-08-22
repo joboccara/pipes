@@ -3,14 +3,14 @@
 
 #include "pipes/operator.hpp"
 
-#include "output_iterator.hpp"
+#include "pipeline_base.hpp"
 
 #include <utility>
 
 namespace pipes
 {
     template<typename Iterator>
-    class override_pipeline : public OutputIteratorBase<override_pipeline<Iterator>>
+    class override_pipeline : public pipeline_base<override_pipeline<Iterator>>
     {
     public:
         template<typename T>
@@ -24,7 +24,7 @@ namespace pipes
         Iterator iterator_;
         
     public: // but technical
-        using base = OutputIteratorBase<override_pipeline<Iterator>>;
+        using base = pipeline_base<override_pipeline<Iterator>>;
         using base::operator=;
         override_pipeline& operator=(override_pipeline const& other)
         {

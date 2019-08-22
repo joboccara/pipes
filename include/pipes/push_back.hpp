@@ -3,7 +3,7 @@
 
 #include "pipes/operator.hpp"
 
-#include "pipes/output_iterator.hpp"
+#include "pipes/pipeline_base.hpp"
 #include "pipes/helpers/FWD.hpp"
 
 #include <functional>
@@ -11,7 +11,7 @@
 namespace pipes
 {
     template<typename Container>
-    class push_back_pipeline : public OutputIteratorBase<push_back_pipeline<Container>>
+    class push_back_pipeline : public pipeline_base<push_back_pipeline<Container>>
     {
     public:
         template<typename T>
@@ -26,7 +26,7 @@ namespace pipes
         std::reference_wrapper<Container> container_;
         
     public: // but technical
-        using base = OutputIteratorBase<push_back_pipeline<Container>>;
+        using base = pipeline_base<push_back_pipeline<Container>>;
         using base::operator=;
         push_back_pipeline& operator=(push_back_pipeline const& other)
         {
