@@ -1,7 +1,9 @@
 #ifndef PIPES_UNZIP_HPP
 #define PIPES_UNZIP_HPP
 
-#include "pipes/output_iterator.hpp"
+#include "pipes/operator.hpp"
+
+#include "pipes/pipeline_base.hpp"
 #include "pipes/helpers/meta.hpp"
 
 #include <tuple>
@@ -9,7 +11,7 @@
 namespace pipes
 {
 template<typename... NextPipes>
-class unzip_pipe : public OutputIteratorBase<unzip_pipe<NextPipes...>>
+class unzip_pipe : public pipeline_base<unzip_pipe<NextPipes...>>
 {
 public:
     template<typename Tuple>
@@ -24,7 +26,7 @@ private:
     std::tuple<NextPipes...> nextPipes_;
     
 public: // but technical
-    using base = OutputIteratorBase<unzip_pipe<NextPipes...>>;
+    using base = pipeline_base<unzip_pipe<NextPipes...>>;
     using base::operator=;
     unzip_pipe& operator=(unzip_pipe const& other)
     {

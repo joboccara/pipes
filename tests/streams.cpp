@@ -20,7 +20,7 @@ TEST_CASE("streaming strings in")
     
     std::istringstream(input) >>= pipes::read_in_stream<std::string>{}
                               >>= pipes::transform(toUpper)
-                              >>= back_inserter(results);
+                              >>= pipes::push_back(results);
     
     REQUIRE(results == expected);
 }
@@ -33,7 +33,7 @@ TEST_CASE("streaming doubles in")
     
     std::istringstream(input) >>= pipes::read_in_stream<double>{}
                               >>= pipes::transform([](double d){ return d * 10; })
-                              >>= back_inserter(results);
+                              >>= pipes::push_back(results);
     
     REQUIRE(results == expected);
 }
@@ -46,7 +46,7 @@ TEST_CASE("empty stream in")
     
     std::istringstream(input) >>= pipes::read_in_stream<std::string>{}
                               >>= pipes::transform(toUpper)
-                              >>= back_inserter(results);
+                              >>= pipes::push_back(results);
     
     REQUIRE(results == expected);
 }
@@ -59,20 +59,6 @@ TEST_CASE("streaming out")
     
     input >>= pipes::transform(toUpper)
           >>= pipes::to_out_stream(resultStream);
-    
-    auto const results = resultStream.str();
-    
-    REQUIRE(results == expected);
-}
-
-TEST_CASE("streaming out with ostream_iterator")
-{
-    auto const input = std::vector<std::string>{"word1", "word2", "word3"};
-    auto const expected = std::string{"WORD1WORD2WORD3"};
-    auto resultStream = std::ostringstream{};
-    
-    input >>= pipes::transform(toUpper)
-          >>= std::ostream_iterator<std::string>(resultStream);
     
     auto const results = resultStream.str();
     

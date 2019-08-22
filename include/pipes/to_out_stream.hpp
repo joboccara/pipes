@@ -1,13 +1,15 @@
 #ifndef TO_OUT_STREAM_HPP
 #define TO_OUT_STREAM_HPP
 
-#include "pipes/output_iterator.hpp"
+#include "pipes/operator.hpp"
+
+#include "pipes/pipeline_base.hpp"
 #include <functional>
 
 namespace pipes
 {
 template<typename OutStream>
-class to_out_stream_pipe : public OutputIteratorBase<to_out_stream_pipe<OutStream>>
+class to_out_stream_pipe : public pipeline_base<to_out_stream_pipe<OutStream>>
 {
 public:
     template<typename T>
@@ -22,7 +24,7 @@ private:
     std::reference_wrapper<OutStream> outStream_;
     
 public: // but technical
-    using base = OutputIteratorBase<to_out_stream_pipe<OutStream>>;
+    using base = pipeline_base<to_out_stream_pipe<OutStream>>;
     using base::operator=;
     to_out_stream_pipe& operator=(to_out_stream_pipe const& other)
     {

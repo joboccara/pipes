@@ -1,11 +1,14 @@
 #ifndef PIPES_SET_AGGREGATOR_HPP
 #define PIPES_SET_AGGREGATOR_HPP
 
-#include <functional>
-#include <iterator>
-#include "pipes/output_iterator.hpp"
+#include "pipes/operator.hpp"
+
+#include "pipes/pipeline_base.hpp"
 #include "pipes/helpers/assignable.hpp"
 #include "pipes/helpers/warnings.hpp"
+
+#include <functional>
+#include <iterator>
 
 PIPES_DISABLE_WARNING_PUSH
 PIPES_DISABLE_WARNING_MULTIPLE_ASSIGNMENT_OPERATORS_SPECIFIED
@@ -14,7 +17,7 @@ namespace pipes
 {
 
 template<typename Set, typename Function>
-class set_aggregate_iterator : public OutputIteratorBase<set_aggregate_iterator<Set, Function>>
+class set_aggregate_iterator : public pipeline_base<set_aggregate_iterator<Set, Function>>
 {
 public:
     template<typename T>
@@ -41,7 +44,7 @@ private:
     detail::assignable<Function> aggregator_;
 
 public: // but technical
-    using base = OutputIteratorBase<set_aggregate_iterator<Set, Function>>;
+    using base = pipeline_base<set_aggregate_iterator<Set, Function>>;
     using base::operator=;
     set_aggregate_iterator& operator=(set_aggregate_iterator const& other)
     {

@@ -2,6 +2,7 @@
 #include "pipes/filter.hpp"
 #include "pipes/tee.hpp"
 #include "pipes/transform.hpp"
+#include "pipes/push_back.hpp"
 
 TEST_CASE("tee outuputs to the next pipe as well as the one it takes in argument")
 {
@@ -14,9 +15,9 @@ TEST_CASE("tee outuputs to the next pipe as well as the one it takes in argument
     auto results = std::vector<int>{};
     
     inputs >>= pipes::transform([](int i){ return i * 2; })
-           >>= pipes::tee(back_inserter(intermediaryResults))
+           >>= pipes::tee(pipes::push_back(intermediaryResults))
            >>= pipes::filter([](int i){ return i > 10; })
-           >>= back_inserter(results);
+           >>= pipes::push_back(results);
     
     REQUIRE(results == expectedResults);
     REQUIRE(intermediaryResults == expectedIntermediaryResults);
@@ -26,8 +27,8 @@ TEST_CASE("tee operator=")
 {
     std::vector<int> results1, results2, results3, results4;
     
-    auto tee1 = pipes::tee(back_inserter(results1)) >>= back_inserter(results2);
-    auto tee2 = pipes::tee(back_inserter(results3)) >>= back_inserter(results4);
+    auto tee1 = pipes::tee(pipes::push_back(results1)) >>= pipes::push_back(results2);
+    auto tee2 = pipes::tee(pipes::push_back(results3)) >>= pipes::push_back(results4);
     
     tee2 = tee1;
     pipes::send(tee2, 0);

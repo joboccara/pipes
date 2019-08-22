@@ -1,18 +1,20 @@
 #ifndef PIPES_FILTER_HPP
 #define PIPES_FILTER_HPP
 
+#include "pipes/operator.hpp"
+
 #include "pipes/helpers/assignable.hpp"
 #include "pipes/helpers/meta.hpp"
 #include "pipes/helpers/warnings.hpp"
-#include "pipes/output_iterator.hpp"
+#include "pipes/pipeline_base.hpp"
 
 PIPES_DISABLE_WARNING_PUSH
 PIPES_DISABLE_WARNING_MULTIPLE_ASSIGNMENT_OPERATORS_SPECIFIED
 
 namespace pipes
 {
-template<typename Predicate, typename NextPipe>
-class filter_pipe : public OutputIteratorBase<filter_pipe<Predicate, NextPipe>>
+template<typename Predicate, typename Pipeline>
+class filter_pipeline : public pipeline_base<filter_pipeline<Predicate, Pipeline>>
 {
 public:    
     template<typename T>
@@ -20,41 +22,48 @@ public:
     {
         if (predicate_(value))
         {
-            send(nextPipe_, value);
+            send(pipeline_, value);
         }
     }
 
-    explicit filter_pipe(Predicate predicate, NextPipe nextPipe) : predicate_(predicate), nextPipe_(nextPipe) {}
+    explicit filter_pipeline(Predicate predicate, Pipeline pipeline) : predicate_(predicate), pipeline_(pipeline) {}
     
 private:
     detail::assignable<Predicate> predicate_;
-    NextPipe nextPipe_;
+    Pipeline pipeline_;
 
 public: // but technical
-    using base = OutputIteratorBase<filter_pipe<Predicate, NextPipe>>;
+    using base = pipeline_base<filter_pipeline<Predicate, Pipeline>>;
     using base::operator=;
-    filter_pipe& operator=(filter_pipe const& other)
+    filter_pipeline& operator=(filter_pipeline const& other)
     {
         predicate_ = other.predicate_;
-        nextPipe_ = other.nextPipe_;
+        pipeline_ = other.pipeline_;
         return *this;
     }
-    filter_pipe& operator=(filter_pipe& other) { *this = const_cast<filter_pipe const&>(other); return *this; }
+    filter_pipeline& operator=(filter_pipeline& other) { *this = const_cast<filter_pipeline const&>(other); return *this; }
 };
 
 template<typename Predicate>
-struct FilterPredicateWrapper{ Predicate const& predicate; };
+class filter_pipe
+{
+public:
+    template<typename Pipeline>
+    auto plug_to_pipeline(Pipeline&& pipeline) const
+    {
+        return filter_pipeline<Predicate, std::remove_reference_t<Pipeline>>{predicate_, pipeline};
+    }
+    
+    explicit filter_pipe(Predicate predicate) : predicate_(predicate){}
+    
+private:
+    Predicate predicate_;
+};
 
 template<typename Predicate>
-FilterPredicateWrapper<Predicate> filter(Predicate const& predicate)
+filter_pipe<Predicate> filter(Predicate const& predicate)
 {
-    return FilterPredicateWrapper<Predicate>{predicate};
-}
-
-template<typename Predicate, typename NextPipe>
-filter_pipe<Predicate, NextPipe> operator>>= (FilterPredicateWrapper<Predicate> const& filterPredicateWrapper, NextPipe const& nextPipe)
-{
-    return filter_pipe<Predicate, NextPipe>{filterPredicateWrapper.predicate, nextPipe};
+    return filter_pipe<Predicate>{predicate};
 }
 
 } // namespace pipes

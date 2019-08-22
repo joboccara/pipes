@@ -1,13 +1,15 @@
 #ifndef PIPES_DEAD_END_ITERATOR_HPP
 #define PIPES_DEAD_END_ITERATOR_HPP
 
+#include "pipes/operator.hpp"
+
+#include "pipes/pipeline_base.hpp"
 #include <iterator>
-#include "pipes/output_iterator.hpp"
 
 namespace pipes
 {
     
-    class dev_null : public OutputIteratorBase<dev_null>
+    class dev_null : public pipeline_base<dev_null>
     {
     public:
         template<typename T>
@@ -17,7 +19,7 @@ namespace pipes
         }
         
     public: // but technical
-        using base = OutputIteratorBase<dev_null>;
+        using base = pipeline_base<dev_null>;
         using base::operator=;
     };
     

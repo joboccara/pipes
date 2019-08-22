@@ -2,6 +2,7 @@
 #include "pipes/demux.hpp"
 #include "pipes/filter.hpp"
 #include "pipes/transform.hpp"
+#include "pipes/push_back.hpp"
 
 #include <algorithm>
 #include <utility>
@@ -17,7 +18,7 @@ TEST_CASE("demux dispatches an input to several destinations")
 
     std::vector<int> results1, results2, results3;
     
-    std::copy(begin(numbers), end(numbers), pipes::demux(back_inserter(results1), back_inserter(results2), back_inserter(results3)));
+    std::copy(begin(numbers), end(numbers), pipes::demux(pipes::push_back(results1), pipes::push_back(results2), pipes::push_back(results3)));
     
     REQUIRE(results1 == expected1);
     REQUIRE(results2 == expected2);
@@ -53,9 +54,9 @@ TEST_CASE("demux can send data to other pipes")
 
     std::vector<int> multiplesOf2, multiplesOf3, multiplesOf4;
     
-    std::copy(begin(numbers), end(numbers), pipes::demux(pipes::filter([](int i){return i%2 == 0;}) >>= back_inserter(multiplesOf2),
-                                                         pipes::filter([](int i){return i%3 == 0;}) >>= back_inserter(multiplesOf3),
-                                                         pipes::filter([](int i){return i%4 == 0;}) >>= back_inserter(multiplesOf4)));
+    std::copy(begin(numbers), end(numbers), pipes::demux(pipes::filter([](int i){return i%2 == 0;}) >>= pipes::push_back(multiplesOf2),
+                                                         pipes::filter([](int i){return i%3 == 0;}) >>= pipes::push_back(multiplesOf3),
+                                                         pipes::filter([](int i){return i%4 == 0;}) >>= pipes::push_back(multiplesOf4)));
     
     REQUIRE(multiplesOf2 == expectedMultiplesOf2);
     REQUIRE(multiplesOf3 == expectedMultiplesOf3);
@@ -72,9 +73,9 @@ TEST_CASE("demux can be used as a tee")
     std::vector<int> results, log;
     
     std::copy(begin(numbers), end(numbers), pipes::filter([](int i){return i%2 == 0;})
-                                        >>= pipes::demux(back_inserter(log),
+                                        >>= pipes::demux(pipes::push_back(log),
                                                          pipes::transform([](int i){ return i*2; })
-                                                         >>= back_inserter(results)));
+                                                         >>= pipes::push_back(results)));
     
     REQUIRE(results == expectedResults);
     REQUIRE(log == expectedLog);
@@ -83,7 +84,7 @@ TEST_CASE("demux can be used as a tee")
 TEST_CASE("demux's iterator category should be std::output_iterator_tag")
 {
     std::vector<int> output;
-    static_assert(std::is_same<decltype(pipes::demux(back_inserter(output), back_inserter(output), back_inserter(output)))::iterator_category,
+    static_assert(std::is_same<decltype(pipes::demux(pipes::push_back(output), pipes::push_back(output), pipes::push_back(output)))::iterator_category,
                   std::output_iterator_tag>::value,
                   "iterator category should be std::output_iterator_tag");
 }
@@ -91,8 +92,8 @@ TEST_CASE("demux's iterator category should be std::output_iterator_tag")
 TEST_CASE("demux operator=")
 {
     std::vector<int> results1, results2, results3, results4;
-    auto demux1 = pipes::demux(back_inserter(results1), back_inserter(results2));
-    auto demux2 = pipes::demux(back_inserter(results1), back_inserter(results2));
+    auto demux1 = pipes::demux(pipes::push_back(results1), pipes::push_back(results2));
+    auto demux2 = pipes::demux(pipes::push_back(results1), pipes::push_back(results2));
 
     demux2 = demux1;
     pipes::send(demux2, 0);

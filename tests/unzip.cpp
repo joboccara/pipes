@@ -1,6 +1,7 @@
 #include "catch.hpp"
 #include "pipes/unzip.hpp"
 #include "pipes/transform.hpp"
+#include "pipes/push_back.hpp"
 
 #include <algorithm>
 #include <map>
@@ -13,7 +14,7 @@ TEST_CASE("unzip breaks tuples down to containers")
     std::vector<std::tuple<int, int, int>> lines = { {1, 2, 3}, {4, 5, 6}, {7, 8, 9}, {10, 11, 12} };
     std::vector<int> column1, column2, column3;
     
-    std::copy(begin(lines), end(lines), pipes::unzip(back_inserter(column1), back_inserter(column2), back_inserter(column3)));
+    std::copy(begin(lines), end(lines), pipes::unzip(pipes::push_back(column1), pipes::push_back(column2), pipes::push_back(column3)));
     
     std::vector<int> expectedColumn1 = {1, 4, 7, 10};
     std::vector<int> expectedColumn2 = {2, 5, 8, 11};
@@ -33,7 +34,7 @@ TEST_CASE("unzip breaks pairs down to two containers")
     std::vector<int> keys;
     std::vector<std::string> values;
     
-    std::copy(begin(entries), end(entries), pipes::unzip(back_inserter(keys), back_inserter(values)));
+    std::copy(begin(entries), end(entries), pipes::unzip(pipes::push_back(keys), pipes::push_back(values)));
     
     REQUIRE(keys == expectedKeys);
     REQUIRE(values == expectedValues);
@@ -43,7 +44,7 @@ TEST_CASE("unzip breaks pairs down to two containers")
 TEST_CASE("unzip's iterator category should be std::output_iterator_tag")
 {
     std::vector<int> output;
-    static_assert(std::is_same<decltype(pipes::unzip(back_inserter(output)))::iterator_category,
+    static_assert(std::is_same<decltype(pipes::unzip(pipes::push_back(output)))::iterator_category,
                   std::output_iterator_tag>::value,
                   "iterator category should be std::output_iterator_tag");
 }
@@ -69,7 +70,7 @@ TEST_CASE("unzip can override existing contents")
 std::string toUpperString(std::string const& s)
 {
     std::string upperString;
-    std::transform(begin(s), end(s), std::back_inserter(upperString), [](char c){ return std::toupper(c); });
+    std::transform(begin(s), end(s), pipes::push_back(upperString), [](char c){ return std::toupper(c); });
     return upperString;
 }
 
@@ -85,8 +86,8 @@ TEST_CASE("unzip + transform")
     auto const toUpper = pipes::transform(toUpperString);
     
     std::copy(begin(entries), end(entries),
-              pipes::unzip(back_inserter(keys),
-                           toUpper >>= back_inserter(values)));
+              pipes::unzip(pipes::push_back(keys),
+                           toUpper >>= pipes::push_back(values)));
     
     REQUIRE(keys == expectedKeys);
     REQUIRE(values == expectedValues);
@@ -98,8 +99,8 @@ TEST_CASE("unzip operator=")
     auto results2 = std::vector<std::string>{};
     auto results3 = std::vector<int>{};
     auto results4 = std::vector<std::string>{};
-    auto pipeline1 = pipes::unzip(back_inserter(results1), back_inserter(results2));
-    auto pipeline2 = pipes::unzip(back_inserter(results3), back_inserter(results4));
+    auto pipeline1 = pipes::unzip(pipes::push_back(results1), pipes::push_back(results2));
+    auto pipeline2 = pipes::unzip(pipes::push_back(results3), pipes::push_back(results4));
     
     pipeline2 = pipeline1;
     send(pipeline2, std::make_pair(0, "zero"));

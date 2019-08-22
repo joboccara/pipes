@@ -1,10 +1,12 @@
 #ifndef PIPES_SWITCH_HPP
 #define PIPES_SWITCH_HPP
 
+#include "pipes/operator.hpp"
+
 #include "pipes/helpers/assignable.hpp"
 #include "pipes/helpers/meta.hpp"
 #include "pipes/helpers/warnings.hpp"
-#include "pipes/output_iterator.hpp"
+#include "pipes/pipeline_base.hpp"
 
 PIPES_DISABLE_WARNING_PUSH
 PIPES_DISABLE_WARNING_MULTIPLE_ASSIGNMENT_OPERATORS_SPECIFIED
@@ -12,16 +14,16 @@ PIPES_DISABLE_WARNING_MULTIPLE_ASSIGNMENT_OPERATORS_SPECIFIED
 namespace pipes
 {
     
-template<typename Predicate, typename OutputPipe>
+template<typename Predicate, typename Pipeline>
 struct case_branch
 {
     detail::assignable<Predicate> predicate;
-    OutputPipe outputPipe;
-    case_branch(Predicate predicate, OutputPipe outputPipe) : predicate(predicate), outputPipe(outputPipe) {}
+    Pipeline pipeline;
+    case_branch(Predicate predicate, Pipeline pipeline) : predicate(predicate), pipeline(pipeline) {}
 };
 
 template<typename... CaseBranches>
-class switch_pipe : public OutputIteratorBase<switch_pipe<CaseBranches...>>
+class switch_pipeline : public pipeline_base<switch_pipeline<CaseBranches...>>
 {
 public:
     template<typename T>
@@ -30,55 +32,55 @@ public:
         auto const firstSatisfyingBranchIndex = detail::find_if(branches_, [&value](auto&& branch){ return branch.predicate(value); });
         if (firstSatisfyingBranchIndex < sizeof...(CaseBranches))
         {
-            detail::perform(branches_, firstSatisfyingBranchIndex, [&value](auto&& branch){ send(branch.outputPipe, value); });
+            detail::perform(branches_, firstSatisfyingBranchIndex, [&value](auto&& branch){ send(branch.pipeline, value); });
         }
     }
 
-    explicit switch_pipe(CaseBranches const&... caseBranches) : branches_(std::make_tuple(caseBranches...)) {}
+    explicit switch_pipeline(CaseBranches const&... caseBranches) : branches_(std::make_tuple(caseBranches...)) {}
     
 private:
     std::tuple<CaseBranches...> branches_;
     
 public: // but technical
-    using base = OutputIteratorBase<switch_pipe<CaseBranches...>>;
+    using base = pipeline_base<switch_pipeline<CaseBranches...>>;
     using base::operator=;
-    switch_pipe& operator=(switch_pipe const& other)
+    switch_pipeline& operator=(switch_pipeline const& other)
     {
         branches_ = other.branches_;
         return *this;
     }
-    switch_pipe& operator=(switch_pipe& other) { *this = const_cast<switch_pipe const&>(other); return *this; }
+    switch_pipeline& operator=(switch_pipeline& other) { *this = const_cast<switch_pipeline const&>(other); return *this; }
 };
 
 template<typename... CaseBranches>
-switch_pipe<CaseBranches...> switch_(CaseBranches const&... caseBranches)
+switch_pipeline<CaseBranches...> switch_(CaseBranches const&... caseBranches)
 {
-    return switch_pipe<CaseBranches...>(caseBranches...);
+    return switch_pipeline<CaseBranches...>(caseBranches...);
 }
 
 template<typename Predicate>
-class Case_
+class case_pipe
 {
 public:
-    explicit constexpr Case_(Predicate const& predicate) : predicate_(predicate) {}
-    Predicate const& get() const {return predicate_;}
+    template<typename Pipeline>
+    auto plug_to_pipeline(Pipeline&& pipeline) const
+    {
+        return case_branch<Predicate, std::remove_reference_t<Pipeline>>{predicate_, pipeline};
+    }
+    
+    explicit case_pipe(Predicate predicate) : predicate_(predicate){}
+    
 private:
-    Predicate const& predicate_;
+    Predicate predicate_;
 };
 
 template<typename Predicate>
-Case_<Predicate> case_(Predicate&& predicate)
+case_pipe<Predicate> case_(Predicate&& predicate)
 {
-    return Case_<Predicate>(std::forward<Predicate>(predicate));
+    return case_pipe<Predicate>(std::forward<Predicate>(predicate));
 }
     
 auto const default_ = case_([](auto&&){ return true; });
-
-template<typename Predicate, typename OutputPipe>
-case_branch<Predicate, OutputPipe> operator>>=(Case_<Predicate> const& casePredicate, OutputPipe outputPipe)
-{
-    return case_branch<Predicate, OutputPipe>{casePredicate.get(), outputPipe};
-}
 
 } // namespace pipes
 

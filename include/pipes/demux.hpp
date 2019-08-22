@@ -1,9 +1,11 @@
 #ifndef PIPES_DEMUX_HPP
 #define PIPES_DEMUX_HPP
 
+#include "pipes/operator.hpp"
+
 #include "pipes/helpers/meta.hpp"
 #include "pipes/helpers/warnings.hpp"
-#include "pipes/output_iterator.hpp"
+#include "pipes/pipeline_base.hpp"
 
 PIPES_DISABLE_WARNING_PUSH
 PIPES_DISABLE_WARNING_MULTIPLE_ASSIGNMENT_OPERATORS_SPECIFIED
@@ -12,7 +14,7 @@ namespace pipes
 {
 
 template<typename... OutputPipes>
-class demux_pipe : public OutputIteratorBase<demux_pipe<OutputPipes...>>
+class demux_pipe : public pipeline_base<demux_pipe<OutputPipes...>>
 {
 public:
     template<typename T>
@@ -27,7 +29,7 @@ private:
     std::tuple<OutputPipes...> outputPipes_;
     
 public: // but technical
-    using base = OutputIteratorBase<demux_pipe<OutputPipes...>>;
+    using base = pipeline_base<demux_pipe<OutputPipes...>>;
     using base::operator=;
     demux_pipe& operator=(demux_pipe const& other)
     {
