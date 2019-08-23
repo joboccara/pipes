@@ -15,29 +15,29 @@ PIPES_DISABLE_WARNING_MULTIPLE_ASSIGNMENT_OPERATORS_SPECIFIED
 namespace pipes
 {
 
-template<typename Function, typename Pipeline>
-class transform_pipeline : public pipeline_base<transform_pipeline<Function, Pipeline>>
+template<typename Function, typename TailPipeline>
+class transform_pipeline : public pipeline_base<transform_pipeline<Function, TailPipeline>>
 {
 public:
     template<typename T>
     void onReceive(T&& input)
     {
-        send(pipeline_, function_(input));
+        send(tailPipeline_, function_(input));
     }
 
-    explicit transform_pipeline(Function function, Pipeline pipeline) : function_(function), pipeline_(pipeline) {}
+    explicit transform_pipeline(Function function, TailPipeline tailPipeline) : function_(function), tailPipeline_(tailPipeline) {}
     
 private:
     detail::assignable<Function> function_;
-    Pipeline pipeline_;
+    TailPipeline tailPipeline_;
 
 public: // but technical
-    using base = pipeline_base<transform_pipeline<Function, Pipeline>>;
+    using base = pipeline_base<transform_pipeline<Function, TailPipeline>>;
     using base::operator=;
     transform_pipeline& operator=(transform_pipeline const& other)
     {
         function_ = other.function_;
-        pipeline_ = other.pipeline_;
+        tailPipeline_ = other.tailPipeline_;
         return *this;
     }
     transform_pipeline& operator=(transform_pipeline& other) { *this = const_cast<transform_pipeline const&>(other); return *this; }
