@@ -4,25 +4,26 @@
 #include "pipes/operator.hpp"
 
 #include "pipes/pipeline_base.hpp"
+#include "pipes/helpers/FWD.hpp"
 #include "pipes/helpers/warnings.hpp"
 
 #include <type_traits>
 
-PIPES_DISABLE_WARNING_PUSH
-PIPES_DISABLE_WARNING_MULTIPLE_ASSIGNMENT_OPERATORS_SPECIFIED
-
 namespace pipes
 {
+    
+PIPES_DISABLE_WARNING_PUSH
+PIPES_DISABLE_WARNING_MULTIPLE_ASSIGNMENT_OPERATORS_SPECIFIED
     
 template<typename TeeBranch, typename PipelineTail>
 class tee_pipeline : public pipeline_base<tee_pipeline<TeeBranch, PipelineTail>>
 {
 public:
     template<typename T>
-    void onReceive(T const& value)
+    void onReceive(T&& value)
     {
-        send(teeBranch_, value);
-        send(pipelineTail_, value);
+        send(teeBranch_, FWD(value));
+        send(pipelineTail_, FWD(value));
     }
     
     tee_pipeline(TeeBranch const& teeBranch, PipelineTail const& pipelineTail) : teeBranch_(teeBranch), pipelineTail_(pipelineTail){}
@@ -43,6 +44,8 @@ public: // but technical
     tee_pipeline& operator=(tee_pipeline& other) { *this = const_cast<tee_pipeline const&>(other); return *this; }
 };
     
+PIPES_DISABLE_WARNING_POP
+
 template<typename TeeBranch>
 class tee_pipe
 {
@@ -67,6 +70,5 @@ tee_pipe<TeeBranch> tee(TeeBranch const& teeBranch)
     
 } // namespace pipes
 
-PIPES_DISABLE_WARNING_POP
 
 #endif /* PIPES_TEE_HPP */
