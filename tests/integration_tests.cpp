@@ -165,11 +165,29 @@ TEST_CASE("Aggregation of pipes into reusable components")
     
     SECTION("Middle of pipeline aggregated")
     {
-        auto pipeline = pipes::filter([](int i) { return i % 2 == 0; })
-                    >>= pipes::transform([](int i ){ return i * 2;});
+        SECTION("Composte of simple pipes")
+        {
+            auto pipeline = pipes::filter([](int i) { return i % 2 == 0; })
+                        >>= pipes::transform([](int i ){ return i * 2;});
+            
+            input >>= pipeline >>= pipes::push_back(results);
+            
+            REQUIRE(results == expected);
+        }
         
-        input >>= pipeline >>= pipes::push_back(results);
-        
-        REQUIRE(results == expected);
+        SECTION("Composite of composite pipes")
+        {
+            auto const expectedComposite = std::vector<int>{8, 16, 24, 32, 40};
+            auto resultsComposite = std::vector<int>{};
+
+            auto pipeline = pipes::filter([](int i) { return i % 2 == 0; })
+                        >>= pipes::transform([](int i ){ return i * 2;});
+            
+            auto pipeline2 = pipeline >>= pipes::transform([](int i ){ return i * 2;});
+            
+            input >>= pipeline2 >>= pipes::push_back(resultsComposite);
+
+            REQUIRE(resultsComposite == expectedComposite);
+        }
     }
 }
