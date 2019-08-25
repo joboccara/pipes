@@ -59,13 +59,7 @@ namespace pipes
         template<typename Pipeline>
         using IsAPipeline = impl::IsAPipeline<std::remove_reference_t<Pipeline>>;
 
-        template<typename Pipe1, typename Pipe2>
-        class CompositePipe;
-        
     } // namespace detail
-
-    template<typename Pipe1, typename Pipe2, detail::IsAPipe<Pipe1> = true, detail::IsAPipe<Pipe2> = true>
-    detail::CompositePipe<std::remove_reference_t<Pipe1>, std::remove_reference_t<Pipe2>> operator>>=(Pipe1&& pipe1, Pipe2&& pipe2);
 
     template<typename Pipe, typename Pipeline, detail::IsAPipe<Pipe> = true, detail::IsAPipeline<Pipeline> = true>
     auto operator>>=(Pipe&& pipe, Pipeline&& pipeline);
@@ -93,15 +87,15 @@ namespace pipes
 
 // range >>= pipeline
     
-    template<typename Range, typename Pipeline, detail::IsARange<Range> = true, detail::IsAPipeline<Pipeline> = true>
-    void operator>>=(Range&& range, Pipeline&& pipeline)
-    {
-        std::copy(begin(range), end(range), pipeline);
-    }
+template<typename Range, typename Pipeline, detail::IsARange<Range> = true, detail::IsAPipeline<Pipeline> = true>
+void operator>>=(Range&& range, Pipeline&& pipeline)
+{
+    std::copy(begin(range), end(range), pipeline);
+}
 
 // pipe >>= pipe
     
-    template<typename Pipe1, typename Pipe2, detail::IsAPipe<Pipe1>, detail::IsAPipe<Pipe2>>
+    template<typename Pipe1, typename Pipe2, detail::IsAPipe<Pipe1> = true, detail::IsAPipe<Pipe2> = true>
     detail::CompositePipe<std::remove_reference_t<Pipe1>, std::remove_reference_t<Pipe2>> operator>>=(Pipe1&& pipe1, Pipe2&& pipe2)
     {
         return detail::CompositePipe<std::remove_reference_t<Pipe1>, std::remove_reference_t<Pipe2>>(FWD(pipe1), FWD(pipe2));
