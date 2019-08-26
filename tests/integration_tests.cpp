@@ -124,6 +124,8 @@ TEST_CASE("Sequence of input ranges and output iterators, with pipes")
     REQUIRE(results == expected);
 }
 
+namespace
+{
 namespace MyCollectionNamespace
 {
     struct MyCollection
@@ -133,6 +135,7 @@ namespace MyCollectionNamespace
     
     auto begin(MyCollection const& myCollection) { return begin(myCollection.data_); }
     auto end(MyCollection const& myCollection) { return end(myCollection.data_); }
+}
 }
 
 TEST_CASE("Reading from a collection with ADL begin and end")

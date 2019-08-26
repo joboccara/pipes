@@ -12,6 +12,7 @@ add_executable(${PROJECT_NAME}
     sorted_inserter.cpp
     demux.cpp
     filter.cpp
+    override.cpp
     partition.cpp
     streams.cpp
     switch.cpp
