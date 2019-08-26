@@ -7,6 +7,7 @@
 #include "pipes/do_then.hpp"
 #include "pipes/filter.hpp"
 #include "pipes/map_aggregator.hpp"
+#include "pipes/move.hpp"
 #include "pipes/override.hpp"
 #include "pipes/partition.hpp"
 #include "pipes/push_back.hpp"
