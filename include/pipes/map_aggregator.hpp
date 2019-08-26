@@ -26,7 +26,7 @@ public:
         auto position = map_.get().find(keyValue.first);
         if (position != map_.get().end())
         {
-            position->second = (*aggregator_)(position->second, keyValue.second);
+            position->second = aggregator_(position->second, keyValue.second);
         }
         else
         {

@@ -30,11 +30,8 @@ public:
     assignable(T const& value) : value_(value) {}
     assignable(T&& value) : value_(std::move(value)) {}
     
-    T const* operator->() const { return &*value_; }
-    T* operator->() { return &*value_; }
-    
-    T const& operator*() const { return *value_; }
-    T& operator*() { return *value_; }
+    T const& get() const { return *value_; }
+    T& get() { return *value_; }
     
     template<typename... Args>
     decltype(auto) operator()(Args&&... args)
@@ -51,11 +48,8 @@ class assignable<T&>
 public:
     assignable(T& value) : value_(value) {}
     
-    T const* operator->() const { return &value_; }
-    T* operator->() { return &value_; }
-    
-    T const& operator*() const { return value_; }
-    T& operator*() { return value_; }
+    T const& get() const { return value_; }
+    T& get() { return value_; }
     
     template<typename... Args>
     decltype(auto) operator()(Args&&... args)
@@ -72,11 +66,8 @@ class assignable<T const&>
 public:
     assignable(T const& value) : value_(value) {}
     
-    T const* operator->() const { return &value_; }
-    T* operator->() { return &value_; }
-    
-    T const& operator*() const { return value_; }
-    T& operator*() { return value_; }
+    T const& get() const { return value_; }
+    T& get() { return value_; }
     
     template<typename... Args>
     decltype(auto) operator()(Args&&... args)
