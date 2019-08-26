@@ -371,7 +371,7 @@ std::vector<int> input = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
 std::vector<int> results = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
 
 input >>= pipes::filter([](int i){ return i % 2 == 0; })
->>= pipes::override(results));
+      >>= pipes::override(results);
 
 // results contains {2, 4, 6, 8, 10, 0, 0, 0, 0, 0};
 ```
