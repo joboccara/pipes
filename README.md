@@ -144,6 +144,7 @@ std::cin >>= pipes::read_in_stream<std::string>{}
 * [End pipes](#end-pipes-1)
     * [`custom`](#-custom-)
     * [`map_aggregator`](#-map-aggregator-)
+    * [`override`](#-override-)
     * [`push_back`](#-push-back-)
     * [`set_aggregator`](#-set-aggregator-)
     * [`sorted_inserter`](#-sorted-inserter-)
@@ -360,6 +361,20 @@ std::copy(entries2.begin(), entries2.end(), map_aggregator(results, concatenateS
 `set_aggreagator` provides a similar functionality for aggregating elements into sets.
 
 Read the [full story](https://www.fluentcpp.com/2017/03/21/smart-iterator-aggregating-new-elements-existing-ones-map-set/) about `map_aggregator` and `set_aggregator`.
+
+### `override`
+
+`override` is the pipe equivalent to calling `begin` on an existing collection. The data that `override` receives overrides the first element of the container, then the next, and so on:
+
+```cpp
+std::vector<int> input = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
+std::vector<int> results = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+
+input >>= pipes::filter([](int i){ return i % 2 == 0; })
+>>= pipes::override(results));
+
+// results contains {2, 4, 6, 8, 10, 0, 0, 0, 0, 0};
+```
 
 ### `push_back`
 
