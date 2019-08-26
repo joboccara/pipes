@@ -17,7 +17,7 @@ public:
     template<typename Tuple>
     void onReceive(Tuple&& values)
     {
-        detail::for_each2([](auto&& value, auto&& nextPipe) { send(nextPipe, value); }, values, nextPipes_);
+        detail::for_each2([](auto&& value, auto&& nextPipe) { send(nextPipe, value); }, FWD(values), nextPipes_);
     }
     
     explicit unzip_pipe(NextPipes... nextPipes) : nextPipes_(nextPipes...) {}

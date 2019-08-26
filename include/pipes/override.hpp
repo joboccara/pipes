@@ -17,7 +17,7 @@ namespace pipes
         template<typename T>
         void onReceive(T&& value)
         {
-            send(iterator_, value);
+            send(iterator_, FWD(value));
         }
         
         explicit override_pipeline(Iterator iterator) : iterator_(iterator) {}

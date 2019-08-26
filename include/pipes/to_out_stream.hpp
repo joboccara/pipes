@@ -15,7 +15,7 @@ public:
     template<typename T>
     void onReceive(T&& value)
     {
-        outStream_.get() << value;
+        outStream_.get() << FWD(value);
     }
     
     to_out_stream_pipe(OutStream& outStream) : outStream_(outStream) {}

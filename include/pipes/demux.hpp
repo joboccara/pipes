@@ -20,7 +20,7 @@ public:
     template<typename T>
     void onReceive(T&& value)
     {
-        detail::for_each([&value](auto&& outputPipe){ send(outputPipe, value); }, outputPipes_);
+        detail::for_each([&value](auto&& outputPipe){ send(outputPipe, FWD(value)); }, outputPipes_);
     }
 
     explicit demux_pipe(OutputPipes const&... outputPipes) : outputPipes_(outputPipes...) {}

@@ -18,11 +18,11 @@ class filter_pipeline : public pipeline_base<filter_pipeline<Predicate, Pipeline
 {
 public:    
     template<typename T>
-    void onReceive(T const& value)
+    void onReceive(T&& value)
     {
-        if (predicate_(value))
+        if (predicate_(FWD(value)))
         {
-            send(pipeline_, value);
+            send(pipeline_, FWD(value));
         }
     }
 

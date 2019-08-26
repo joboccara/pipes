@@ -20,15 +20,15 @@ class partition_pipe : public pipeline_base<partition_pipe<OutputPipeTrue, Outpu
 {
 public:
     template<typename T>
-    void onReceive(T const& value)
+    void onReceive(T&& value)
     {
-        if (predicate_(value))
+        if (predicate_(FWD(value)))
         {
-            send(outputPipeTrue_, value);
+            send(outputPipeTrue_, FWD(value));
         }
         else
         {
-            send(outputPipeFalse_, value);
+            send(outputPipeFalse_, FWD(value));
         }
     }
 

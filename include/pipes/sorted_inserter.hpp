@@ -20,12 +20,12 @@ class sorted_insert_iterator : public pipeline_base<sorted_insert_iterator<Conta
 {
 public:
     template<typename T>
-    void onReceive(T const& value)
+    void onReceive(T&& value)
     {
         if (hint_)
-            container_->insert(*hint_,value);
+            container_->insert(*hint_,FWD(value));
         else
-            container_->insert(value);
+            container_->insert(FWD(value));
     }
 
     explicit sorted_insert_iterator (Container& container) : container_(&container), hint_(detail::nullopt) {}

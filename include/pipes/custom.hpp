@@ -18,9 +18,9 @@ class custom_iterator : public pipeline_base<custom_iterator<InsertFunction>>
 {
 public:
     template<typename T>
-    void onReceive(T const& value)
+    void onReceive(T&& value)
     {
-        insertFunction_(value);
+        insertFunction_(FWD(value));
     }
     
     explicit custom_iterator(InsertFunction insertFunction) : insertFunction_(insertFunction) {}

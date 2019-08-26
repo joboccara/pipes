@@ -21,14 +21,14 @@ class set_aggregate_iterator : public pipeline_base<set_aggregate_iterator<Set, 
 {
 public:
     template<typename T>
-    void onReceive(T const& value)
+    void onReceive(T&& value)
     {
-        auto position = set_.get().find(value);
+        auto position = set_.get().find(FWD(value));
         if (position != set_.get().end())
         {
             auto containedValue = *position;
             position = set_.get().erase(position);
-            set_.get().insert(position, aggregator_(value, containedValue));
+            set_.get().insert(position, aggregator_(FWD(value), containedValue));
         }
         else
         {

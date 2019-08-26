@@ -22,7 +22,7 @@ public:
     template<typename T>
     void onReceive(T&& input)
     {
-        send(tailPipeline_, function_(input));
+        send(tailPipeline_, function_(FWD(input)));
     }
 
     explicit transform_pipeline(Function function, TailPipeline tailPipeline) : function_(function), tailPipeline_(tailPipeline) {}

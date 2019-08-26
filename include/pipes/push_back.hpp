@@ -17,7 +17,7 @@ namespace pipes
         template<typename T>
         void onReceive(T&& value)
         {
-            container_.get().push_back(value);
+            container_.get().push_back(FWD(value));
         }
         
         explicit push_back_pipeline(Container& container) : container_(container) {}

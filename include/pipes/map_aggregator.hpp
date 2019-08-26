@@ -21,7 +21,7 @@ class map_aggregate_iterator : public pipeline_base<map_aggregate_iterator<Map, 
 {
 public:
     template<typename T>
-    void onReceive(T const& keyValue)
+    void onReceive(T&& keyValue)
     {
         auto position = map_.get().find(keyValue.first);
         if (position != map_.get().end())

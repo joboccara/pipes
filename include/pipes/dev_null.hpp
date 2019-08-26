@@ -13,7 +13,7 @@ namespace pipes
     {
     public:
         template<typename T>
-        void onReceive(T const&)
+        void onReceive(T&&)
         {
             //do nothing
         }
