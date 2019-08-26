@@ -34,6 +34,23 @@ TEST_CASE("transform")
     }
 }
 
+TEST_CASE("transform can use pointer to member functions")
+{
+    struct S
+    {
+        int get_42() const { return 42; }
+    };
+    
+    auto const input = std::vector<S>(10);
+    auto const expected = std::vector<int>(10, 42);
+    std::vector<int> results;
+    
+    input >>= pipes::transform(&S::get_42)
+          >>= pipes::push_back(results);
+    
+    REQUIRE(expected == results);
+}
+
 TEST_CASE("transform's iterator category should be std::output_iterator_tag")
 {
     auto const times2 = pipes::transform([](int i) { return i*2; });

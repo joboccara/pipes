@@ -7,7 +7,10 @@
 #include "pipes/helpers/assignable.hpp"
 #include "pipes/helpers/FWD.hpp"
 #include "pipes/helpers/meta.hpp"
+#include "pipes/helpers/invoke.hpp"
 #include "pipes/helpers/warnings.hpp"
+
+#include <type_traits>
 
 PIPES_DISABLE_WARNING_PUSH
 PIPES_DISABLE_WARNING_MULTIPLE_ASSIGNMENT_OPERATORS_SPECIFIED
@@ -22,7 +25,7 @@ public:
     template<typename T>
     void onReceive(T&& input)
     {
-        send(tailPipeline_, function_(FWD(input)));
+        send(tailPipeline_, detail::invoke(function_.get(), FWD(input)));
     }
 
     explicit transform_pipeline(Function function, TailPipeline tailPipeline) : function_(function), tailPipeline_(tailPipeline) {}
@@ -60,9 +63,9 @@ private:
 };
 
 template<typename Function>
-transform_pipe<Function> transform(Function&& function)
+    transform_pipe<std::decay_t<Function>> transform(Function&& function)
 {
-    return transform_pipe<Function>{function};
+    return transform_pipe<std::decay_t<Function>>{function};
 }
 
 } // namespace pipes
