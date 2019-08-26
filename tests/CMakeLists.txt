@@ -1,8 +1,6 @@
-cmake_minimum_required(VERSION 3.10)
+cmake_minimum_required(VERSION 3.12)
 
-project(pipes_test)
-
-add_executable(${PROJECT_NAME}
+add_executable(pipes_test
     main.cpp
     custom.cpp
     dev_null.cpp
@@ -21,4 +19,16 @@ add_executable(${PROJECT_NAME}
     unzip.cpp
     integration_tests.cpp)
 
-target_link_libraries(${PROJECT_NAME} PRIVATE joboccara::pipes)
+target_include_directories(pipes_test PRIVATE
+                           $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include>
+                           $<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}/include>)
+
+target_compile_features(pipes_test PRIVATE cxx_std_14)
+
+target_compile_options(pipes_test
+                       PRIVATE $<$<CXX_COMPILER_ID:MSVC>:/std:c++17>
+                       $<$<CXX_COMPILER_ID:MSVC>:/W4>
+                       $<$<CXX_COMPILER_ID:MSVC>:/WX>
+                       $<$<OR:$<CXX_COMPILER_ID:GNU>,$<CXX_COMPILER_ID:Clang>>:-Wall>
+                       $<$<OR:$<CXX_COMPILER_ID:GNU>,$<CXX_COMPILER_ID:Clang>>:-Werror>
+                       $<$<OR:$<CXX_COMPILER_ID:GNU>,$<CXX_COMPILER_ID:Clang>>:-pedantic>)
