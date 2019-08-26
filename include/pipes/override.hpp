@@ -3,13 +3,17 @@
 
 #include "pipes/operator.hpp"
 
-#include "pipeline_base.hpp"
+#include "pipes/pipeline_base.hpp"
+#include "pipes/helpers/warnings.hpp"
 
 #include <iterator>
 #include <utility>
 
 namespace pipes
 {
+    PIPES_DISABLE_WARNING_PUSH
+    PIPES_DISABLE_WARNING_MULTIPLE_ASSIGNMENT_OPERATORS_SPECIFIED
+    
     template<typename Iterator>
     class override_pipeline : public pipeline_base<override_pipeline<Iterator>>
     {
@@ -34,6 +38,8 @@ namespace pipes
         }
         override_pipeline& operator=(override_pipeline& other) { *this = const_cast<override_pipeline const&>(other); return *this; }
     };
+    
+    PIPES_DISABLE_WARNING_POP
     
     template<typename Container>
     auto override(Container& container)

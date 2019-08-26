@@ -6,6 +6,7 @@
 #include "pipes/demux.hpp"
 #include "pipes/do_then.hpp"
 #include "pipes/filter.hpp"
+#include "pipes/flatten.hpp"
 #include "pipes/map_aggregator.hpp"
 #include "pipes/override.hpp"
 #include "pipes/partition.hpp"

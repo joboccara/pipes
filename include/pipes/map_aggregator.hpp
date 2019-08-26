@@ -16,6 +16,9 @@ PIPES_DISABLE_WARNING_MULTIPLE_ASSIGNMENT_OPERATORS_SPECIFIED
 namespace pipes
 {
 
+PIPES_DISABLE_WARNING_PUSH
+PIPES_DISABLE_WARNING_MULTIPLE_ASSIGNMENT_OPERATORS_SPECIFIED
+
 template<typename Map, typename Function>
 class map_aggregate_iterator : public pipeline_base<map_aggregate_iterator<Map, Function>>
 {
@@ -52,6 +55,8 @@ public: // but technical
     }
     map_aggregate_iterator& operator=(map_aggregate_iterator& other) { *this = const_cast<map_aggregate_iterator const&>(other); return *this; }
 };
+
+PIPES_DISABLE_WARNING_POP
 
 template<typename Map, typename Function>
 map_aggregate_iterator<Map, Function> map_aggregator(Map& map, Function aggregator)

@@ -5,11 +5,15 @@
 
 #include "pipes/pipeline_base.hpp"
 #include "pipes/helpers/FWD.hpp"
+#include "pipes/helpers/warnings.hpp"
 
 #include <functional>
 
 namespace pipes
 {
+    PIPES_DISABLE_WARNING_PUSH
+    PIPES_DISABLE_WARNING_MULTIPLE_ASSIGNMENT_OPERATORS_SPECIFIED
+    
     template<typename Container>
     class push_back_pipeline : public pipeline_base<push_back_pipeline<Container>>
     {
@@ -35,6 +39,8 @@ namespace pipes
         }
         push_back_pipeline& operator=(push_back_pipeline& other) { *this = const_cast<push_back_pipeline const&>(other); return *this; }
     };
+    
+    PIPES_DISABLE_WARNING_POP
     
     template<typename Container>
     push_back_pipeline<Container> push_back(Container& container)
