@@ -5,6 +5,7 @@
 
 #include "pipeline_base.hpp"
 
+#include <iterator>
 #include <utility>
 
 namespace pipes
@@ -37,6 +38,7 @@ namespace pipes
     template<typename Container>
     auto override(Container& container)
     {
+        using std::begin;
         return override_pipeline<decltype(begin(std::declval<Container&>()))>{begin(container)};
     }
 }
