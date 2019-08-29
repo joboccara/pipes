@@ -8,6 +8,7 @@
 #include "pipes/helpers/warnings.hpp"
 
 #include <tuple>
+#include <type_traits>
 
 namespace pipes
 {
@@ -15,38 +16,38 @@ namespace pipes
 PIPES_DISABLE_WARNING_PUSH
 PIPES_DISABLE_WARNING_MULTIPLE_ASSIGNMENT_OPERATORS_SPECIFIED
 
-template<typename... NextPipes>
-class unzip_pipe : public pipeline_base<unzip_pipe<NextPipes...>>
+template<typename... TailPipelines>
+class unzip_pipeline : public pipeline_base<unzip_pipeline<TailPipelines...>>
 {
 public:
     template<typename Tuple>
     void onReceive(Tuple&& values)
     {
-        detail::for_each2([](auto&& value, auto&& nextPipe) { send(nextPipe, value); }, FWD(values), nextPipes_);
+        detail::for_each2([](auto&& value, auto&& tailPipe) { send(tailPipe, value); }, FWD(values), tailPipes_);
     }
     
-    explicit unzip_pipe(NextPipes... nextPipes) : nextPipes_(nextPipes...) {}
+    explicit unzip_pipeline(TailPipelines... tailPipes) : tailPipes_(tailPipes...) {}
     
 private:
-    std::tuple<NextPipes...> nextPipes_;
+    std::tuple<TailPipelines...> tailPipes_;
     
 public: // but technical
-    using base = pipeline_base<unzip_pipe<NextPipes...>>;
+    using base = pipeline_base<unzip_pipeline<TailPipelines...>>;
     using base::operator=;
-    unzip_pipe& operator=(unzip_pipe const& other)
+    unzip_pipeline& operator=(unzip_pipeline const& other)
     {
-        nextPipes_ = other.nextPipes_;
+        tailPipes_ = other.tailPipes_;
         return *this;
     }
-    unzip_pipe& operator=(unzip_pipe& other) { *this = const_cast<unzip_pipe const&>(other); return *this; }
+    unzip_pipeline& operator=(unzip_pipeline& other) { *this = const_cast<unzip_pipeline const&>(other); return *this; }
 };
 
 PIPES_DISABLE_WARNING_POP
     
-template<typename... NextPipes>
-unzip_pipe<NextPipes...> unzip(NextPipes... nextPipes)
+template<typename... TailPipelines>
+unzip_pipeline<TailPipelines...> unzip(TailPipelines... tailPipes)
 {
-    return unzip_pipe<NextPipes...>(nextPipes...);
+    return unzip_pipeline<std::decay_t<TailPipelines>...>(tailPipes...);
 }
     
 } // namespace pipes
