@@ -17,10 +17,6 @@ namespace pipes
         {
             //do nothing
         }
-        
-    public: // but technical
-        using base = pipeline_base<dev_null>;
-        using base::operator=;
     };
     
 } // namespace fluent

@@ -10,32 +10,41 @@
 namespace pipes
 {
     
-template<typename Pipeline, typename T>
-void send(Pipeline& pipeline, T&& value)
-{
-    pipeline.onReceive(FWD(value));
-}
-
-template<typename Derived>
-struct pipeline_base : detail::crtp<Derived, pipeline_base>
-{
-    using iterator_category = std::output_iterator_tag;
-    using value_type = void;
-    using difference_type = void;
-    using pointer = void;
-    using reference = void;
-    
-    Derived& operator++() { return this->derived(); }
-    Derived& operator++(int){ ++this->derived(); return this->derived(); }
-    Derived& operator*() { return this->derived(); }
-    
-    template<typename T>
-    Derived& operator=(T&& input)
+    template<typename Pipeline, typename T>
+    void send(Pipeline& pipeline, T&& value)
     {
-        send(this->derived(), FWD(input));
-        return this->derived();
+        pipeline.onReceive(FWD(value));
     }
-};
+
+    template<typename Pipeline>
+    struct pipeline_proxy
+    {
+        template<typename T>
+        pipeline_proxy& operator=(T&& input)
+        {
+            send(pipeline_, FWD(input));
+            return *this;
+        }
+        
+        explicit pipeline_proxy(Pipeline& pipeline) : pipeline_(pipeline){}
+        
+    private:
+        Pipeline& pipeline_;
+    };
+
+    template<typename Derived>
+    struct pipeline_base : detail::crtp<Derived, pipeline_base>
+    {
+        using iterator_category = std::output_iterator_tag;
+        using value_type = void;
+        using difference_type = void;
+        using pointer = void;
+        using reference = void;
+        
+        Derived& operator++() { return this->derived(); }
+        Derived& operator++(int){ ++this->derived(); return this->derived(); }
+        pipeline_proxy<Derived> operator*() { return pipeline_proxy<Derived>(this->derived()); }
+    };
 
 } // namespace pipes
 

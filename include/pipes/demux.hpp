@@ -4,11 +4,7 @@
 #include "pipes/operator.hpp"
 
 #include "pipes/helpers/meta.hpp"
-#include "pipes/helpers/warnings.hpp"
 #include "pipes/pipeline_base.hpp"
-
-PIPES_DISABLE_WARNING_PUSH
-PIPES_DISABLE_WARNING_MULTIPLE_ASSIGNMENT_OPERATORS_SPECIFIED
 
 namespace pipes
 {
@@ -27,16 +23,6 @@ public:
     
 private:
     std::tuple<TailPipelines...> tailPipelines_;
-    
-public: // but technical
-    using base = pipeline_base<demux_pipeline<TailPipelines...>>;
-    using base::operator=;
-    demux_pipeline& operator=(demux_pipeline const& other)
-    {
-        tailPipelines_ = other.tailPipelines_;
-        return *this;
-    }
-    demux_pipeline& operator=(demux_pipeline& other) { *this = const_cast<demux_pipeline const&>(other); return *this; }
 };
 
 template<typename... TailPipelines>
@@ -46,7 +32,5 @@ demux_pipeline<TailPipelines...> demux(TailPipelines const&... tailPipelines)
 }
 
 } // namespace pipes
-
-PIPES_DISABLE_WARNING_POP
 
 #endif /* PIPES_DEMUX_HPP */

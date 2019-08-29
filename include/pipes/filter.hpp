@@ -5,11 +5,7 @@
 
 #include "pipes/helpers/assignable.hpp"
 #include "pipes/helpers/meta.hpp"
-#include "pipes/helpers/warnings.hpp"
 #include "pipes/pipeline_base.hpp"
-
-PIPES_DISABLE_WARNING_PUSH
-PIPES_DISABLE_WARNING_MULTIPLE_ASSIGNMENT_OPERATORS_SPECIFIED
 
 namespace pipes
 {
@@ -31,17 +27,6 @@ public:
 private:
     detail::assignable<Predicate> predicate_;
     Pipeline pipeline_;
-
-public: // but technical
-    using base = pipeline_base<filter_pipeline<Predicate, Pipeline>>;
-    using base::operator=;
-    filter_pipeline& operator=(filter_pipeline const& other)
-    {
-        predicate_ = other.predicate_;
-        pipeline_ = other.pipeline_;
-        return *this;
-    }
-    filter_pipeline& operator=(filter_pipeline& other) { *this = const_cast<filter_pipeline const&>(other); return *this; }
 };
 
 template<typename Predicate>
@@ -67,7 +52,5 @@ filter_pipe<Predicate> filter(Predicate const& predicate)
 }
 
 } // namespace pipes
-
-PIPES_DISABLE_WARNING_POP
 
 #endif /* PIPES_FILTER_HPP */

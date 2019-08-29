@@ -5,13 +5,9 @@
 
 #include "pipes/pipeline_base.hpp"
 #include "pipes/helpers/assignable.hpp"
-#include "pipes/helpers/warnings.hpp"
 
 #include <functional>
 #include <iterator>
-
-PIPES_DISABLE_WARNING_PUSH
-PIPES_DISABLE_WARNING_MULTIPLE_ASSIGNMENT_OPERATORS_SPECIFIED
 
 namespace pipes
 {
@@ -42,17 +38,6 @@ public:
 private:
     std::reference_wrapper<Set> set_;
     detail::assignable<Function> aggregator_;
-
-public: // but technical
-    using base = pipeline_base<set_aggregate_iterator<Set, Function>>;
-    using base::operator=;
-    set_aggregate_iterator& operator=(set_aggregate_iterator const& other)
-    {
-        set_ = other.set_;
-        aggregator_ = other.aggregator_;
-        return *this;
-    }
-    set_aggregate_iterator& operator=(set_aggregate_iterator& other) { *this = const_cast<set_aggregate_iterator const&>(other); return *this; }
 };
 
 template<typename Set, typename Function>
@@ -62,7 +47,5 @@ set_aggregate_iterator<Set, Function> set_aggregator(Set& set, Function aggregat
 }
     
 } // namespace pipes
-
-PIPES_DISABLE_WARNING_POP
 
 #endif // PIPES_SET_AGGREGATOR_HPP

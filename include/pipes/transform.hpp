@@ -8,12 +8,8 @@
 #include "pipes/helpers/FWD.hpp"
 #include "pipes/helpers/meta.hpp"
 #include "pipes/helpers/invoke.hpp"
-#include "pipes/helpers/warnings.hpp"
 
 #include <type_traits>
-
-PIPES_DISABLE_WARNING_PUSH
-PIPES_DISABLE_WARNING_MULTIPLE_ASSIGNMENT_OPERATORS_SPECIFIED
 
 namespace pipes
 {
@@ -33,17 +29,6 @@ public:
 private:
     detail::assignable<Function> function_;
     TailPipeline tailPipeline_;
-
-public: // but technical
-    using base = pipeline_base<transform_pipeline<Function, TailPipeline>>;
-    using base::operator=;
-    transform_pipeline& operator=(transform_pipeline const& other)
-    {
-        function_ = other.function_;
-        tailPipeline_ = other.tailPipeline_;
-        return *this;
-    }
-    transform_pipeline& operator=(transform_pipeline& other) { *this = const_cast<transform_pipeline const&>(other); return *this; }
 };
 
 template<typename Function>
@@ -69,7 +54,5 @@ transform_pipe<std::decay_t<Function>> transform(Function&& function)
 }
 
 } // namespace pipes
-
-PIPES_DISABLE_WARNING_POP
 
 #endif /* PIPES_TRANSFORM_HPP */

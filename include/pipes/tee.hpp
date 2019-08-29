@@ -5,15 +5,11 @@
 
 #include "pipes/pipeline_base.hpp"
 #include "pipes/helpers/FWD.hpp"
-#include "pipes/helpers/warnings.hpp"
 
 #include <type_traits>
 
 namespace pipes
 {
-    
-PIPES_DISABLE_WARNING_PUSH
-PIPES_DISABLE_WARNING_MULTIPLE_ASSIGNMENT_OPERATORS_SPECIFIED
     
 template<typename TeeBranch, typename PipelineTail>
 class tee_pipeline : public pipeline_base<tee_pipeline<TeeBranch, PipelineTail>>
@@ -31,21 +27,8 @@ public:
 private:
     TeeBranch teeBranch_;
     PipelineTail pipelineTail_;
-
-public: // but technical
-    using base = pipeline_base<tee_pipeline<TeeBranch, PipelineTail>>;
-    using base::operator=;
-    tee_pipeline& operator=(tee_pipeline const& other)
-    {
-        teeBranch_ = other.teeBranch_;
-        pipelineTail_ = other.pipelineTail_;
-        return *this;
-    }
-    tee_pipeline& operator=(tee_pipeline& other) { *this = const_cast<tee_pipeline const&>(other); return *this; }
 };
     
-PIPES_DISABLE_WARNING_POP
-
 template<typename TeeBranch>
 class tee_pipe
 {

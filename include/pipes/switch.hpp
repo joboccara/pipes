@@ -5,11 +5,7 @@
 
 #include "pipes/helpers/assignable.hpp"
 #include "pipes/helpers/meta.hpp"
-#include "pipes/helpers/warnings.hpp"
 #include "pipes/pipeline_base.hpp"
-
-PIPES_DISABLE_WARNING_PUSH
-PIPES_DISABLE_WARNING_MULTIPLE_ASSIGNMENT_OPERATORS_SPECIFIED
 
 namespace pipes
 {
@@ -40,16 +36,6 @@ public:
     
 private:
     std::tuple<CaseBranches...> branches_;
-    
-public: // but technical
-    using base = pipeline_base<switch_pipeline<CaseBranches...>>;
-    using base::operator=;
-    switch_pipeline& operator=(switch_pipeline const& other)
-    {
-        branches_ = other.branches_;
-        return *this;
-    }
-    switch_pipeline& operator=(switch_pipeline& other) { *this = const_cast<switch_pipeline const&>(other); return *this; }
 };
 
 template<typename... CaseBranches>
@@ -83,7 +69,5 @@ case_pipe<Predicate> case_(Predicate&& predicate)
 auto const default_ = case_([](auto&&){ return true; });
 
 } // namespace pipes
-
-PIPES_DISABLE_WARNING_POP
 
 #endif /* PIPES_SWITCH_HPP */

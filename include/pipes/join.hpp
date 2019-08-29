@@ -5,10 +5,6 @@
 
 #include "pipes/pipeline_base.hpp"
 #include "pipes/helpers/FWD.hpp"
-#include "pipes/helpers/warnings.hpp"
-
-PIPES_DISABLE_WARNING_PUSH
-PIPES_DISABLE_WARNING_MULTIPLE_ASSIGNMENT_OPERATORS_SPECIFIED
 
 namespace pipes
 {
@@ -26,16 +22,6 @@ namespace pipes
         
     private:
         TailPipeline tailPipeline_;
-        
-    public: // but technical
-        using base = pipeline_base<join_pipeline<TailPipeline>>;
-        using base::operator=;
-        join_pipeline& operator=(join_pipeline const& other)
-        {
-            tailPipeline_ = other.tailPipeline_;
-            return *this;
-        }
-        join_pipeline& operator=(join_pipeline& other) { *this = const_cast<join_pipeline const&>(other); return *this; }
     };
     
     struct join_pipe
@@ -49,7 +35,5 @@ namespace pipes
     
     static auto constexpr join = join_pipe{};
 } // namespace pipes
-
-PIPES_DISABLE_WARNING_POP
 
 #endif /* PIPES_join_HPP */
