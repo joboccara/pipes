@@ -1,4 +1,5 @@
 #include "catch.hpp"
+#include "pipes/override.hpp"
 #include "pipes/partition.hpp"
 #include "pipes/push_back.hpp"
 
@@ -31,8 +32,8 @@ TEST_CASE("partition can override existing results")
     std::vector<int> odds = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
     
     std::copy(begin(input), end(input), pipes::partition([](int n){ return n % 2 == 0; },
-                                                         begin(evens),
-                                                         begin(odds)));
+                                                         pipes::override(evens),
+                                                         pipes::override(odds)));
     
     REQUIRE(evens == expectedEvens);
     REQUIRE(odds == expectedOdds);

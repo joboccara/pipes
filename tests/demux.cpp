@@ -1,6 +1,7 @@
 #include "catch.hpp"
 #include "pipes/demux.hpp"
 #include "pipes/filter.hpp"
+#include "pipes/override.hpp"
 #include "pipes/transform.hpp"
 #include "pipes/push_back.hpp"
 
@@ -37,7 +38,7 @@ TEST_CASE("demux can override existing results")
     std::vector<int> results2(numbers.size(), 0);
     std::vector<int> results3(numbers.size(), 0);
     
-    std::copy(begin(numbers), end(numbers), pipes::demux(begin(results1), begin(results2), begin(results3)));
+    std::copy(begin(numbers), end(numbers), pipes::demux(pipes::override(results1), pipes::override(results2), pipes::override(results3)));
     
     REQUIRE(results1 == expected1);
     REQUIRE(results2 == expected2);

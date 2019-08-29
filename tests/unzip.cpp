@@ -1,7 +1,8 @@
 #include "catch.hpp"
-#include "pipes/unzip.hpp"
+#include "pipes/override.hpp"
 #include "pipes/transform.hpp"
 #include "pipes/push_back.hpp"
+#include "pipes/unzip.hpp"
 
 #include <algorithm>
 #include <map>
@@ -56,7 +57,7 @@ TEST_CASE("unzip can override existing contents")
     std::vector<int> column2 = {0, 0, 0, 0, 0};
     std::vector<int> column3 = {0, 0, 0, 0, 0};
     
-    std::copy(begin(lines), end(lines), pipes::unzip(begin(column1), begin(column2), begin(column3)));
+    std::copy(begin(lines), end(lines), pipes::unzip(pipes::override(column1), pipes::override(column2), pipes::override(column3)));
     
     std::vector<int> expectedColumn1 = {1, 4, 7, 10, 0};
     std::vector<int> expectedColumn2 = {2, 5, 8, 11, 0};

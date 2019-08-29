@@ -10,11 +10,10 @@
 namespace pipes
 {
     
-template<typename OutputIterator, typename T>
-void send(OutputIterator& outputIterator, T&& value)
+template<typename Pipeline, typename T>
+void send(Pipeline& pipeline, T&& value)
 {
-    *outputIterator = FWD(value);
-    ++outputIterator;
+    pipeline.onReceive(FWD(value));
 }
 
 template<typename Derived>
@@ -33,7 +32,7 @@ struct pipeline_base : detail::crtp<Derived, pipeline_base>
     template<typename T>
     Derived& operator=(T&& input)
     {
-        this->derived().onReceive(FWD(input));
+        send(this->derived(), FWD(input));
         return this->derived();
     }
 };
