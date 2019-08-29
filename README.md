@@ -210,6 +210,19 @@ input >>= pipes::filter([](int i){ return i % 2 == 0; })
 // results contains {2, 4, 6, 8, 10}
 ```
 
+### `join`
+
+The `join` pipe receives collection and sends each element of each of those collections to the next pipe:
+
+```cpp
+auto const input = std::vector<std::vector<int>>{ {1, 2}, {3, 4}, {5, 6} };
+auto results = std::vector<int>{};
+
+input >>= pipes::join >>= pipes::push_back(results);
+
+// results contain {1, 2, 3, 4, 5, 6}
+```
+
 ### `partition`
 
 <p align="center"><img src="https://github.com/joboccara/pipes/blob/readme/docs/partition_pipe.png"/></p>
