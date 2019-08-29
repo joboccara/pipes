@@ -10,9 +10,6 @@
 #include <functional>
 #include <iterator>
 
-PIPES_DISABLE_WARNING_PUSH
-PIPES_DISABLE_WARNING_MULTIPLE_ASSIGNMENT_OPERATORS_SPECIFIED
-
 namespace pipes
 {
 
@@ -65,8 +62,5 @@ map_aggregate_iterator<Map, Function> map_aggregator(Map& map, Function aggregat
 }
     
 } // namespace pipes
-
-
-PIPES_DISABLE_WARNING_POP
 
 #endif // PIPES_MAP_AGGREGATOR_HPP
