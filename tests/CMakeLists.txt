@@ -10,7 +10,7 @@ add_executable(pipes_test
     sorted_inserter.cpp
     demux.cpp
     filter.cpp
-    flatten.cpp
+    join.cpp
     override.cpp
     partition.cpp
     streams.cpp
