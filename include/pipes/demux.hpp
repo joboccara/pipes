@@ -13,36 +13,36 @@ PIPES_DISABLE_WARNING_MULTIPLE_ASSIGNMENT_OPERATORS_SPECIFIED
 namespace pipes
 {
 
-template<typename... OutputPipes>
-class demux_pipe : public pipeline_base<demux_pipe<OutputPipes...>>
+template<typename... TailPipelines>
+class demux_pipeline : public pipeline_base<demux_pipeline<TailPipelines...>>
 {
 public:
     template<typename T>
     void onReceive(T&& value)
     {
-        detail::for_each([&value](auto&& outputPipe){ send(outputPipe, FWD(value)); }, outputPipes_);
+        detail::for_each([&value](auto&& tailPipeline){ send(tailPipeline, FWD(value)); }, tailPipelines_);
     }
 
-    explicit demux_pipe(OutputPipes const&... outputPipes) : outputPipes_(outputPipes...) {}
+    explicit demux_pipeline(TailPipelines const&... tailPipelines) : tailPipelines_(tailPipelines...) {}
     
 private:
-    std::tuple<OutputPipes...> outputPipes_;
+    std::tuple<TailPipelines...> tailPipelines_;
     
 public: // but technical
-    using base = pipeline_base<demux_pipe<OutputPipes...>>;
+    using base = pipeline_base<demux_pipeline<TailPipelines...>>;
     using base::operator=;
-    demux_pipe& operator=(demux_pipe const& other)
+    demux_pipeline& operator=(demux_pipeline const& other)
     {
-        outputPipes_ = other.outputPipes_;
+        tailPipelines_ = other.tailPipelines_;
         return *this;
     }
-    demux_pipe& operator=(demux_pipe& other) { *this = const_cast<demux_pipe const&>(other); return *this; }
+    demux_pipeline& operator=(demux_pipeline& other) { *this = const_cast<demux_pipeline const&>(other); return *this; }
 };
 
-template<typename... OutputPipes>
-demux_pipe<OutputPipes...> demux(OutputPipes const&... outputPipes)
+template<typename... TailPipelines>
+demux_pipeline<TailPipelines...> demux(TailPipelines const&... tailPipelines)
 {
-    return demux_pipe<OutputPipes...>(outputPipes...);
+    return demux_pipeline<TailPipelines...>(tailPipelines...);
 }
 
 } // namespace pipes
