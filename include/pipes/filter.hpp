@@ -29,7 +29,7 @@ namespace pipes
     };
     
     template<typename Predicate>
-    filter_pipe<std::decay_t<Predicate>> filter(Predicate&& predicate)
+    auto filter(Predicate&& predicate)
     {
         return filter_pipe<std::decay_t<Predicate>>{predicate};
     }
