@@ -19,7 +19,7 @@ public:
     template<typename Tuple>
     void onReceive(Tuple&& values)
     {
-        detail::for_each2([](auto&& value, auto&& tailPipe) { send(tailPipe, value); }, FWD(values), tailPipes_);
+        detail::for_each2(FWD(values), tailPipes_, [](auto&& value, auto&& tailPipe) { send(tailPipe, value); });
     }
     
     explicit unzip_pipeline(TailPipelines... tailPipes) : tailPipes_(tailPipes...) {}
