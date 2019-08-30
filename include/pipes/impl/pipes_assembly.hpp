@@ -1,8 +1,6 @@
 #ifndef PIPES_PIPES_ASSEMBLY
 #define PIPES_PIPES_ASSEMBLY
 
-
-
 namespace pipes
 {
     namespace detail
@@ -34,6 +32,12 @@ namespace pipes
             template<typename Pipe1_, typename Pipe2_>
             CompositePipe(Pipe1_&& pipe1, Pipe2_&& pipe2) : pipe1(FWD(pipe1)), pipe2(FWD(pipe2)){}
         };
+        
+        template<typename Pipe1, typename Pipe2>
+        auto make_composite_pipe(Pipe1&& pipe1, Pipe2&& pipe2)
+        {
+            return CompositePipe<std::decay_t<Pipe1>, std::decay_t<Pipe2>>{pipe1, pipe2};
+        }
 
         template<typename HeadPipe, typename TailPipeline>
         auto make_generic_pipeline(HeadPipe&& headPipe, TailPipeline&& tailPipeline)
@@ -47,6 +51,20 @@ namespace pipes
             return make_generic_pipeline(compositePipe.pipe1, make_generic_pipeline(compositePipe.pipe2, tailPipeline));
         }
         
+        template<typename Range, typename Pipe>
+        struct RangePipe
+        {
+            Range range;
+            Pipe pipe;
+            
+            RangePipe(Range range, Pipe pipe) : range(std::move(range)), pipe(std::move(pipe)) {}
+        };
+        
+        template<typename Range, typename Pipe>
+        auto make_range_pipe(Range&& range, Pipe&& pipe)
+        {
+            return detail::RangePipe<std::decay_t<Range>, std::decay_t<Pipe>>{FWD(range), FWD(pipe)};
+        }
     } // namespace detail
 } // namespace pipes
 

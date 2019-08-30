@@ -222,3 +222,102 @@ TEST_CASE("Aggregation of pipes into reusable components")
         }
     }
 }
+
+TEST_CASE("One pipe operator|")
+{
+    std::vector<int> input = {1, 2, 3, 4, 5};
+    std::vector<int> expected = {2, 4, 6, 8, 10};
+    std::vector<int> results;
+    
+    input | pipes::transform([](int i) { return i*2; }) | pipes::push_back(results);
+    
+    REQUIRE(results == expected);
+}
+
+TEST_CASE("Several pipes operator|")
+{
+    std::vector<int> input = {1, 2, 3, 4, 5};
+    std::vector<int> expected = {4, 8};
+    std::vector<int> results;
+    
+    input | pipes::filter([](int i) { return i%2 == 0; })
+          | pipes::transform([](int i) { return i*2; })
+          | pipes::push_back(results);
+    
+    REQUIRE(results == expected);
+}
+
+TEST_CASE("Aggregation of pipes into reusable components with operator|")
+{
+    auto const input = std::vector<int>{1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
+    auto results = std::vector<int>{};
+    
+    SECTION("End of pipeline aggregated")
+    {
+        auto const expected = std::vector<int>{4, 8, 12, 16, 20};
+        auto pipeline = pipes::filter([](int i) { return i % 2 == 0; })
+                      | pipes::transform([](int i){ return i * 2;})
+                      | pipes::push_back(results);
+        
+        input | pipeline;
+        
+        REQUIRE(results == expected);
+    }
+    
+    SECTION("Middle of pipeline aggregated")
+    {
+        SECTION("Composite of simple pipes")
+        {
+            auto const expected = std::vector<int>{4, 8, 12, 16, 20};
+            auto pipeline = pipes::filter([](int i) { return i % 2 == 0; })
+                          | pipes::transform([](int i){ return i * 2;});
+            
+            input | pipeline | pipes::push_back(results);
+            
+            REQUIRE(results == expected);
+        }
+        
+        SECTION("Composite + pipe")
+        {
+            auto const expected = std::vector<int>{8, 16, 24, 32, 40};
+            
+            auto pipeline = pipes::filter([](int i) { return i % 2 == 0; })
+                          | pipes::transform([](int i){ return i * 2;});
+            
+            auto pipeline2 = pipeline | pipes::transform([](int i){ return i * 2;});
+            
+            input | pipeline2 | pipes::push_back(results);
+            
+            REQUIRE(results == expected);
+        }
+        
+        SECTION("pipe + composite")
+        {
+            auto const expected = std::vector<int>{4, 8, 12, 16, 20, 24, 28, 32, 36, 40};
+            
+            auto pipeline = pipes::filter([](int i) { return i % 2 == 0; })
+                          | pipes::transform([](int i){ return i * 2;});
+            
+            auto pipeline2 = pipes::transform([](int i){ return i * 2;}) | pipeline;
+            
+            input | pipeline2 | pipes::push_back(results);
+            
+            REQUIRE(results == expected);
+        }
+        
+        SECTION("composite + composite")
+        {
+            auto const expected = std::vector<int>{8, 16, 24, 32, 40};
+            
+            auto pipeline = pipes::filter([](int i) { return i % 2 == 0; })
+                          | pipes::transform([](int i){ return i * 2;});
+            
+            auto pipeline2 = pipeline | pipeline;
+            
+            input | pipeline2 | pipes::push_back(results);
+            
+            REQUIRE(results == expected);
+        }
+    }
+}
+
