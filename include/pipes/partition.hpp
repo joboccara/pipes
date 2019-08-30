@@ -20,11 +20,11 @@ public:
     {
         if (predicate_(FWD(value)))
         {
-            send(outputPipeTrue_, FWD(value));
+            send(FWD(value), outputPipeTrue_);
         }
         else
         {
-            send(outputPipeFalse_, FWD(value));
+            send(FWD(value), outputPipeFalse_);
         }
     }
 

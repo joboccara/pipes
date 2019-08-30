@@ -20,7 +20,7 @@ namespace pipes
         template<typename Value, typename TailPipeline>
         void onReceive(Value&& value, TailPipeline&& tailPipeline)
         {
-            send(tailPipeline, detail::invoke(function_.get(), FWD(value)));
+            send(detail::invoke(function_.get(), FWD(value)), tailPipeline);
         }
         
         explicit transform_pipe(Function function) : function_(function){}

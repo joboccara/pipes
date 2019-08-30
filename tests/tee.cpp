@@ -31,7 +31,7 @@ TEST_CASE("tee operator=")
     auto tee2 = pipes::tee(pipes::push_back(results3)) >>= pipes::push_back(results4);
     
     tee2 = tee1;
-    pipes::send(tee2, 0);
+    pipes::send(0, tee2);
     
     REQUIRE(results1.size() == 1);
     REQUIRE(results2.size() == 1);

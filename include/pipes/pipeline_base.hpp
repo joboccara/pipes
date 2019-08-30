@@ -11,8 +11,8 @@ namespace pipes
 {
     struct pipe_base {};
     
-    template<typename Pipeline, typename T>
-    void send(Pipeline& pipeline, T&& value)
+    template<typename T, typename Pipeline>
+    void send(T&& value, Pipeline& pipeline)
     {
         pipeline.onReceive(FWD(value));
     }
@@ -23,7 +23,7 @@ namespace pipes
         template<typename T>
         pipeline_proxy& operator=(T&& input)
         {
-            send(pipeline_, FWD(input));
+            send(FWD(input), pipeline_);
             return *this;
         }
         

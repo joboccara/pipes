@@ -24,7 +24,7 @@ TEST_CASE("join pipe operator=")
     auto pipeline2 = pipes::join >>= pipes::push_back(results2);
     
     pipeline2 = pipeline1;
-    send(pipeline2, std::vector<int>{1, 2});
+    send(std::vector<int>{1, 2}, pipeline2);
     REQUIRE(results1.size() == 2);
     REQUIRE(results2.size() == 0);
 }

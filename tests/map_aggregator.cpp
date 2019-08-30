@@ -69,7 +69,7 @@ TEST_CASE("map_aggregator::operator=")
     auto map_aggregator2 = pipes::map_aggregator(results2, concatenateStrings);
     
     map_aggregator2 = map_aggregator1;
-    pipes::send(map_aggregator2, std::make_pair(0, std::string{"zero"}));
+    pipes::send(std::make_pair(0, std::string{"zero"}), map_aggregator2);
     REQUIRE(results1.size() == 1);
     REQUIRE(results2.size() == 0);
 }

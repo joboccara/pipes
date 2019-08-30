@@ -113,7 +113,7 @@ TEST_CASE("switch operator=")
                                   pipes::case_(multipleOf2) >>= pipes::push_back(results4));
     
     switch2 = switch1;
-    pipes::send(switch2, 4);
+    pipes::send(4, switch2);
     
     REQUIRE(results1.size() == 0);
     REQUIRE(results2.size() == 1);

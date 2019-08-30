@@ -104,7 +104,7 @@ TEST_CASE("unzip operator=")
     auto pipeline2 = pipes::unzip(pipes::push_back(results3), pipes::push_back(results4));
     
     pipeline2 = pipeline1;
-    send(pipeline2, std::make_pair(0, "zero"));
+    send(std::make_pair(0, "zero"), pipeline2);
     REQUIRE(results1.size() == 1);
     REQUIRE(results2.size() == 1);
     REQUIRE(results3.size() == 0);

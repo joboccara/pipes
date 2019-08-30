@@ -16,7 +16,7 @@ public:
     template<typename T>
     void onReceive(T&& value)
     {
-        detail::for_each(tailPipelines_, [&value](auto&& tailPipeline){ send(tailPipeline, FWD(value)); });
+        detail::for_each(tailPipelines_, [&value](auto&& tailPipeline){ send(FWD(value), tailPipeline); });
     }
 
     explicit demux_pipeline(TailPipelines const&... tailPipelines) : tailPipelines_(tailPipelines...) {}

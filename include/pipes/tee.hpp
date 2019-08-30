@@ -17,8 +17,8 @@ namespace pipes
         template<typename Value, typename TailPipeline>
         void onReceive(Value&& value, TailPipeline&& tailPipeline)
         {
-            send(teeBranch_, FWD(value));
-            send(tailPipeline, FWD(value));
+            send(FWD(value), teeBranch_);
+            send(FWD(value), tailPipeline);
         }
         
         explicit tee_pipe(TeeBranch teeBranch) : teeBranch_(teeBranch){}

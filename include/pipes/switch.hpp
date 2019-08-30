@@ -26,7 +26,7 @@ namespace pipes
             auto const firstSatisfyingBranchIndex = detail::find_if(branches_, [&value](auto&& branch){ return branch.predicate(FWD(value)); });
             if (firstSatisfyingBranchIndex < sizeof...(CaseBranches))
             {
-                detail::perform(branches_, firstSatisfyingBranchIndex, [&value](auto&& branch){ send(branch.pipeline, FWD(value)); });
+                detail::perform(branches_, firstSatisfyingBranchIndex, [&value](auto&& branch){ send(FWD(value), branch.pipeline); });
             }
         }
 

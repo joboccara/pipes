@@ -97,7 +97,7 @@ TEST_CASE("demux operator=")
     auto demux2 = pipes::demux(pipes::push_back(results1), pipes::push_back(results2));
 
     demux2 = demux1;
-    pipes::send(demux2, 0);
+    pipes::send(0, demux2);
     
     REQUIRE(results1.size() == 1);
     REQUIRE(results2.size() == 1);

@@ -81,7 +81,7 @@ TEST_CASE("transform operator=")
     auto pipeline2 = pipes::transform(func) >>= pipes::push_back(results2);
     
     pipeline2 = pipeline1;
-    send(pipeline2, 1);
+    send(1, pipeline2);
     REQUIRE(results1.size() == 1);
     REQUIRE(results2.size() == 0);
 }

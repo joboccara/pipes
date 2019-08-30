@@ -24,7 +24,7 @@ namespace pipes
     {
         for (auto inValue = std::istream_iterator<Value>{inStream}; inValue != std::istream_iterator<Value>{}; ++inValue)
         {
-            pipes::send(readInStreamPipe.pipeline_, *inValue);
+            pipes::send(*inValue, readInStreamPipe.pipeline_);
         }
     }
     

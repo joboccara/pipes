@@ -59,7 +59,7 @@ TEST_CASE("set_aggregator::operator=")
     auto set_aggregator2 = pipes::set_aggregator(results2, concatenateValues);
     
     set_aggregator2 = set_aggregator1;
-    pipes::send(set_aggregator2, Value{0, "zero"});
+    pipes::send(Value{0, "zero"}, set_aggregator2);
     REQUIRE(results1.size() == 1);
     REQUIRE(results2.size() == 0);
 }

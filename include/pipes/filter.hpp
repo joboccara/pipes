@@ -18,7 +18,7 @@ namespace pipes
         {
             if (predicate_(FWD(value)))
             {
-                send(tailPipeline, FWD(value));
+                send(FWD(value), tailPipeline);
             }
         }
         

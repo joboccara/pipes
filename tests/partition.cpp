@@ -74,7 +74,7 @@ TEST_CASE("partition operator=")
     auto pipeline2 = pipes::partition(predicate, pipes::push_back(results3), pipes::push_back(results4));
     
     pipeline2 = pipeline1;
-    send(pipeline2, 1);
+    send(1, pipeline2);
     REQUIRE(results1.size() == 1);
     REQUIRE(results2.size() == 0);
     REQUIRE(results3.size() == 0);

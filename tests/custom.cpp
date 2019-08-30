@@ -40,7 +40,7 @@ TEST_CASE("custom::operator= (called in the _Recheck function of Visual Studio's
     auto custom2 = pipes::custom(IncrementContext{context2});
     
     custom2 = custom1;
-    pipes::send(custom2, 0);
+    pipes::send(0, custom2);
     REQUIRE(context1 == 43);
     REQUIRE(context2 == 42);
 }
