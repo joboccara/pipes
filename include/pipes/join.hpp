@@ -8,32 +8,17 @@
 
 namespace pipes
 {
-    template<typename TailPipeline>
-    class join_pipeline : public pipeline_base<join_pipeline<TailPipeline>>
+    struct join_pipe : public pipe_base
     {
-    public:
-        template<typename T>
-        void onReceive(T&& inputCollection)
+        template<typename Collection, typename TailPipeline>
+        void onReceive(Collection&& collection, TailPipeline&& tailPipeline)
         {
-            std::copy(begin(inputCollection), end(inputCollection), tailPipeline_);
-        }
-        
-        explicit join_pipeline(TailPipeline tailPipeline) : tailPipeline_(tailPipeline) {}
-        
-    private:
-        TailPipeline tailPipeline_;
-    };
-    
-    struct join_pipe
-    {
-        template<typename Pipeline>
-        auto plug_to_pipeline(Pipeline&& pipeline) const
-        {
-            return join_pipeline<std::decay_t<Pipeline>>{pipeline};
+            std::copy(begin(collection), end(collection), tailPipeline);
         }
     };
     
-    static auto constexpr join = join_pipe{};
+    auto constexpr join = join_pipe{};
+
 } // namespace pipes
 
 #endif /* PIPES_join_HPP */

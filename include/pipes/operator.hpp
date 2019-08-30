@@ -34,15 +34,8 @@ namespace pipes
             
             // definition of pipe
             
-            struct aPipeline : pipeline_base<aPipeline>{};
             template<typename Pipe>
-            using pipe_expression = decltype(std::declval<Pipe&>().plug_to_pipeline(std::declval<aPipeline&>()));
-            
-            template<typename Pipe>
-            constexpr bool pipe_expression_detected = detail::is_detected<pipe_expression, Pipe>;
-            
-            template<typename Pipe>
-            using IsAPipe = std::enable_if_t<pipe_expression_detected<Pipe>, bool>;
+            using IsAPipe = std::enable_if_t<std::is_base_of<pipe_base, Pipe>::value, bool>;
 
             //definition of pipeline
             
@@ -61,52 +54,28 @@ namespace pipes
 
     } // namespace detail
 
-    template<typename Pipe, typename Pipeline, detail::IsAPipe<Pipe> = true, detail::IsAPipeline<Pipeline> = true>
-    auto operator>>=(Pipe&& pipe, Pipeline&& pipeline);
-
-    namespace detail
-    {
-        template<typename Pipe1, typename Pipe2>
-        class CompositePipe
-        {
-        public:
-            template<typename Pipeline>
-            auto plug_to_pipeline(Pipeline&& pipeline)
-            {
-                return pipe1_ >>= pipe2_ >>= pipeline;
-            }
-            
-            template<typename Pipe1_, typename Pipe2_>
-            CompositePipe(Pipe1_&& pipe1, Pipe2_&& pipe2) : pipe1_(FWD(pipe1)), pipe2_(FWD(pipe2)){}
-        private:
-            Pipe1 pipe1_;
-            Pipe2 pipe2_;
-        };
-    } // namespace detail
-    
-
 // range >>= pipeline
     
-template<typename Range, typename Pipeline, detail::IsARange<Range> = true, detail::IsAPipeline<Pipeline> = true>
-void operator>>=(Range&& range, Pipeline&& pipeline)
-{
-    std::copy(begin(range), end(range), pipeline);
-}
+    template<typename Range, typename Pipeline, detail::IsARange<Range> = true, detail::IsAPipeline<Pipeline> = true>
+    void operator>>=(Range&& range, Pipeline&& pipeline)
+    {
+        std::copy(begin(range), end(range), pipeline);
+    }
 
 // pipe >>= pipe
     
     template<typename Pipe1, typename Pipe2, detail::IsAPipe<Pipe1> = true, detail::IsAPipe<Pipe2> = true>
-    detail::CompositePipe<std::remove_reference_t<Pipe1>, std::remove_reference_t<Pipe2>> operator>>=(Pipe1&& pipe1, Pipe2&& pipe2)
+    auto operator>>=(Pipe1&& pipe1, Pipe2&& pipe2)
     {
-        return detail::CompositePipe<std::remove_reference_t<Pipe1>, std::remove_reference_t<Pipe2>>(FWD(pipe1), FWD(pipe2));
+        return detail::CompositePipe<std::decay_t<Pipe1>, std::decay_t<Pipe2>>(FWD(pipe1), FWD(pipe2));
     }
 
 // pipe >>= pipeline
     
-    template<typename Pipe, typename Pipeline, detail::IsAPipe<Pipe>, detail::IsAPipeline<Pipeline>>
+    template<typename Pipe, typename Pipeline, detail::IsAPipe<Pipe> = true, detail::IsAPipeline<Pipeline> = true>
     auto operator>>=(Pipe&& pipe, Pipeline&& pipeline)
     {
-        return pipe.plug_to_pipeline(pipeline);
+        return make_generic_pipeline(pipe, pipeline);
     }
     
 } // namespace pipes

@@ -10,46 +10,28 @@
 
 namespace pipes
 {
-    
-template<typename TeeBranch, typename PipelineTail>
-class tee_pipeline : public pipeline_base<tee_pipeline<TeeBranch, PipelineTail>>
-{
-public:
-    template<typename T>
-    void onReceive(T&& value)
+    template<typename TeeBranch>
+    class tee_pipe : public pipe_base
     {
-        send(teeBranch_, FWD(value));
-        send(pipelineTail_, FWD(value));
-    }
+    public:
+        template<typename Value, typename TailPipeline>
+        void onReceive(Value&& value, TailPipeline&& tailPipeline)
+        {
+            send(teeBranch_, FWD(value));
+            send(tailPipeline, FWD(value));
+        }
+        
+        explicit tee_pipe(TeeBranch teeBranch) : teeBranch_(teeBranch){}
+        
+    private:
+        TeeBranch teeBranch_;
+    };
     
-    tee_pipeline(TeeBranch const& teeBranch, PipelineTail const& pipelineTail) : teeBranch_(teeBranch), pipelineTail_(pipelineTail){}
-
-private:
-    TeeBranch teeBranch_;
-    PipelineTail pipelineTail_;
-};
-    
-template<typename TeeBranch>
-class tee_pipe
-{
-public:
-    template<typename Pipeline>
-    auto plug_to_pipeline(Pipeline&& pipeline) const
+    template<typename TeeBranch>
+    tee_pipe<std::decay_t<TeeBranch>> tee(TeeBranch&& predicate)
     {
-        return tee_pipeline<TeeBranch, std::remove_reference_t<Pipeline>>{teeBranch_, pipeline};
+        return tee_pipe<std::decay_t<TeeBranch>>{predicate};
     }
-    
-    explicit tee_pipe(TeeBranch teeBranch) : teeBranch_(teeBranch){}
-    
-private:
-    TeeBranch teeBranch_;
-};
-    
-template<typename TeeBranch>
-tee_pipe<TeeBranch> tee(TeeBranch const& teeBranch)
-{
-    return tee_pipe<TeeBranch>{teeBranch};
-}
     
 } // namespace pipes
 

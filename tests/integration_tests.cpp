@@ -200,7 +200,7 @@ TEST_CASE("Aggregation of pipes into reusable components")
             auto pipeline = pipes::filter([](int i) { return i % 2 == 0; })
                         >>= pipes::transform([](int i){ return i * 2;});
             
-            auto pipeline2 =  pipes::transform([](int i){ return i * 2;}) >>= pipeline;
+            auto pipeline2 = pipes::transform([](int i){ return i * 2;}) >>= pipeline;
             
             input >>= pipeline2 >>= pipes::push_back(results);
             

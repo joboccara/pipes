@@ -9,48 +9,32 @@
 
 namespace pipes
 {
-template<typename Predicate, typename Pipeline>
-class filter_pipeline : public pipeline_base<filter_pipeline<Predicate, Pipeline>>
-{
-public:    
-    template<typename T>
-    void onReceive(T&& value)
+    template<typename Predicate>
+    class filter_pipe : public pipe_base
     {
-        if (predicate_(FWD(value)))
+    public:
+        template<typename Value, typename TailPipeline>
+        void onReceive(Value&& value, TailPipeline&& tailPipeline)
         {
-            send(pipeline_, FWD(value));
+            if (predicate_(FWD(value)))
+            {
+                send(tailPipeline, FWD(value));
+            }
         }
-    }
-
-    explicit filter_pipeline(Predicate predicate, Pipeline pipeline) : predicate_(predicate), pipeline_(pipeline) {}
+        
+        explicit filter_pipe(Predicate predicate) : predicate_(predicate){}
+        
+    private:
+        detail::assignable<Predicate> predicate_;
+    };
     
-private:
-    detail::assignable<Predicate> predicate_;
-    Pipeline pipeline_;
-};
-
-template<typename Predicate>
-class filter_pipe
-{
-public:
-    template<typename Pipeline>
-    auto plug_to_pipeline(Pipeline&& pipeline) const
+    template<typename Predicate>
+    filter_pipe<std::decay_t<Predicate>> filter(Predicate&& predicate)
     {
-        return filter_pipeline<Predicate, std::remove_reference_t<Pipeline>>{predicate_, pipeline};
+        return filter_pipe<std::decay_t<Predicate>>{predicate};
     }
     
-    explicit filter_pipe(Predicate predicate) : predicate_(predicate){}
-    
-private:
-    Predicate predicate_;
-};
-
-template<typename Predicate>
-filter_pipe<Predicate> filter(Predicate const& predicate)
-{
-    return filter_pipe<Predicate>{predicate};
-}
-
 } // namespace pipes
+
 
 #endif /* PIPES_FILTER_HPP */
