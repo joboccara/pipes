@@ -17,10 +17,10 @@ namespace pipes
     class transform_pipe : public pipe_base
     {
     public:
-        template<typename Value, typename TailPipeline>
-        void onReceive(Value&& value, TailPipeline&& tailPipeline)
+        template<typename... Values, typename TailPipeline>
+        void onReceive(Values&&... values, TailPipeline&& tailPipeline)
         {
-            send(detail::invoke(function_.get(), FWD(value)), tailPipeline);
+            send(detail::invoke(function_.get(), FWD(values)...), tailPipeline);
         }
         
         explicit transform_pipe(Function function) : function_(function){}

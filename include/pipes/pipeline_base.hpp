@@ -6,6 +6,7 @@
 #include "pipes/helpers/FWD.hpp"
 
 #include <iterator>
+#include <tuple>
 
 namespace pipes
 {
@@ -15,6 +16,21 @@ namespace pipes
     void send(T&& value, Pipeline& pipeline)
     {
         pipeline.onReceive(FWD(value));
+    }
+    
+    namespace detail
+    {
+        template<typename... Ts, typename Pipeline, size_t... Is>
+        void sendTupleValues(std::tuple<Ts...> const& tuple, Pipeline& pipeline, std::index_sequence<Is...>)
+        {
+            pipeline.onReceive(FWD(std::get<Is>(tuple))...);
+        }
+    }
+
+    template<typename... Ts, typename Pipeline>
+    void sendTupleValues(std::tuple<Ts...> const& tuple, Pipeline& pipeline)
+    {
+        detail::sendTupleValues(tuple, pipeline, std::make_index_sequence<sizeof...(Ts)>{});
     }
 
     template<typename Pipeline>

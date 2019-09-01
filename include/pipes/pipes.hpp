@@ -8,6 +8,7 @@
 #include "pipes/filter.hpp"
 #include "pipes/join.hpp"
 #include "pipes/map_aggregator.hpp"
+#include "pipes/mux.hpp"
 #include "pipes/override.hpp"
 #include "pipes/partition.hpp"
 #include "pipes/push_back.hpp"

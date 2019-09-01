@@ -12,10 +12,10 @@ namespace pipes
         class generic_pipeline : public pipeline_base<generic_pipeline<HeadPipe, TailPipeline>>
         {
         public:
-            template<typename T>
-            void onReceive(T&& input)
+            template<typename... Ts>
+            void onReceive(Ts&&... inputs)
             {
-                headPipe_.onReceive(FWD(input), tailPipeline_);
+                headPipe_.template onReceive<Ts...>(FWD(inputs)..., tailPipeline_);
             }
             
             generic_pipeline(HeadPipe headPipe, TailPipeline tailPipeline) : headPipe_(headPipe), tailPipeline_(tailPipeline) {}

@@ -11,6 +11,7 @@ add_executable(pipes_test
     demux.cpp
     filter.cpp
     join.cpp
+    mux.cpp
     override.cpp
     partition.cpp
     streams.cpp
