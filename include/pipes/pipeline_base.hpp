@@ -11,11 +11,31 @@
 namespace pipes
 {
     struct pipe_base {};
-    
-    template<typename T, typename Pipeline>
-    void send(T&& value, Pipeline& pipeline)
+
+    namespace detail
     {
-        pipeline.onReceive(FWD(value));
+        template<size_t>
+        struct send_tag{};
+        
+        template<typename Pipeline, typename... Ts>
+        void send(send_tag<1>, Pipeline& pipeline, Ts&&... values)
+        {
+            pipeline.onReceive(FWD(values)...);
+        }
+        
+        template<typename... ValuesThenPipeline, size_t... ValuesIndexes>
+        void send(send_tag<0>, std::tuple<ValuesThenPipeline...> valuesThenPipeline, std::index_sequence<ValuesIndexes...>)
+        {
+            auto constexpr pipelineIndex = sizeof...(ValuesThenPipeline) - 1;
+            send(send_tag<1>{}, std::get<pipelineIndex>(valuesThenPipeline), std::get<ValuesIndexes>(valuesThenPipeline)...);
+        }
+    }
+    
+    // usage: send(0, 1, 2, 3, myPipeline);
+    template<typename... ValuesThenPipeline>
+    void send(ValuesThenPipeline&&... valuesThenPipeline)
+    {
+        detail::send(detail::send_tag<0>{}, std::forward_as_tuple(FWD(valuesThenPipeline)...), std::make_index_sequence<sizeof...(ValuesThenPipeline) - 1>{});
     }
     
     namespace detail
@@ -23,7 +43,7 @@ namespace pipes
         template<typename... Ts, typename Pipeline, size_t... Is>
         void sendTupleValues(std::tuple<Ts...> const& tuple, Pipeline& pipeline, std::index_sequence<Is...>)
         {
-            pipeline.onReceive(FWD(std::get<Is>(tuple))...);
+            send(std::get<Is>(tuple)..., pipeline);
         }
     }
 
