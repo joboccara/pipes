@@ -10,7 +10,7 @@ namespace pipes
 {
 
 template<typename OutStream>
-class to_out_stream_pipe : public pipeline_base<to_out_stream_pipe<OutStream>>
+class to_out_stream_pipeline : public pipeline_base<to_out_stream_pipeline<OutStream>>
 {
 public:
     template<typename T>
@@ -19,16 +19,16 @@ public:
         outStream_.get() << FWD(value);
     }
     
-    to_out_stream_pipe(OutStream& outStream) : outStream_(outStream) {}
+    explicit to_out_stream_pipeline(OutStream& outStream) : outStream_(outStream) {}
 
 private:
     std::reference_wrapper<OutStream> outStream_;
 };
 
 template<typename OutStream>
-to_out_stream_pipe<OutStream> to_out_stream(OutStream& outStream)
+to_out_stream_pipeline<OutStream> to_out_stream(OutStream& outStream)
 {
-    return to_out_stream_pipe<OutStream>(outStream);
+    return to_out_stream_pipeline<OutStream>(outStream);
 }
 
 } // namespace pipes

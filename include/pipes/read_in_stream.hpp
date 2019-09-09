@@ -19,6 +19,12 @@ namespace pipes
     template<typename Value>
     struct read_in_stream {};
 
+    template<typename Value, typename Pipeline>
+    auto operator>>= (read_in_stream<Value> readInStreamPipe, Pipeline&& pipeline)
+    {
+        return read_in_stream_pipeline<Value, std::decay_t<Pipeline>>{pipeline};
+    }
+
     template<typename InStream, typename Value, typename Pipeline>
     void operator>>= (InStream&& inStream, read_in_stream_pipeline<Value, Pipeline> readInStreamPipe)
     {
@@ -28,11 +34,5 @@ namespace pipes
         }
     }
     
-    template<typename Value, typename Pipeline>
-    auto operator>>= (read_in_stream<Value> readInStreamPipe, Pipeline&& pipeline)
-    {
-        return read_in_stream_pipeline<Value, std::decay_t<Pipeline>>{pipeline};
-    }
-
 } // namespace pipes
 #endif /* READ_IN_STREAM_HPP */
