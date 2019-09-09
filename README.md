@@ -66,15 +66,33 @@ Pipes sort of look like [ranges](https://github.com/ericniebler/range-v3) adapto
 Range views are about adapting ranges with view layers, and reading through those layers in lazy mode.
 Pipes are about sending pieces of data as they come along in a collection through a pipeline, and let them land in a destination.
 
-Ranges and pipes have overlapping components such as `transform` and `filter`. But pipes do things like ranges can't do, such as `pipes::demux` and ranges do things that pipes can't do, like `ranges::view::zip`.
+Ranges and pipes have overlapping components such as `transform` and `filter`. But pipes do things like ranges can't do, such as `pipes::mux`, `pipes::demux` and `pipes:unzip`, and ranges do things that pipes can't do, like infinite ranges.
 
 It is possible to use ranges and pipes in the same expression though:
 
 ```cpp
 ranges::view::zip(dadChromosome, momChromosome)
-    >>= pipes::transform(crossover)
+    >>= pipes::transform(crossover) // crossover takes and returns a tuple of 2 elements
     >>= pipes::unzip(pipes::push_back(gameteChromosome1),
                      pipes::push_back(gameteChromosome2));
+```
+
+# Operating on several collections
+
+The pipes library allows to manipulate several collections at the same time, with the `pipes::mux` helper.
+Note that contrary to `range::view::zip`, `pipes::mux` doesn't require to use tuples:
+
+```cpp
+auto const input1 = std::vector<int>{1, 2, 3, 4, 5};
+auto const input2 = std::vector<int>{10, 20, 30, 40, 50};
+
+auto results = std::vector<int>{};
+
+pipes::mux(input1, input2) >>= pipes::filter   ([](int a, int b){ return a + b < 40; })
+                           >>= pipes::transform([](int a, int b) { return a * b; })
+                           >>= pipes::push_back(results);
+
+// results contains {10, 40, 90}
 ```
 
 # End pipes
