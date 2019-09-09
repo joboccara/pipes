@@ -15,16 +15,16 @@ template<typename OutputPipeTrue, typename OutputPipeFalse, typename Predicate>
 class partition_pipe : public pipeline_base<partition_pipe<OutputPipeTrue, OutputPipeFalse, Predicate>>
 {
 public:
-    template<typename T>
-    void onReceive(T&& value)
+    template<typename... Ts>
+    void onReceive(Ts&&... values)
     {
-        if (predicate_(FWD(value)))
+        if (predicate_(FWD(values)...))
         {
-            send(FWD(value), outputPipeTrue_);
+            send(FWD(values)..., outputPipeTrue_);
         }
         else
         {
-            send(FWD(value), outputPipeFalse_);
+            send(FWD(values)..., outputPipeFalse_);
         }
     }
 

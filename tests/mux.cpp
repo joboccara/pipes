@@ -84,3 +84,22 @@ TEST_CASE("mux filter transform")
     
     REQUIRE(results == expected);
 }
+
+TEST_CASE("mux partition")
+{
+    auto const input1 = std::vector<int>{1, 2, 3, 4, 5};
+    auto const input2 = std::vector<int>{10, 20, 30, 40, 50};
+    auto const expected1 = std::vector<int>{10, 40, 90};
+    auto const expected2 = std::vector<int>{36, 45};
+
+    auto results1 = std::vector<int>{};
+    auto results2 = std::vector<int>{};
+
+    pipes::mux(input1, input2)
+    >>= pipes::partition([](int a, int b){ return a + b < 41; },
+                         pipes::transform([](int a, int b){ return a * b;}) >>= pipes::push_back(results1),
+                         pipes::transform([](int a, int b){ return b - a;}) >>= pipes::push_back(results2));
+    
+    REQUIRE(results1 == expected1);
+    REQUIRE(results2 == expected2);
+}
