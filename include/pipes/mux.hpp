@@ -21,22 +21,7 @@ namespace pipes
         static_assert(sizeof...(Ranges) > 0, "There should be at least one range in mux.");
         return muxer<std::decay_t<Ranges>...>(FWD(ranges)...);
     }
-    /*
-    template<typename... Ranges>
-    size_t smallest_size(std::tuple<Ranges...> const& ranges)
-    {
-        auto smallestSize = std::get<1>(ranges).size();
 
-        for_each(ranges, [&smallestSize](auto&& range)
-                 {
-                     if (range.size() < smallestSize)
-                     {
-                         smallestSize = range.size();
-                     }
-                 });
-        return smallestSize;
-    }
-*/
     namespace detail
     {
         template<typename... Ts>

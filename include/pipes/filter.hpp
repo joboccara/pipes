@@ -13,12 +13,12 @@ namespace pipes
     class filter_pipe : public pipe_base
     {
     public:
-        template<typename Value, typename TailPipeline>
-        void onReceive(Value&& value, TailPipeline&& tailPipeline)
+        template<typename... Values, typename TailPipeline>
+        void onReceive(Values&&... values, TailPipeline&& tailPipeline)
         {
-            if (predicate_(FWD(value)))
+            if (predicate_(FWD(values)...))
             {
-                send(FWD(value), tailPipeline);
+                send(FWD(values)..., tailPipeline);
             }
         }
         
