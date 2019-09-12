@@ -9,27 +9,27 @@
 namespace pipes
 {
     
-template<typename InsertFunction>
-class custom_iterator : public pipeline_base<custom_iterator<InsertFunction>>
-{
-public:
-    template<typename T>
-    void onReceive(T&& value)
+    template<typename Function>
+    class custom_pipeline : public pipeline_base<custom_pipeline<Function>>
     {
-        insertFunction_(FWD(value));
+    public:
+        template<typename T>
+        void onReceive(T&& value)
+        {
+            function_(FWD(value));
+        }
+        
+        explicit custom_pipeline(Function function) : function_(function) {}
+        
+    private:
+        detail::assignable<Function> function_;
+    };
+    
+    template <typename InsertFunction>
+    custom_pipeline<InsertFunction> custom(InsertFunction insertFunction)
+    {
+        return custom_pipeline<InsertFunction>(insertFunction);
     }
-    
-    explicit custom_iterator(InsertFunction insertFunction) : insertFunction_(insertFunction) {}
-    
-private:
-    detail::assignable<InsertFunction> insertFunction_;
-};
-    
-template <typename InsertFunction>
-custom_iterator<InsertFunction> custom(InsertFunction insertFunction)
-{
-    return custom_iterator<InsertFunction>(insertFunction);
-}
     
 } // namespace pipes
 
