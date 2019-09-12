@@ -43,12 +43,6 @@ namespace pipes
         {
             for_each(tuple, [](auto&& element){ ++element; });
         }
-
-        template<typename... Ts>
-        auto dereference(std::tuple<Ts...> const& tuple)
-        {
-            return transform(tuple, [](auto&& element){ return *element; });
-        }
     }
     
     template<typename... Ranges, typename Pipeline, detail::IsAPipeline<Pipeline> = true>

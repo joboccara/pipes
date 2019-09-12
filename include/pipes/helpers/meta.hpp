@@ -36,23 +36,22 @@ namespace pipes
                                           std::make_index_sequence<std::tuple_size<std::remove_reference_t<Tuple1>>::value>{});
         }
         
+        template<typename...Ts, typename Function, size_t... Is>
+        auto transform_impl(std::tuple<Ts...> const& inputs, Function function, std::index_sequence<Is...>)
+        {
+            return std::tuple<std::result_of_t<Function(Ts)>...>{function(std::get<Is>(inputs))...};
+        }
+        
         template<typename... Ts, typename Function>
         auto transform(std::tuple<Ts...> const& inputs, Function function)
         {
-            auto results = std::tuple<std::result_of_t<Function(Ts)>...>{};
-            
-            for_each2(inputs, results, [&function](auto&& input, auto&& result)
-                      {
-                          result = function(input);
-                      });
-            
-            return results;
+            return transform_impl(inputs, function, std::make_index_sequence<sizeof...(Ts)>{});
         }
         
         template<typename Tuple, typename Predicate>
         size_t find_if(Tuple&& tuple, Predicate pred)
         {
-            size_t index = std::tuple_size<std::remove_reference_t<Tuple>>::value;
+            size_t index = std::tuple_size<std::decay_t<Tuple>>::value;
             size_t currentIndex = 0;
             bool found = false;
             for_each(tuple, [&](auto&& value)
@@ -67,6 +66,12 @@ namespace pipes
             return index;
         }
         
+        template<typename Tuple, typename Predicate>
+        bool any_of(Tuple&& tuple, Predicate pred)
+        {
+            return find_if(tuple, pred) != std::tuple_size<std::decay_t<Tuple>>::value;
+        }
+
         template<typename Tuple, typename Action>
         void perform(Tuple&& tuple, size_t index, Action action)
         {
@@ -79,6 +84,12 @@ namespace pipes
                          }
                          ++currentIndex;
                      });
+        }
+        
+        template<typename... Ts>
+        auto dereference(std::tuple<Ts...> const& tuple)
+        {
+            return transform(tuple, [](auto&& element) -> decltype(auto) { return *element; });
         }
         
     }  // namespace detail
