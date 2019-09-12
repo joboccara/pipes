@@ -288,8 +288,11 @@ auto const inputs = std::vector<int>{1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
 auto intermediaryResults = std::vector<int>{};
 auto results = std::vector<int>{};
 
-inputs >>= pipes::tee(pipes::push_back(intermediaryResults))
-       >>= pipes::push_back(results);
+inputs
+    >>= pipes::transform([](int i) { return i * 2; })
+    >>= pipes::tee(pipes::push_back(intermediaryResults))
+    >>= pipes::filter([](int i){ return i >= 12; })
+    >>= pipes::push_back(results);
 
 // intermediaryResults contains {2, 4, 6, 8, 10, 12, 14, 16, 18, 20}
 // results contains {12, 14, 16, 18, 20}
