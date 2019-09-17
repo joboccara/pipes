@@ -95,6 +95,25 @@ pipes::mux(input1, input2) >>= pipes::filter   ([](int a, int b){ return a + b <
 // results contains {10, 40, 90}
 ```
 
+## Operating on all the possible combinations between several collections
+
+`pipes::cartesian_product` takes any number of collections, and generates all the possible combinations between the elements of those collections. It sends each combination successively to the next pipe after it.
+
+Like `pipes::mux`, `pipes::cartesian_product` doesn't use tuples but sends the values directly to the next pipe:
+
+```cpp
+auto const inputs1 = std::vector<int>{1, 2, 3};
+auto const inputs2 = std::vector<std::string>{"up", "down"};
+
+auto results = std::vector<std::string>{};
+
+pipes::cartesian_product(inputs1, inputs2)
+    >>= pipes::transform([](int i, std::string const& s){ return std::to_string(i) + '-' + s; })
+    >>= pipes::push_back(results);
+
+// results contains {"1-up", "1-down", "2-up", "2-down", "3-up", "3-down"}
+```
+
 # End pipes
 
 This library also provides end pipes, which are components that send data to a collection in an elaborate way. For example, the `map_aggregate`  pipe receives `std::pair<Key, Value>`s and adds them to a map with the following rule:
