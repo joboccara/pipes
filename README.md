@@ -13,6 +13,7 @@ The library is under development and subject to change. Contributions are welcom
 * [A First Example](#a-first-example)
 * [A Second Example](#a-second-example)
 * [Doesn't it look like ranges?](#doesn-t-it-look-like-ranges-)
+* [Operating on several collections](#operating-on-several-collections)
 * [End pipes](#end-pipes)
 * [Easy integration with STL algorithms](#easy-integration-with-stl-algorithms)
 * [Streams support](#streams-support)
@@ -175,6 +176,7 @@ std::cin >>= pipes::read_in_stream<std::string>{}
     * [`partition`](#-partition-)
     * [`read_in_stream`](#-read-in-stream-)
     * [`switch`](#-switch-)
+    * [`take`](#-take-)
     * [`tee`](#-tee-)
     * [`transform`](#-transform-)
     * [`unzip`](#-unzip-)
@@ -311,6 +313,21 @@ numbers >>= pipes::switch_(pipes::case_([](int n){ return n % 4 == 0; }) >>= pip
 // multiplesOf4 contains {4, 8};
 // multiplesOf3 contains {3, 6, 9};
 // rest contains {1, 2, 5, 7, 10};
+```
+
+### `take`
+
+`take` takes a number `N` and sends to the next pipe the first `N` element that it receives. The elements after it are ignored:
+
+```cpp
+auto const input = std::vector<int>{1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
+
+auto result = std::vector<int>{};
+
+input >>= pipes::take(6)
+      >>= pipes::push_back(result);
+      
+// result contains {1, 2, 3, 4, 5, 6}
 ```
 
 ### `tee`

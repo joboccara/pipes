@@ -17,6 +17,7 @@ add_executable(pipes_test
     partition.cpp
     streams.cpp
     switch.cpp
+    take.cpp
     tee.cpp
     transform.cpp
     unzip.cpp
