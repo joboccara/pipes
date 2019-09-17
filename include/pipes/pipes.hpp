@@ -1,6 +1,7 @@
 #ifndef PIPES_HPP
 #define PIPES_HPP
 
+#include "pipes/cartesian_product.hpp"
 #include "pipes/custom.hpp"
 #include "pipes/dev_null.hpp"
 #include "pipes/demux.hpp"
@@ -8,6 +9,7 @@
 #include "pipes/filter.hpp"
 #include "pipes/join.hpp"
 #include "pipes/map_aggregator.hpp"
+#include "pipes/mux.hpp"
 #include "pipes/override.hpp"
 #include "pipes/partition.hpp"
 #include "pipes/push_back.hpp"

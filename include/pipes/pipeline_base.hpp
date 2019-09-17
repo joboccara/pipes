@@ -1,22 +1,17 @@
 #ifndef PIPES_OUTPUT_ITERATOR_HPP
 #define PIPES_OUTPUT_ITERATOR_HPP
 
+#include "pipes/send.hpp"
 #include "pipes/helpers/crtp.hpp"
-#include "pipes/helpers/detect.hpp"
 #include "pipes/helpers/FWD.hpp"
 
 #include <iterator>
+#include <tuple>
 
 namespace pipes
 {
     struct pipe_base {};
     
-    template<typename T, typename Pipeline>
-    void send(T&& value, Pipeline& pipeline)
-    {
-        pipeline.onReceive(FWD(value));
-    }
-
     template<typename Pipeline>
     struct pipeline_proxy
     {
@@ -46,9 +41,6 @@ namespace pipes
         Derived& operator++(int){ ++this->derived(); return this->derived(); }
         pipeline_proxy<Derived> operator*() { return pipeline_proxy<Derived>(this->derived()); }
     };
-
-
-    
 } // namespace pipes
 
 #endif /* PIPES_OUTPUT_ITERATOR_HPP */
