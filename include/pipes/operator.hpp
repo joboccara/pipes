@@ -1,7 +1,7 @@
 #ifndef OPERATOR_HPP
 #define OPERATOR_HPP
 
-#include "pipes/pipeline_base.hpp"
+#include "pipes/base.hpp"
 #include "pipes/helpers/detect.hpp"
 #include "pipes/helpers/FWD.hpp"
 #include "pipes/impl/concepts.hpp"

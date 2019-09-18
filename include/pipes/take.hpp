@@ -1,6 +1,9 @@
 #ifndef PIPES_TAKE_HPP
 #define PIPES_TAKE_HPP
 
+#include "pipes/base.hpp"
+#include "pipes/helpers/FWD.hpp"
+
 namespace pipes
 {
     class take_pipe : public pipe_base

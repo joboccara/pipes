@@ -3,7 +3,7 @@
 
 #include "pipes/helpers/assignable.hpp"
 #include "pipes/helpers/meta.hpp"
-#include "pipes/pipeline_base.hpp"
+#include "pipes/base.hpp"
 
 namespace pipes
 {

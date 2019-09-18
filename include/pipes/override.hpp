@@ -3,7 +3,7 @@
 
 #include "pipes/operator.hpp"
 
-#include "pipes/pipeline_base.hpp"
+#include "pipes/base.hpp"
 
 #include <iterator>
 #include <utility>

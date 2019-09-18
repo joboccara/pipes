@@ -1,7 +1,7 @@
 #ifndef READ_IN_STREAM_HPP
 #define READ_IN_STREAM_HPP
 
-#include "pipes/pipeline_base.hpp"
+#include "pipes/base.hpp"
 #include "pipes/helpers/FWD.hpp"
 
 #include <iterator>

@@ -1,6 +1,7 @@
 #ifndef PIPES_TAKE_WHILE_HPP
 #define PIPES_TAKE_WHILE_HPP
 
+#include "pipes/base.hpp"
 #include "pipes/helpers/FWD.hpp"
 #include "pipes/helpers/assignable.hpp"
 

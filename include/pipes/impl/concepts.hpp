@@ -4,7 +4,7 @@
 #include <type_traits>
 #include <utility>
 
-#include "pipes/pipeline_base.hpp"
+#include "pipes/base.hpp"
 #include "pipes/helpers/detect.hpp"
 
 namespace pipes
