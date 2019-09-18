@@ -6,6 +6,7 @@ add_executable(pipes_test
     custom.cpp
     dev_null.cpp
     do_then.cpp
+    drop.cpp
     map_aggregator.cpp
     set_aggregator.cpp
     sorted_inserter.cpp

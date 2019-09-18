@@ -172,6 +172,7 @@ std::cin >>= pipes::read_in_stream<std::string>{}
 * [General pipes](#general-pipes)
     * [`demux`](#-demux-)
     * [`dev_null`](#-dev-null-)
+    * [`drop`](#-drop-)
     * [`filter`](#-filter-)
     * [`partition`](#-partition-)
     * [`read_in_stream`](#-read-in-stream-)
@@ -231,6 +232,21 @@ sets::set_seggregate(setA, setB,
 
 // inAOnly contains {1, 2}
 // inBoth contains {3, 4, 5}
+```
+
+### `drop`
+
+`drop` is a pipe that ignores the first N incoming values, and sends on the values after them to the next pipe:
+
+```cpp
+auto const input = std::vector<int>{ 1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
+
+auto result = std::vector<int>{};
+
+input >>= pipes::drop(5)
+      >>= pipes::push_back(result);
+
+// result contains { 6, 7, 8, 9, 10 }
 ```
 
 ### `filter`
