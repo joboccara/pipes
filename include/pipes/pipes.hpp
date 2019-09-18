@@ -7,6 +7,7 @@
 #include "pipes/demux.hpp"
 #include "pipes/do_then.hpp"
 #include "pipes/drop.hpp"
+#include "pipes/drop_while.hpp"
 #include "pipes/filter.hpp"
 #include "pipes/join.hpp"
 #include "pipes/map_aggregator.hpp"

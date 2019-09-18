@@ -249,6 +249,21 @@ input >>= pipes::drop(5)
 // result contains { 6, 7, 8, 9, 10 }
 ```
 
+### `drop_while`
+
+`drop` is a pipe that ignores the incoming values until they stop satisfying a predicate, and sends on the values after them to the next pipe:
+
+```cpp
+auto const input = std::vector<int>{ 1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
+
+auto result = std::vector<int>{};
+
+input >>= pipes::drop_while([](int i){ return i != 6; })
+      >>= pipes::push_back(result);
+
+// result contains { 6, 7, 8, 9, 10 }
+```
+
 ### `filter`
 
 <p align="center"><img src="https://github.com/joboccara/pipes/blob/readme/docs/filter_pipe.png"/></p>
