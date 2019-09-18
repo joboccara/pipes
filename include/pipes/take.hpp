@@ -16,7 +16,7 @@ namespace pipes
             }
         }
         
-        explicit take_pipe(size_t nbToTake_) : nbToTake_{nbToTake_}, nbTaken_{0} {}
+        explicit take_pipe(size_t nbToTake) : nbToTake_{nbToTake}, nbTaken_{0} {}
         
     private:
         size_t nbToTake_;

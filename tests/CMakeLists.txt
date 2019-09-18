@@ -18,6 +18,7 @@ add_executable(pipes_test
     streams.cpp
     switch.cpp
     take.cpp
+    take_while.cpp
     tee.cpp
     transform.cpp
     unzip.cpp
