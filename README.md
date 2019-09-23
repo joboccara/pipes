@@ -173,6 +173,7 @@ std::cin >>= pipes::read_in_stream<std::string>{}
     * [`demux`](#-demux-)
     * [`dev_null`](#-dev-null-)
     * [`drop`](#-drop-)
+    * [`drop_while`](#-drop-while-)
     * [`filter`](#-filter-)
     * [`partition`](#-partition-)
     * [`read_in_stream`](#-read-in-stream-)
@@ -358,6 +359,21 @@ auto result = std::vector<int>{};
 input >>= pipes::take(6)
       >>= pipes::push_back(result);
       
+// result contains {1, 2, 3, 4, 5, 6}
+```
+
+### `take_while`
+
+`take_while` takes a predicate and sends to the next pipe the first values it receives. It stops when one of them doesn't satisfy the predicate:
+
+```cpp
+auto const input = std::vector<int>{1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
+
+auto result = std::vector<int>{};
+
+input >>= pipes::take_while([](int i){ return i != 7; })
+      >>= pipes::push_back(result);
+
 // result contains {1, 2, 3, 4, 5, 6}
 ```
 

@@ -10,7 +10,7 @@ TEST_CASE("take_while takes elements coming from a range while the predicate is 
     
     auto result = std::vector<int>{};
     
-    input >>= pipes::take_while([](int i){ return i < 7; })
+    input >>= pipes::take_while([](int i){ return i != 7; })
           >>= pipes::push_back(result);
     
     REQUIRE(result == expected);
