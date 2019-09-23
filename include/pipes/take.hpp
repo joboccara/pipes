@@ -6,7 +6,7 @@
 
 namespace pipes
 {
-    class take_pipe : public pipe_base
+    class take : public pipe_base
     {
     public:
         template<typename... Values, typename TailPipeline>
@@ -19,18 +19,12 @@ namespace pipes
             }
         }
         
-        explicit take_pipe(size_t nbToTake) : nbToTake_{nbToTake}, nbTaken_{0} {}
+        explicit take(size_t nbToTake) : nbToTake_{nbToTake}, nbTaken_{0} {}
         
     private:
         size_t nbToTake_;
         size_t nbTaken_;
     };
-    
-    inline take_pipe take(size_t nbToTake)
-    {
-        return take_pipe{nbToTake};
-    }
-    
 } // namespace pipes
 
 #endif /* PIPES_TAKE_HPP */
