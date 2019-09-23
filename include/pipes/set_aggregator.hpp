@@ -19,7 +19,7 @@ public:
     template<typename T>
     void onReceive(T&& value)
     {
-        auto position = set_.get().find(FWD(value));
+        auto position = set_.get().find(value);
         if (position != set_.get().end())
         {
             auto containedValue = *position;

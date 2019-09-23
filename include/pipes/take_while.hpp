@@ -16,7 +16,7 @@ namespace pipes
         {
             if (!predicateHasBeenFalse_)
             {
-                if (predicate_(FWD(values)...))
+                if (predicate_(values...))
                 {
                     send(FWD(values)..., tailPipeline);
                 }

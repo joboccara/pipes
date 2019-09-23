@@ -52,3 +52,28 @@ TEST_CASE("filter operator=")
     REQUIRE(results1.size() == 1);
     REQUIRE(results2.size() == 0);
 }
+
+TEST_CASE("filter doesn't move values into the predicate")
+{
+    struct Moveable
+    {
+        int i_;
+        explicit Moveable(int i) : i_{i}{}
+        Moveable(Moveable&& other) : i_(other.i_) { other.i_ = 0; }
+        Moveable(Moveable const&) = default;
+        bool operator==(Moveable other) const { return i_ == other.i_; }
+    };
+    
+    auto input = std::vector<Moveable>{Moveable{0}, Moveable{1}, Moveable{2}, Moveable{3}};
+    auto expectedInput = std::vector<Moveable>{Moveable{0}, Moveable{1}, Moveable{0}, Moveable{3}};
+    auto expectedResult = std::vector<Moveable>{Moveable{0}, Moveable{2}};
+    
+    auto result = std::vector<Moveable>{};
+    
+    std::copy(std::make_move_iterator(begin(input)), std::make_move_iterator(end(input)),
+              pipes::filter([](Moveable m){ return m.i_ % 2 == 0; })
+          >>= pipes::push_back(result));
+    
+    REQUIRE(result == expectedResult);
+    REQUIRE(input == expectedInput);
+}

@@ -18,7 +18,7 @@ public:
     template<typename... Ts>
     void onReceive(Ts&&... values)
     {
-        if (predicate_(FWD(values)...))
+        if (predicate_(values...))
         {
             send(FWD(values)..., outputPipeTrue_);
         }

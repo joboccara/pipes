@@ -17,7 +17,7 @@ namespace pipes
         {
             if (!predicateHasBeenFalse_)
             {
-                predicateHasBeenFalse_ = !predicate_(FWD(values)...);
+                predicateHasBeenFalse_ = !predicate_(values...);
             }
             
             if (predicateHasBeenFalse_)

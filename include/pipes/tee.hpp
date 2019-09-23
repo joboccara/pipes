@@ -17,7 +17,7 @@ namespace pipes
         template<typename Value, typename TailPipeline>
         void onReceive(Value&& value, TailPipeline&& tailPipeline)
         {
-            send(FWD(value), teeBranch_);
+            send(value, teeBranch_);
             send(FWD(value), tailPipeline);
         }
         

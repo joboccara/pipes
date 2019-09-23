@@ -16,7 +16,7 @@ namespace pipes
         template<typename... Values, typename TailPipeline>
         void onReceive(Values&&... values, TailPipeline&& tailPipeline)
         {
-            if (predicate_(FWD(values)...))
+            if (predicate_(values...))
             {
                 send(FWD(values)..., tailPipeline);
             }
