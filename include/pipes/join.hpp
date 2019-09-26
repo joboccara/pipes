@@ -13,7 +13,10 @@ namespace pipes
         template<typename Collection, typename TailPipeline>
         void onReceive(Collection&& collection, TailPipeline&& tailPipeline)
         {
-            std::copy(begin(collection), end(collection), tailPipeline);
+            for (auto&& element : collection)
+            {
+                send(FWD(element), tailPipeline);
+            }
         }
     };
     
