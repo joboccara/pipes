@@ -12,6 +12,7 @@ add_executable(pipes_test
     set_aggregator.cpp
     sorted_inserter.cpp
     demux.cpp
+    intersperse.cpp
     filter.cpp
     join.cpp
     mux.cpp

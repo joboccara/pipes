@@ -10,6 +10,7 @@
 #include "pipes/drop_while.hpp"
 #include "pipes/filter.hpp"
 #include "pipes/join.hpp"
+#include "pipes/intersperse.hpp"
 #include "pipes/map_aggregator.hpp"
 #include "pipes/mux.hpp"
 #include "pipes/override.hpp"
