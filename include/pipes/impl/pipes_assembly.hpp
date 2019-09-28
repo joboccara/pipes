@@ -57,7 +57,8 @@ namespace pipes
             Range& range;
             Pipe pipe;
             
-            RangePipe(Range& range, Pipe pipe) : range(range), pipe(std::move(pipe)) {}
+            template<typename Pipe_>
+            RangePipe(Range& range, Pipe_&& pipe) : range(range), pipe(FWD(pipe)) {}
         };
         
         template<typename Range, typename Pipe>
