@@ -54,16 +54,16 @@ namespace pipes
         template<typename Range, typename Pipe>
         struct RangePipe
         {
-            Range range;
+            Range& range;
             Pipe pipe;
             
-            RangePipe(Range range, Pipe pipe) : range(std::move(range)), pipe(std::move(pipe)) {}
+            RangePipe(Range& range, Pipe pipe) : range(range), pipe(std::move(pipe)) {}
         };
         
         template<typename Range, typename Pipe>
         auto make_range_pipe(Range&& range, Pipe&& pipe)
         {
-            return detail::RangePipe<std::decay_t<Range>, std::decay_t<Pipe>>{FWD(range), FWD(pipe)};
+            return detail::RangePipe<std::remove_reference_t<Range>, std::decay_t<Pipe>>{FWD(range), FWD(pipe)};
         }
     } // namespace detail
 } // namespace pipes
