@@ -3,6 +3,8 @@
 #include "pipes/helpers/has_onReceive.hpp"
 #include "pipes/join.hpp"
 #include "pipes/filter.hpp"
+#include "pipes/drop.hpp"
+#include "pipes/dev_null.hpp"
 
 struct dummy_without_onReceive{};
 
@@ -49,15 +51,15 @@ TEST_CASE("dummy has onReceive")
     REQUIRE((std::is_base_of<std::true_type, sfinae_result>::value));
 }
 
-TEST_CASE("join has onReceive")
-{
-	using sfinae_result = typename pipes::detail::has_onReceive_method<pipes::join_pipe>;
-    REQUIRE((std::is_base_of<std::true_type, sfinae_result>::value));
-}
-
 TEST_CASE("variadic has onReceive")
 {
 	using sfinae_result = typename pipes::detail::has_onReceive_method<dummy_with_variadic_templated_onReceive>;
+    REQUIRE((std::is_base_of<std::true_type, sfinae_result>::value));
+}
+
+TEST_CASE("join has onReceive")
+{
+	using sfinae_result = typename pipes::detail::has_onReceive_method<pipes::join_pipe>;
     REQUIRE((std::is_base_of<std::true_type, sfinae_result>::value));
 }
 
@@ -65,4 +67,16 @@ TEST_CASE("filter has onReceive")
 {
 	using sfinae_result = typename pipes::detail::has_onReceive_method<pipes::filter_pipe<dummy_predicate>>;
     REQUIRE((std::is_base_of<std::true_type, sfinae_result>::value));
+}
+
+TEST_CASE("drop has onReceive")
+{
+	using sfinae_result = typename pipes::detail::has_onReceive_method<pipes::drop>;
+    REQUIRE((std::is_base_of<std::true_type, sfinae_result>::value));
+}
+
+TEST_CASE("dev_null wrong onReceive")
+{
+	using sfinae_result = typename pipes::detail::has_onReceive_method<pipes::dev_null>;
+    REQUIRE((std::is_base_of<std::true_type, sfinae_result>::value == false));
 }
