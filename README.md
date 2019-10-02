@@ -115,7 +115,7 @@ pipes::cartesian_product(inputs1, inputs2)
 // results contains {"1-up", "1-down", "2-up", "2-down", "3-up", "3-down"}
 ```
 
-## Operating on adjacent elements of a collectin
+## Operating on adjacent elements of a collection
 
 `pipes::adjacent` allows to send adjacent pairs of element from a range to a pipeline:
 
