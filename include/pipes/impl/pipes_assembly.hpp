@@ -33,6 +33,13 @@ namespace pipes
             
             template<typename Pipe1_, typename Pipe2_>
             CompositePipe(Pipe1_&& pipe1, Pipe2_&& pipe2) : pipe1(FWD(pipe1)), pipe2(FWD(pipe2)){}
+
+            // Dummy method so it meets the IsAPipe requirements
+            template<typename Values, typename TailPipeline>
+            void onReceive(Values&&, TailPipeline&&)
+            {
+                // It is never supposed to be called!
+            }
         };
 
         template<typename HeadPipe, typename TailPipeline>
