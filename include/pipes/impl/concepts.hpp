@@ -35,8 +35,7 @@ namespace pipes
             // definition of pipe
             
             template<typename Pipe>
-            //using IsAPipe = std::enable_if_t<std::is_base_of<pipe_base, Pipe>::value, bool>;
-            using IsAPipe = std::enable_if_t<std::is_base_of<std::true_type, pipes::detail::has_onReceive_method<std::remove_const_t<Pipe>>>::value && std::is_base_of<pipe_base, Pipe>::value, bool>;
+            using IsAPipe = std::enable_if_t<std::is_base_of<std::true_type, pipes::detail::has_onReceive_method<std::remove_const_t<Pipe>>>::value  && !std::is_base_of<pipeline_base<Pipe>, Pipe>::value, bool>;
             
             //definition of pipeline
             

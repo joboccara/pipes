@@ -1,6 +1,9 @@
 #include "catch.hpp"
 
 #include "pipes/helpers/has_onReceive.hpp"
+
+#include "pipes/impl/concepts.hpp"
+
 #include "pipes/join.hpp"
 #include "pipes/filter.hpp"
 #include "pipes/drop.hpp"
@@ -17,7 +20,7 @@ struct dummy_with_wrong_onReceive
 
 struct dummy_with_templated_onReceive
 {
-    template <typename T, typename U>
+    template <typename T, typename U, pipes::detail::IsAPipeline<U> = 0>
     auto onReceive(T&&, U&&) { return 5;}
 };
 

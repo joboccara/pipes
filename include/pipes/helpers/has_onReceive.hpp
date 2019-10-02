@@ -3,16 +3,30 @@
 
 #include <type_traits>
 
+#include "pipes/base.hpp"
+
 namespace pipes
 {
 namespace detail
 {
 
+/*
+** Helper
+*/
 template<typename... Ts>
 struct sfinae_empty_helper {};
 
+/*
+** Dummies
+*/
+
 struct dummy_value_input_type {};
-struct dummy_tail_pipeline_type {};
+
+struct dummy_tail_pipeline_type: public pipeline_base<dummy_tail_pipeline_type> {};
+
+/*
+** Detect has a right onReceive
+*/
 
 template<typename T, typename _ = void>
 struct has_onReceive_method: std::false_type {};
@@ -31,7 +45,6 @@ struct has_onReceive_method
         void
     >
 > : public std::true_type {};
-
 
 }
 }
