@@ -1,6 +1,7 @@
 #ifndef PIPES_HPP
 #define PIPES_HPP
 
+#include "pipes/adjacent.hpp"
 #include "pipes/cartesian_product.hpp"
 #include "pipes/custom.hpp"
 #include "pipes/dev_null.hpp"

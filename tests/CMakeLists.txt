@@ -2,6 +2,7 @@ cmake_minimum_required(VERSION 3.12)
 
 add_executable(pipes_test
     main.cpp
+    adjacent.cpp
     cartesian_product.cpp
     custom.cpp
     dev_null.cpp

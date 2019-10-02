@@ -115,6 +115,22 @@ pipes::cartesian_product(inputs1, inputs2)
 // results contains {"1-up", "1-down", "2-up", "2-down", "3-up", "3-down"}
 ```
 
+## Operating on adjacent elements of a collectin
+
+`pipes::adjacent` allows to send adjacent pairs of element from a range to a pipeline:
+
+```cpp
+auto const input = std::vector<int>{1, 2, 4, 7, 11, 16};
+
+auto results = std::vector<int>{};
+
+pipes::adjacent(input)
+    >>= pipes::transform([](int a, int b){ return b - a; })
+    >>= pipes::push_back(results);
+
+// result contains {1, 2, 3, 4, 5};
+```
+
 # End pipes
 
 This library also provides end pipes, which are components that send data to a collection in an elaborate way. For example, the `map_aggregate`  pipe receives `std::pair<Key, Value>`s and adds them to a map with the following rule:
