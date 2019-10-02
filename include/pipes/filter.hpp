@@ -10,7 +10,7 @@
 namespace pipes
 {
     template<typename Predicate>
-    class filter_pipe : public pipe_base
+    class filter_pipe  
     {
     public:
         template<typename... Values, typename TailPipeline>

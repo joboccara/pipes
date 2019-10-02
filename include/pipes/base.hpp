@@ -9,9 +9,7 @@
 #include <tuple>
 
 namespace pipes
-{
-    struct pipe_base {};
-    
+{    
     template<typename Pipeline>
     struct pipeline_proxy
     {

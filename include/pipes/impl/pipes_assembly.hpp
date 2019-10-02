@@ -26,7 +26,7 @@ namespace pipes
         };
 
         template<typename Pipe1, typename Pipe2>
-        struct CompositePipe : public pipe_base
+        struct CompositePipe  
         {
             Pipe1 pipe1;
             Pipe2 pipe2;

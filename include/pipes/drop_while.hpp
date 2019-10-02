@@ -8,7 +8,7 @@
 namespace pipes
 {
     template<typename Predicate>
-    class drop_while_pipe : public pipe_base
+    class drop_while_pipe  
     {
     public:
         

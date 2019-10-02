@@ -11,7 +11,7 @@
 namespace pipes
 {
     template<typename TeeBranch>
-    class tee_pipe : public pipe_base
+    class tee_pipe  
     {
     public:
         template<typename Value, typename TailPipeline>

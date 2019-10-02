@@ -6,7 +6,7 @@
 
 namespace pipes
 {
-    class take : public pipe_base
+    class take  
     {
     public:
         template<typename... Values, typename TailPipeline>

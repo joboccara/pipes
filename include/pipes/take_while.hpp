@@ -8,7 +8,7 @@
 namespace pipes
 {
     template<typename Predicate>
-    class take_while_pipe : public pipe_base
+    class take_while_pipe  
     {
     public:
         template<typename... Values, typename TailPipeline>

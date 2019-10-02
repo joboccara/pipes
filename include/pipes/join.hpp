@@ -8,7 +8,7 @@
 
 namespace pipes
 {
-    struct join_pipe : public pipe_base
+    struct join_pipe  
     {
         template<typename Collection, typename TailPipeline>
         void onReceive(Collection&& collection, TailPipeline&& tailPipeline)

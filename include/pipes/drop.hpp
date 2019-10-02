@@ -6,7 +6,7 @@
 
 namespace pipes
 {
-    class drop : public pipe_base
+    class drop  
     {
     public:
         

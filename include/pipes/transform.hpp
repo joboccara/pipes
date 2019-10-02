@@ -14,7 +14,7 @@
 namespace pipes
 {
     template<typename Function>
-    class transform_pipe : public pipe_base
+    class transform_pipe  
     {
     public:
         template<typename... Values, typename TailPipeline>
