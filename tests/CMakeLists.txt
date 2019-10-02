@@ -25,7 +25,8 @@ add_executable(pipes_test
     tee.cpp
     transform.cpp
     unzip.cpp
-    integration_tests.cpp)
+    integration_tests.cpp
+    has_on_receive.cpp)
 
 target_include_directories(pipes_test PRIVATE
                            $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include>
