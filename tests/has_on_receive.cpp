@@ -5,6 +5,7 @@
 #include "pipes/filter.hpp"
 #include "pipes/drop.hpp"
 #include "pipes/dev_null.hpp"
+#include "pipes/transform.hpp"
 
 struct dummy_without_onReceive{};
 
@@ -31,6 +32,12 @@ struct dummy_predicate
 {
     template <typename T>
     bool operator()(const T&&) { return true; }
+};
+
+struct dummy_transform_function
+{
+    template <typename T>
+    auto operator()(const T&& t) { return t; }
 };
 
 TEST_CASE("dummy does not have onReceive")
@@ -72,6 +79,12 @@ TEST_CASE("filter has onReceive")
 TEST_CASE("drop has onReceive")
 {
 	using sfinae_result = typename pipes::detail::has_onReceive_method<pipes::drop>;
+    REQUIRE((std::is_base_of<std::true_type, sfinae_result>::value));
+}
+
+TEST_CASE("transform has onReceive")
+{
+	using sfinae_result = typename pipes::detail::has_onReceive_method<pipes::transform_pipe<dummy_transform_function>>;
     REQUIRE((std::is_base_of<std::true_type, sfinae_result>::value));
 }
 
