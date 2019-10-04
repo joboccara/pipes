@@ -2,5 +2,3 @@
 .DS_Store
 build/
 install/
-/cmake-build-debug/
-/.idea/
