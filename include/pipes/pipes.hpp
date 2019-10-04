@@ -18,6 +18,7 @@
 #include "pipes/partition.hpp"
 #include "pipes/push_back.hpp"
 #include "pipes/read_in_stream.hpp"
+#include "pipes/repeat.hpp"
 #include "pipes/set_aggregator.hpp"
 #include "pipes/sorted_inserter.hpp"
 #include "pipes/switch.hpp"
