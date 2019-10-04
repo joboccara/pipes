@@ -16,9 +16,10 @@ public:
   template<typename Value, typename TailPipeline>
   void onReceive(Value&& value, TailPipeline&& tailPipeline)
   {
-    for (uint64_t i = 0; i <= n_.get(); ++i) {
-      send(FWD(value), tailPipeline);
+    for (uint64_t i = 0; i < n_.get(); ++i) {
+      send(value, tailPipeline);
     }
+    send(FWD(value), tailPipeline);
   }
 
   explicit repeat(uint64_t n) : n_(n) {}
