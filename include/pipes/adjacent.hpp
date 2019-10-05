@@ -30,14 +30,18 @@ namespace pipes
         
         auto first = begin(range);
         auto second = begin(range);
+
+        if (second != end(range))
+        {
+            second++;
+        }
+
         while (second != end(range))
         {
-            ++second;
-            if (second != end(range))
-            {
-                send(*first, *second, pipeline);
-            }
-            ++first;
+            send(*first, *second, pipeline);
+
+            first++;
+            second++;
         }
     }
 } // namespace pipes
