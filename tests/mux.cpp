@@ -97,7 +97,7 @@ TEST_CASE("mux partition")
 
     pipes::mux(input1, input2)
     >>= pipes::partition([](int a, int b){ return a + b < 41; },
-                         pipes::transform([](int a, int b){ return a * b;}) >>= pipes::push_back(results1),
+                         pipes::transform(std::multiplies<>{}) >>= pipes::push_back(results1),
                          pipes::transform([](int a, int b){ return b - a;}) >>= pipes::push_back(results2));
     
     REQUIRE(results1 == expected1);
