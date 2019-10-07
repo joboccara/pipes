@@ -19,8 +19,8 @@ add_executable(pipes_test
     mux.cpp
     override.cpp
     partition.cpp
-	step.cpp
     streams.cpp
+    stride.cpp
     switch.cpp
     take.cpp
     take_while.cpp

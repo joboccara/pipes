@@ -20,7 +20,7 @@
 #include "pipes/read_in_stream.hpp"
 #include "pipes/set_aggregator.hpp"
 #include "pipes/sorted_inserter.hpp"
-#include "pipes/step.hpp"
+#include "pipes/stride.hpp"
 #include "pipes/switch.hpp"
 #include "pipes/take.hpp"
 #include "pipes/take_while.hpp"

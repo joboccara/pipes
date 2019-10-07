@@ -6,29 +6,30 @@
 
 namespace pipes
 {
-    class step : public pipe_base
+    class stride : public pipe_base
     {
     public:
         
         template<typename... Values, typename TailPipeline>
         void onReceive(Values&&... values, TailPipeline&& tailPipeline)
         {
-            if (nbSinceLastStep_ == 0)
+            if (nbSinceLastStride_ == 0)
             {
                 send(FWD(values)..., FWD(tailPipeline));
             }
-            nbSinceLastStep_++;
+            nbSinceLastStride_++;
 
-            if( nbSinceLastStep_ == stepSize_ ) {
-                nbSinceLastStep_ = 0;
+            if( nbSinceLastStride_ == strideSize_ )
+			{
+                nbSinceLastStride_ = 0;
             }
         }
 
-        explicit step(size_t stepSize) : stepSize_{stepSize}, nbSinceLastStep_{0} {}
+        explicit stride(size_t strideSize) : strideSize_{strideSize}, nbSinceLastStride_{0} {}
         
     private:
-        const size_t stepSize_;
-        size_t nbSinceLastStep_;
+        const size_t strideSize_;
+        size_t nbSinceLastStride_;
     };
 } // namespace pipes
 
