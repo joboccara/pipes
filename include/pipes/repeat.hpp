@@ -16,16 +16,16 @@ public:
   template<typename Value, typename TailPipeline>
   void onReceive(Value&& value, TailPipeline&& tailPipeline)
   {
-    for (uint64_t i = 0; i < n_.get(); ++i) {
+    for (uint64_t i = 0; i < n_; ++i) {
       send(value, tailPipeline);
     }
     send(FWD(value), tailPipeline);
   }
 
-  explicit repeat(uint64_t n) : n_(n) {}
+  explicit repeat(size_t n) : n_(n) {}
 
 private:
-  detail::assignable<uint64_t> n_;
+  size_t n_;
 };
 
 } // namespace pipes
