@@ -1,6 +1,8 @@
 #ifndef PIPES_TAP_HPP
 #define PIPES_TAP_HPP
 
+#include <type_traits>
+
 #include "pipes/operator.hpp"
 
 #include "pipes/base.hpp"
@@ -20,6 +22,12 @@ namespace pipes
             function_(FWD(value));
             send(FWD(value), tailPipeline);
         }
+
+        template<typename Value>
+        void onReceive(Value&& value)
+        {
+            function_(FWD(value));
+        }
         
         explicit tap_pipe(Function function) : function_(function) {}
         
@@ -28,8 +36,8 @@ namespace pipes
     };
     
     template <typename Function>
-    tap_pipe<Function> tap(Function function) {
-        return tap_pipe<Function>(function);
+    tap_pipe<std::decay_t<Function>> tap(Function&& function) {
+        return tap_pipe<std::decay_t<Function>>(FWD(function));
     }
     
 } // namespace pipes
