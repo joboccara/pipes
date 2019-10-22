@@ -2,10 +2,10 @@
 #include <vector>
 #include "catch.hpp"
 
-#include "pipes/custom.hpp"
+#include "pipes/for_each.hpp"
 #include "pipes/do_then.hpp"
 
-TEST_CASE("several operations in custom_inserter")
+TEST_CASE("several operations in for_each")
 {
     auto const inputs = std::vector<int>{1, 2, 3, 4, 5};
     auto const expected1 = std::vector<int>{2, 4, 6, 8, 10};
@@ -16,7 +16,7 @@ TEST_CASE("several operations in custom_inserter")
     auto results2 = std::vector<int>{};
     auto results3 = std::vector<int>{};
     
-    inputs >>= pipes::custom(pipes::do_([&](int i){ results1.push_back(i*2);}).
+    inputs >>= pipes::for_each(pipes::do_([&](int i){ results1.push_back(i*2);}).
                              then_([&](int i){ results2.push_back(i+1);}).
                              then_([&](int i){ results3.push_back(-i);}));
     

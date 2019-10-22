@@ -10,7 +10,7 @@ namespace pipes
 {
     
     template<typename Function>
-    class custom_pipeline : public pipeline_base<custom_pipeline<Function>>
+    class for_each_pipeline : public pipeline_base<for_each_pipeline<Function>>
     {
     public:
         template<typename T>
@@ -19,16 +19,16 @@ namespace pipes
             function_(FWD(value));
         }
         
-        explicit custom_pipeline(Function function) : function_(function) {}
+        explicit for_each_pipeline(Function function) : function_(function) {}
         
     private:
         detail::assignable<Function> function_;
     };
     
     template <typename InsertFunction>
-    custom_pipeline<InsertFunction> custom(InsertFunction insertFunction)
+    for_each_pipeline<InsertFunction> for_each(InsertFunction insertFunction)
     {
-        return custom_pipeline<InsertFunction>(insertFunction);
+        return for_each_pipeline<InsertFunction>(insertFunction);
     }
     
 } // namespace pipes
