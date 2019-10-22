@@ -64,8 +64,8 @@ Since data circulates through pipes, real life pipes and plumbing provide a nice
 
 Pipes sort of look like [ranges](https://github.com/ericniebler/range-v3) adaptors from afar, but those two libraries have very different designs.
 
-Range views are about adapting ranges with view layers, and reading through those layers in lazy mode.
-Pipes are about sending pieces of data as they come along in a collection through a pipeline, and let them land in a destination.
+Range views are about adapting ranges with view layers, and reading through those layers in lazy mode. Ranges are "pull based", in that components ask for the next value.
+Pipes are about sending pieces of data as they come along in a collection through a pipeline, and let them land in a destination. Pipes are "push based", in that components wait for the next value.  
 
 Ranges and pipes have overlapping components such as `transform` and `filter`. But pipes do things like ranges can't do, such as `pipes::mux`, `pipes::demux` and `pipes:unzip`, and ranges do things that pipes can't do, like infinite ranges.
 
