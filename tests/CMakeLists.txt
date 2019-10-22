@@ -1,5 +1,3 @@
-cmake_minimum_required(VERSION 3.12)
-
 add_executable(pipes_test
     main.cpp
     adjacent.cpp
@@ -27,6 +25,7 @@ add_executable(pipes_test
     transform.cpp
     unzip.cpp
     integration_tests.cpp)
+add_test(NAME pipes_test COMMAND pipes_test)
 
 target_include_directories(pipes_test PRIVATE
                            $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include>
