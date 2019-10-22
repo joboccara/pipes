@@ -3,6 +3,8 @@
 
 #include "pipes/helpers/FWD.hpp"
 
+#include <tuple>
+
 namespace pipes
 {
     namespace detail
