@@ -80,6 +80,21 @@ TEST_CASE("Transform and filter")
     }
 }
 
+TEST_CASE("transform then filter calls the transform function only once per element")
+{
+    auto const input = std::vector<int>{1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
+    auto const expected = std::vector<int>{1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
+    
+    auto results = std::vector<int>{};
+    auto output = std::vector<int>{};
+    
+    input >>= pipes::transform([&results](int i){ results.push_back(i); return i * 2; })
+          >>= pipes::filter([](int i){ return i % 3 == 0; })
+          >>= pipes::push_back(output);
+    
+    REQUIRE(results == expected);
+}
+
 TEST_CASE("Sequence of output iterators, no algorithms")
 {
     std::vector<int> numbers = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
