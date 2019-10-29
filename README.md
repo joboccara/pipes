@@ -194,6 +194,7 @@ std::cin >>= pipes::read_in_stream<std::string>{}
     * [`partition`](#-partition-)
     * [`read_in_stream`](#-read-in-stream-)
     * [`switch`](#-switch-)
+    * [`stride`](#-stride-)
     * [`take`](#-take-)
     * [`tee`](#-tee-)
     * [`transform`](#-transform-)
@@ -361,6 +362,21 @@ numbers >>= pipes::switch_(pipes::case_([](int n){ return n % 4 == 0; }) >>= pip
 // multiplesOf4 contains {4, 8};
 // multiplesOf3 contains {3, 6, 9};
 // rest contains {1, 2, 5, 7, 10};
+```
+
+### `stride`
+
+`stride` is a pipe that passes every `N`<sup>th</sup> element starting from the first one. Hence `N-1` elements after every `N`<sup>th</sup> element are ignored
+
+```cpp
+auto const input = std::vector<int>{1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
+
+auto result = std::vector<int>{};
+
+input >>= pipes::stride(3)
+      >>= pipes::push_back(result);
+      
+// result contains {1, 4, 7, 10}
 ```
 
 ### `take`
