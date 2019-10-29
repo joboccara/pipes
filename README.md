@@ -366,7 +366,7 @@ numbers >>= pipes::switch_(pipes::case_([](int n){ return n % 4 == 0; }) >>= pip
 
 ### `stride`
 
-`stride` is a pipe that passes every `N`<sup>th</sup> element starting from the first one. Hence `N-1` elements after every `N`<sup>th</sup> element are ignored
+`stride` is a pipe that sends every `N`<sup>th</sup> element starting from the first one. Hence `N-1` elements after every `N`<sup>th</sup> element are ignored
 
 ```cpp
 auto const input = std::vector<int>{1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
