@@ -21,6 +21,7 @@ add_executable(pipes_test
     switch.cpp
     take.cpp
     take_while.cpp
+    tap.cpp
     tee.cpp
     transform.cpp
     unzip.cpp
