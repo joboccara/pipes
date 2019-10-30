@@ -60,24 +60,6 @@ private:
     std::reference_wrapper<T> value_;
 };
 
-template<typename T>
-class assignable<T const&>
-{
-public:
-    assignable(T const& value) : value_(value) {}
-    
-    T const& get() const { return value_; }
-    T& get() { return value_; }
-    
-    template<typename... Args>
-    decltype(auto) operator()(Args&&... args)
-    {
-        return value_(std::forward<Args>(args)...);
-    }
-private:
-    std::reference_wrapper<const T> value_;
-};
-
 } // namespace detail
 } // namespace pipes
 

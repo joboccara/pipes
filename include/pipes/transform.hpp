@@ -30,9 +30,9 @@ namespace pipes
     };
     
     template<typename Function>
-    transform_pipe<std::decay_t<Function>> transform(Function&& function)
+    transform_pipe<Function> transform(Function&& function)
     {
-        return transform_pipe<std::decay_t<Function>>{function};
+        return transform_pipe<Function>{function};
     }
 
 } // namespace pipes
