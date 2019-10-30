@@ -12,24 +12,16 @@ TEST_CASE("transform")
     std::vector<int> input = {1, 2, 3, 4, 5};
     std::vector<int> expected = {2, 4, 6, 8, 10};
     std::vector<int> results;
-
-    SECTION("one transform")
-    {
-        auto const times2 = pipes::transform([](int i) { return i*2; });
-        
-        std::copy(begin(input), end(input), times2 >>= pipes::push_back(results));
-        REQUIRE(results == expected);
-    }
     
-    SECTION("STL algorithm operator>>=")
-    {
-        std::copy(begin(input), end(input), pipes::transform([](int i) { return i*2; }) >>= pipes::push_back(results));
-        REQUIRE(results == expected);
-    }
-    
-    SECTION("operator>>=")
+    SECTION("input from range")
     {
         input >>= pipes::transform([](int i) { return i*2; }) >>= pipes::push_back(results);
+        REQUIRE(results == expected);
+    }
+
+    SECTION("input from STL algorithm")
+    {
+        std::copy(begin(input), end(input), pipes::transform([](int i) { return i*2; }) >>= pipes::push_back(results));
         REQUIRE(results == expected);
     }
 }
