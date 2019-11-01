@@ -164,6 +164,21 @@ TEST_CASE("Reading from a collection with ADL begin and end")
     REQUIRE(results == expected);
 }
 
+TEST_CASE("A pipeline can accept rvalues as inputs")
+{
+    
+    auto const getInput = [](){ return std::vector<int>{1, 2, 3, 4, 5}; };
+    auto const expected = std::vector<int>{4, 8};
+    
+    auto results = std::vector<int>{};
+    
+    getInput() >>= pipes::filter([](int i){ return i % 2 == 0; })
+               >>= pipes::transform([](int i){ return i * 2; })
+               >>= pipes::push_back(results);
+    
+    REQUIRE(results == expected);
+}
+
 TEST_CASE("Aggregation of pipes into reusable components")
 {
     auto const input = std::vector<int>{1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
