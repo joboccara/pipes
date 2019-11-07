@@ -72,6 +72,28 @@ TEST_CASE("intersperse can read from an STL algorithm")
     REQUIRE(result == expected);
 }
 
+struct ToString
+{
+    std::string const& operator()(std::string const& string) { return string; }
+    
+    template<typename T>
+    std::string operator()(T&& value){ return std::to_string(value); }
+};
+
+TEST_CASE("intersperse can have a delimiter of another type than the data it receives")
+{
+    auto const input = std::vector<std::string>{"word1", "word2", "word3"};
+    auto const expected = std::vector<std::string>{"word1", "99", "word2", "99", "word3"};
+    
+    auto result = std::vector<std::string>{};
+    
+    input >>= pipes::intersperse(99)
+          >>= pipes::transform(ToString{})
+          >>= pipes::push_back(result);
+    
+    REQUIRE(result == expected);
+}
+
 TEST_CASE("intersperse operator=")
 {
     std::string result1, result2;
