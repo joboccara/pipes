@@ -50,14 +50,14 @@ Here is a more elaborate example with a pipeline that branches out in several di
 A >>= pipes::transform(f)
   >>= pipes::filter(p)
   >>= pipes::unzip(pipes::push_back(B),
-                   pipes::demux(pipes::push_back(C),
+                   pipes::fork(pipes::push_back(C),
                                 pipes::filter(q) >>= pipes::push_back(D),
                                 pipes::filter(r) >>= pipes::push_back(E));
 ```
 
-Here, `unzip` takes the `std::pair`s or `std::tuple`s it receives and breaks them down into individual elements. It sends each element to the pipes it takes (here `pipes::push_back` and `demux`).
+Here, `unzip` takes the `std::pair`s or `std::tuple`s it receives and breaks them down into individual elements. It sends each element to the pipes it takes (here `pipes::push_back` and `fork`).
 
-`demux` takes any number of pipes and sends the data it receives to each of them.
+`fork` takes any number of pipes and sends the data it receives to each of them.
 
 Since data circulates through pipes, real life pipes and plumbing provide a nice analogy (which gave its names to the library). For example, the above pipeline can be graphically represented like this:
  
@@ -70,7 +70,7 @@ Pipes sort of look like [ranges](https://github.com/ericniebler/range-v3) adapto
 Range views are about adapting ranges with view layers, and reading through those layers in lazy mode. Ranges are "pull based", in that components ask for the next value.
 Pipes are about sending pieces of data as they come along in a collection through a pipeline, and let them land in a destination. Pipes are "push based", in that components wait for the next value.  
 
-Ranges and pipes have overlapping components such as `transform` and `filter`. But pipes do things like ranges can't do, such as `pipes::mux`, `pipes::demux` and `pipes:unzip`, and ranges do things that pipes can't do, like infinite ranges.
+Ranges and pipes have overlapping components such as `transform` and `filter`. But pipes do things like ranges can't do, such as `pipes::mux`, `pipes::fork` and `pipes:unzip`, and ranges do things that pipes can't do, like infinite ranges.
 
 It is possible to use ranges and pipes in the same expression though:
 
@@ -189,11 +189,11 @@ std::cin >>= pipes::read_in_stream<std::string>{}
 # List of available pipes
 
 * [General pipes](#general-pipes)
-    * [`demux`](#-demux-)
     * [`dev_null`](#-dev-null-)
     * [`drop`](#-drop-)
     * [`drop_while`](#-drop-while-)
     * [`filter`](#-filter-)
+    * [`fork`](#-fork-)
     * [`partition`](#-partition-)
     * [`read_in_stream`](#-read-in-stream-)
     * [`switch`](#-switch-)
@@ -212,27 +212,6 @@ std::cin >>= pipes::read_in_stream<std::string>{}
     * [`to_out_stream`](#-to-out-stream-)
 
 ## General pipes
-
-### `demux`
-
-<p align="center"><img src="https://github.com/joboccara/pipes/blob/readme/docs/demux_pipe.png"/></p>
-
-`demux` is a pipe that takes any number of pipes, and sends a copy of the values it receives to each of those pipes.
-
-```cpp
-std::vector<int> input = {1, 2, 3, 4, 5};
-std::vector<int> results1;
-std::vector<int> results2;
-std::vector<int> results3;
-
-input >>= pipes::demux(pipes::push_back(results1),
-                       pipes::push_back(results2),
-                       pipes::push_back(results3));
-
-// results1 contains {1, 2, 3, 4, 5}
-// results2 contains {1, 2, 3, 4, 5}
-// results3 contains {1, 2, 3, 4, 5}
-```
 
 ### `dev_null`
 
@@ -299,6 +278,27 @@ input >>= pipes::filter([](int i){ return i % 2 == 0; })
       >>= pipes::push_back(results);
 
 // results contains {2, 4, 6, 8, 10}
+```
+
+### `fork`
+
+<p align="center"><img src="https://github.com/joboccara/pipes/blob/readme/docs/fork_pipe.png"/></p>
+
+`fork` is a pipe that takes any number of pipes, and sends a copy of the values it receives to each of those pipes.
+
+```cpp
+std::vector<int> input = {1, 2, 3, 4, 5};
+std::vector<int> results1;
+std::vector<int> results2;
+std::vector<int> results3;
+
+input >>= pipes::fork(pipes::push_back(results1),
+                       pipes::push_back(results2),
+                       pipes::push_back(results3));
+
+// results1 contains {1, 2, 3, 4, 5}
+// results2 contains {1, 2, 3, 4, 5}
+// results3 contains {1, 2, 3, 4, 5}
 ```
 
 ### `join`
