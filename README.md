@@ -51,8 +51,8 @@ A >>= pipes::transform(f)
   >>= pipes::filter(p)
   >>= pipes::unzip(pipes::push_back(B),
                    pipes::fork(pipes::push_back(C),
-                                pipes::filter(q) >>= pipes::push_back(D),
-                                pipes::filter(r) >>= pipes::push_back(E));
+                               pipes::filter(q) >>= pipes::push_back(D),
+                               pipes::filter(r) >>= pipes::push_back(E));
 ```
 
 Here, `unzip` takes the `std::pair`s or `std::tuple`s it receives and breaks them down into individual elements. It sends each element to the pipes it takes (here `pipes::push_back` and `fork`).
