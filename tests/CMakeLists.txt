@@ -18,6 +18,7 @@ add_executable(pipes_test
     override.cpp
     partition.cpp
     streams.cpp
+    stride.cpp
     switch.cpp
     take.cpp
     take_while.cpp

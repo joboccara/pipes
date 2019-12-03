@@ -1,5 +1,8 @@
- <p><img src="https://github.com/joboccara/pipes/blob/readme/docs/cpp_pipes.png"/></p>
- 
+<p><img src="https://github.com/joboccara/pipes/blob/readme/docs/cpp_pipes.png"/></p>
+
+[![Build Status](https://travis-ci.org/joboccara/pipes.svg?branch=master)](https://travis-ci.org/joboccara/pipes)
+![GitHub](https://img.shields.io/github/license/joboccara/pipes)
+
 <a href="https://www.patreon.com/join/fluentcpp?"><img alt="become a patron" src="https://c5.patreon.com/external/logo/become_a_patron_button.png" height="35px"></a>
 
 Pipes are small components for writing expressive code when working on collections. Pipes chain together into a pipeline that receives data from a source, operates on that data, and send the results to a destination.
@@ -194,6 +197,7 @@ std::cin >>= pipes::read_in_stream<std::string>{}
     * [`partition`](#-partition-)
     * [`read_in_stream`](#-read-in-stream-)
     * [`switch`](#-switch-)
+    * [`stride`](#-stride-)
     * [`take`](#-take-)
     * [`tee`](#-tee-)
     * [`transform`](#-transform-)
@@ -361,6 +365,21 @@ numbers >>= pipes::switch_(pipes::case_([](int n){ return n % 4 == 0; }) >>= pip
 // multiplesOf4 contains {4, 8};
 // multiplesOf3 contains {3, 6, 9};
 // rest contains {1, 2, 5, 7, 10};
+```
+
+### `stride`
+
+`stride` is a pipe that sends every `N`<sup>th</sup> element starting from the first one. Hence `N-1` elements after every `N`<sup>th</sup> element are ignored
+
+```cpp
+auto const input = std::vector<int>{1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
+
+auto result = std::vector<int>{};
+
+input >>= pipes::stride(3)
+      >>= pipes::push_back(result);
+      
+// result contains {1, 4, 7, 10}
 ```
 
 ### `take`
