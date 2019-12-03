@@ -10,7 +10,7 @@ namespace pipes
 {
 
 template<typename... TailPipelines>
-class demux_pipeline : public pipeline_base<demux_pipeline<TailPipelines...>>
+class fork_pipeline : public pipeline_base<fork_pipeline<TailPipelines...>>
 {
 public:
     template<typename T>
@@ -19,16 +19,16 @@ public:
         detail::for_each(tailPipelines_, [&value](auto&& tailPipeline){ send(FWD(value), tailPipeline); });
     }
 
-    explicit demux_pipeline(TailPipelines const&... tailPipelines) : tailPipelines_(tailPipelines...) {}
+    explicit fork_pipeline(TailPipelines const&... tailPipelines) : tailPipelines_(tailPipelines...) {}
     
 private:
     std::tuple<TailPipelines...> tailPipelines_;
 };
 
 template<typename... TailPipelines>
-demux_pipeline<TailPipelines...> demux(TailPipelines const&... tailPipelines)
+fork_pipeline<TailPipelines...> fork(TailPipelines const&... tailPipelines)
 {
-    return demux_pipeline<TailPipelines...>(tailPipelines...);
+    return fork_pipeline<TailPipelines...>(tailPipelines...);
 }
 
 } // namespace pipes

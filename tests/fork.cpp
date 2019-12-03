@@ -1,5 +1,5 @@
 #include "catch.hpp"
-#include "pipes/demux.hpp"
+#include "pipes/fork.hpp"
 #include "pipes/filter.hpp"
 #include "pipes/override.hpp"
 #include "pipes/transform.hpp"
@@ -9,7 +9,7 @@
 #include <utility>
 #include <vector>
 
-TEST_CASE("demux dispatches an input to several destinations")
+TEST_CASE("fork dispatches an input to several destinations")
 {
     std::vector<int> numbers = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
     
@@ -19,14 +19,14 @@ TEST_CASE("demux dispatches an input to several destinations")
 
     std::vector<int> results1, results2, results3;
     
-    std::copy(begin(numbers), end(numbers), pipes::demux(pipes::push_back(results1), pipes::push_back(results2), pipes::push_back(results3)));
+    std::copy(begin(numbers), end(numbers), pipes::fork(pipes::push_back(results1), pipes::push_back(results2), pipes::push_back(results3)));
     
     REQUIRE(results1 == expected1);
     REQUIRE(results2 == expected2);
     REQUIRE(results3 == expected3);
 }
 
-TEST_CASE("demux can override existing results")
+TEST_CASE("fork can override existing results")
 {
     std::vector<int> numbers = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
     
@@ -38,14 +38,14 @@ TEST_CASE("demux can override existing results")
     std::vector<int> results2(numbers.size(), 0);
     std::vector<int> results3(numbers.size(), 0);
     
-    std::copy(begin(numbers), end(numbers), pipes::demux(pipes::override(results1), pipes::override(results2), pipes::override(results3)));
+    std::copy(begin(numbers), end(numbers), pipes::fork(pipes::override(results1), pipes::override(results2), pipes::override(results3)));
     
     REQUIRE(results1 == expected1);
     REQUIRE(results2 == expected2);
     REQUIRE(results3 == expected3);
 }
 
-TEST_CASE("demux can send data to other pipes")
+TEST_CASE("fork can send data to other pipes")
 {
     std::vector<int> numbers = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
     
@@ -55,7 +55,7 @@ TEST_CASE("demux can send data to other pipes")
 
     std::vector<int> multiplesOf2, multiplesOf3, multiplesOf4;
     
-    std::copy(begin(numbers), end(numbers), pipes::demux(pipes::filter([](int i){return i%2 == 0;}) >>= pipes::push_back(multiplesOf2),
+    std::copy(begin(numbers), end(numbers), pipes::fork(pipes::filter([](int i){return i%2 == 0;}) >>= pipes::push_back(multiplesOf2),
                                                          pipes::filter([](int i){return i%3 == 0;}) >>= pipes::push_back(multiplesOf3),
                                                          pipes::filter([](int i){return i%4 == 0;}) >>= pipes::push_back(multiplesOf4)));
     
@@ -64,7 +64,7 @@ TEST_CASE("demux can send data to other pipes")
     REQUIRE(multiplesOf4 == expectedMultiplesOf4);
 }
 
-TEST_CASE("demux can be used as a tee")
+TEST_CASE("fork can be used as a tee")
 {
     std::vector<int> numbers = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
     
@@ -74,7 +74,7 @@ TEST_CASE("demux can be used as a tee")
     std::vector<int> results, log;
     
     std::copy(begin(numbers), end(numbers), pipes::filter([](int i){return i%2 == 0;})
-                                        >>= pipes::demux(pipes::push_back(log),
+                                        >>= pipes::fork(pipes::push_back(log),
                                                          pipes::transform([](int i){ return i*2; })
                                                          >>= pipes::push_back(results)));
     
@@ -82,22 +82,22 @@ TEST_CASE("demux can be used as a tee")
     REQUIRE(log == expectedLog);
 }
 
-TEST_CASE("demux's iterator category should be std::output_iterator_tag")
+TEST_CASE("fork's iterator category should be std::output_iterator_tag")
 {
     std::vector<int> output;
-    static_assert(std::is_same<decltype(pipes::demux(pipes::push_back(output), pipes::push_back(output), pipes::push_back(output)))::iterator_category,
+    static_assert(std::is_same<decltype(pipes::fork(pipes::push_back(output), pipes::push_back(output), pipes::push_back(output)))::iterator_category,
                   std::output_iterator_tag>::value,
                   "iterator category should be std::output_iterator_tag");
 }
 
-TEST_CASE("demux operator=")
+TEST_CASE("fork operator=")
 {
     std::vector<int> results1, results2, results3, results4;
-    auto demux1 = pipes::demux(pipes::push_back(results1), pipes::push_back(results2));
-    auto demux2 = pipes::demux(pipes::push_back(results1), pipes::push_back(results2));
+    auto fork1 = pipes::fork(pipes::push_back(results1), pipes::push_back(results2));
+    auto fork2 = pipes::fork(pipes::push_back(results1), pipes::push_back(results2));
 
-    demux2 = demux1;
-    pipes::send(0, demux2);
+    fork2 = fork1;
+    pipes::send(0, fork2);
     
     REQUIRE(results1.size() == 1);
     REQUIRE(results2.size() == 1);

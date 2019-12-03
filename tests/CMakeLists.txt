@@ -7,10 +7,10 @@ add_executable(pipes_test
     drop.cpp
     drop_while.cpp
     for_each.cpp
+    fork.cpp
     map_aggregator.cpp
     set_aggregator.cpp
     sorted_inserter.cpp
-    demux.cpp
     intersperse.cpp
     filter.cpp
     join.cpp
