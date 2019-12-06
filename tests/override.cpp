@@ -70,3 +70,25 @@ TEST_CASE("Override can assign to a data member of the output collection")
     
     REQUIRE(results == expected);
 }
+
+TEST_CASE("Override can send results to a setter in the output collection")
+{
+    struct P
+    {
+        int x = 0;
+        int y = 0;
+        
+        void setX(int aX){ x = aX; }
+        
+        bool operator==(P const& other) const{ return x == other.x && y == other.y; }
+    };
+    
+    auto const expected = std::vector<P>{ {1,0}, {2,0}, {3,0}, {4,0}, {5,0} };
+
+    auto const xs = std::vector<int>{1, 2, 3, 4, 5};
+    auto results = std::vector<P>(5);
+    
+    xs >>= pipes::override(results, &P::setX);
+    
+    REQUIRE(results == expected);
+}

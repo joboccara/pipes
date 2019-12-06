@@ -56,5 +56,30 @@ namespace pipes
         using std::begin;
         return override_data_member_pipeline<decltype(begin(std::declval<Container&>())), DataMember>{begin(container), dataMember};
     }
+
+    template<typename Iterator, typename Ret, typename Object, typename Value>
+    class override_member_function_pipeline : public pipeline_base<override_member_function_pipeline<Iterator, Ret, Object, Value>>
+    {
+    public:
+        using Setter = Ret (Object::* )(Value);
+        template<typename T>
+        void onReceive(T&& value)
+        {
+            ((*iterator_).*setter_)(FWD(value));
+            ++iterator_;
+        }
+        
+        override_member_function_pipeline(Iterator iterator, Setter setter) : iterator_(iterator), setter_(setter) {}
+    private:
+        Iterator iterator_;
+        Setter setter_;
+    };
+
+    template<typename Container, typename Ret, typename Object, typename Value>
+    auto override(Container& container, Ret (Object::* setter)(Value))
+    {
+        using std::begin;
+        return override_member_function_pipeline<decltype(begin(std::declval<Container&>())), Ret, Object, Value>{begin(container), setter};
+    }
 }
 #endif /* BEGIN_HPP */
