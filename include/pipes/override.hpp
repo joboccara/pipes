@@ -57,11 +57,10 @@ namespace pipes
         return override_data_member_pipeline<decltype(begin(std::declval<Container&>())), DataMember>{begin(container), dataMember};
     }
 
-    template<typename Iterator, typename Ret, typename Object, typename Value>
-    class override_member_function_pipeline : public pipeline_base<override_member_function_pipeline<Iterator, Ret, Object, Value>>
+    template<typename Iterator, typename Setter>
+    class override_member_function_pipeline : public pipeline_base<override_member_function_pipeline<Iterator, Setter>>
     {
     public:
-        using Setter = Ret (Object::* )(Value);
         template<typename T>
         void onReceive(T&& value)
         {
@@ -79,7 +78,7 @@ namespace pipes
     auto override(Container& container, Ret (Object::* setter)(Value))
     {
         using std::begin;
-        return override_member_function_pipeline<decltype(begin(std::declval<Container&>())), Ret, Object, Value>{begin(container), setter};
+        return override_member_function_pipeline<decltype(begin(std::declval<Container&>())), decltype(setter)>{begin(container), setter};
     }
 }
 #endif /* BEGIN_HPP */
