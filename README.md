@@ -528,6 +528,23 @@ input >>= pipes::filter([](int i){ return i % 2 == 0; })
 // results contains {2, 4, 6, 8, 10, 0, 0, 0, 0, 0};
 ```
 
+`override` can also write on a specifc data member instead of erasing the complete structure in the outputs:
+
+```cpp
+struct P
+{
+    int x = 0;
+    int y = 0;
+};
+
+auto const xs = std::vector<int>{1, 2, 3, 4, 5};
+auto results = std::vector<P>(5);
+
+xs >>= pipes::override(results, &P::x);
+
+// results now contains { {1,0}, {2,0}, {3,0}, {4,0}, {5,0} }
+```
+
 ### `push_back`
 
 `push_back` is a pipe that is equivalent to `std::back_inserter`. It takes a collection that has a `push_back` member function, such as a `std::vector`, and `push_back`s the values it receives into that collection.
