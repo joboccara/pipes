@@ -2,6 +2,7 @@
 #include "pipes/pipes.hpp"
 
 #include <algorithm>
+#include <map>
 #include <vector>
 
 TEST_CASE("Override existing contents on STL containers")
@@ -67,6 +68,31 @@ TEST_CASE("Override can assign to a data member of the output collection")
     auto results = std::vector<P>(5);
     
     xs >>= pipes::override(results, &P::x);
+    
+    REQUIRE(results == expected);
+}
+
+TEST_CASE("Override can assign to the value of the output map")
+{
+    struct P
+    {
+        int x = 0;
+        int y = 0;
+        
+        bool operator<(P const& other) const
+        {
+            if (x < other.x) return true;
+            if (x > other.x) return false;
+            return y < other.y;
+        }
+    };
+    
+    auto const expected = std::map<int, std::string>{ {1,"one"}, {2,"two"}, {3,"three"}, {4,"four"}, {5,"five"} };
+
+    auto const xs = std::vector<std::string>{"one", "two", "three", "four", "five"};
+    auto results = std::map<int, std::string>{ {1,""}, {2,""}, {3,""}, {4,""}, {5,""} };;
+    
+    xs >>= pipes::override(results, &std::pair<int const, std::string>::second);
     
     REQUIRE(results == expected);
 }
