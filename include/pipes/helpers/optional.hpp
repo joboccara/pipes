@@ -21,8 +21,10 @@ namespace detail
         optional& operator=(const optional& other)
         {
             reset();
-            new (&m_object) T(*other);
-            m_initialized = other.m_initialized;
+            if (other) {
+                new (&m_object) T(*other);
+                m_initialized = other.m_initialized;
+            }
             return *this;
         }
         optional& operator=(nullopt_t) { reset(); return *this; }
