@@ -41,7 +41,6 @@ TEST_CASE("unzip breaks pairs down to two containers")
     REQUIRE(values == expectedValues);
 }
 
-
 TEST_CASE("unzip's iterator category should be std::output_iterator_tag")
 {
     std::vector<int> output;
@@ -71,7 +70,7 @@ TEST_CASE("unzip can override existing contents")
 std::string toUpperString(std::string const& s)
 {
     std::string upperString;
-    std::transform(begin(s), end(s), pipes::push_back(upperString), [](char c){ return std::toupper(c); });
+    std::transform(begin(s), end(s), pipes::push_back(upperString), [](char c){ return static_cast<char>(std::toupper(c)); });
     return upperString;
 }
 
