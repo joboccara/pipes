@@ -48,7 +48,7 @@ class assignable<T&>
 public:
     assignable(T& value) : value_(value) {}
     
-    T const& get() const { return value_; }
+    T& get() const { return value_; }
     T& get() { return value_; }
     
     template<typename... Args>
