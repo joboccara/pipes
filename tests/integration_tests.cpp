@@ -121,7 +121,7 @@ TEST_CASE("Sequence of output iterators, no algorithms, with pipes")
     REQUIRE(results == expected);
 }
 
-std::vector<int> operator|(std::vector<int> const& v1, std::vector<int> const& v2)
+std::vector<int> operator|(std::vector<int> const&, std::vector<int> const& v2)
 {
     return v2;
 }
