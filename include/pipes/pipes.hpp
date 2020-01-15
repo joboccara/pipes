@@ -3,6 +3,7 @@
 
 #include "pipes/adjacent.hpp"
 #include "pipes/cartesian_product.hpp"
+#include "pipes/combinations.hpp"
 #include "pipes/dev_null.hpp"
 #include "pipes/do_then.hpp"
 #include "pipes/drop.hpp"

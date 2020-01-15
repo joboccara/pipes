@@ -2,6 +2,7 @@ add_executable(pipes_test
     main.cpp
     adjacent.cpp
     cartesian_product.cpp
+    combinations.cpp
     dev_null.cpp
     do_then.cpp
     drop.cpp
