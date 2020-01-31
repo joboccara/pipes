@@ -227,7 +227,7 @@ std::cin >>= pipes::read_in_stream<std::string>{}
     * [`transform`](#-transform-)
     * [`unzip`](#-unzip-)
 * [End pipes](#end-pipes-1)
-    * [`custom`](#-custom-)
+    * [`for_each`](#-for-each-)
     * [`map_aggregator`](#-map-aggregator-)
     * [`override`](#-override-)
     * [`push_back`](#-push-back-)
@@ -494,9 +494,9 @@ entries >>= pipes::unzip(pipes::push_back(keys),
 
 ## End pipes
 
-### `custom`
+### `for_each`
 
-`custom` takes a function (or function object) that sends to the data it receives to that function. One of its usages is to give legacy code that does not use STL containers access to STL algorithms:
+`for_each` takes a function (or function object) that sends to the data it receives to that function. One of its usages is to give legacy code that does not use STL containers access to STL algorithms:
 
 ```cpp
 std::vector<int> input = {1, 2, 3, 4, 5, 6, 7 ,8, 9, 10};
@@ -505,17 +505,17 @@ void legacyInsert(int number, DarkLegacyStructure const& thing); // this functio
 
 DarkLegacyStructure legacyStructure = // ...
 
-std::copy(begin(input), end(input), custom([&legacyStructure](int number){ legacyInsert(number, legacyStructure); });
+std::copy(begin(input), end(input), for_each([&legacyStructure](int number){ legacyInsert(number, legacyStructure); });
 ```
 
 Read the [full story](https://www.fluentcpp.com/2017/11/24/how-to-use-the-stl-in-legacy-code/) about making legacy code compatible with the STL.
 
-Note that `custom` goes along with a helper function object, `do_`, that allows to perfom several actions sequentially on the output of the algorithm:
+Note that `for_each` goes along with a helper function object, `do_`, that allows to perfom several actions sequentially on the output of the algorithm:
 
 ```cpp
-std::copy(begin(input), end(input), pipes::custom(pipes::do_([&](int i){ results1.push_back(i*2);}).
-                                                         then_([&](int i){ results2.push_back(i+1);}).
-                                                         then_([&](int i){ results3.push_back(-i);})));
+std::copy(begin(input), end(input), pipes::for_each(pipes::do_([&](int i){ results1.push_back(i*2);}).
+                                                           then_([&](int i){ results2.push_back(i+1);}).
+                                                           then_([&](int i){ results3.push_back(-i);})));
 
 ```
 
