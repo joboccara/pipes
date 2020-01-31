@@ -22,6 +22,7 @@ namespace pipes
     template<typename Value, typename Pipeline>
     auto operator>>= (read_in_stream<Value> readInStreamPipe, Pipeline&& pipeline)
     {
+        static_cast<void>(readInStreamPipe);
         return read_in_stream_pipeline<Value, std::decay_t<Pipeline>>{pipeline};
     }
 
@@ -33,6 +34,6 @@ namespace pipes
             pipes::send(*inValue, readInStreamPipe.pipeline_);
         }
     }
-    
+
 } // namespace pipes
 #endif /* READ_IN_STREAM_HPP */
