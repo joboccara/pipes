@@ -8,7 +8,7 @@
 std::string toUpper(std::string const& s)
 {
     std::string result(s.size(), '_');
-    std::transform(begin(s), end(s), begin(result), [](char c){ return std::toupper(c); });
+    std::transform(begin(s), end(s), begin(result), [](char c){ return static_cast<char>(std::toupper(c)); });
     return result;
 }
 

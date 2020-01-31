@@ -34,7 +34,7 @@ TEST_CASE("drop_while ignores everything if the predicate is always false")
     auto const expected = std::vector<int>{ };
 
     auto result = std::vector<int>{};
-
+  
     input >>= pipes::filter([](int){ return false; })
           >>= pipes::drop_while([](int i){ return i < 6; })
           >>= pipes::push_back(result);

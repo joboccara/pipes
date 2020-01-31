@@ -28,7 +28,7 @@ namespace pipes
         explicit stride(size_t strideSize) : strideSize_{strideSize}, nbSinceLastStride_{0} {}
         
     private:
-        const size_t strideSize_;
+        size_t strideSize_;
         size_t nbSinceLastStride_;
     };
 } // namespace pipes
