@@ -149,8 +149,18 @@ namespace MyCollectionNamespace
         std::vector<int> data_;
     };
 
-    auto begin(MyCollection const& myCollection) { return begin(myCollection.data_); }
-    auto end(MyCollection const& myCollection) { return end(myCollection.data_); }
+
+    auto begin(MyCollection const& myCollection)
+    {
+        using std::begin;
+        return begin(myCollection.data_);
+    }
+
+    auto end(MyCollection const& myCollection)
+    {
+        using std::end;
+        return end(myCollection.data_);
+    }
 }
 }
 
@@ -162,6 +172,20 @@ TEST_CASE("Reading from a collection with ADL begin and end")
 
     input >>= pipes::transform([](int i){ return i *2; }) >>= pipes::push_back(results);
 
+    REQUIRE(results == expected);
+}
+
+TEST_CASE("A pipeline can accept rvalues as inputs")
+{
+    auto const getInput = [](){ return std::vector<int>{1, 2, 3, 4, 5}; };
+    auto const expected = std::vector<int>{4, 8};
+    
+    auto results = std::vector<int>{};
+    
+    getInput() >>= pipes::filter([](int i){ return i % 2 == 0; })
+               >>= pipes::transform([](int i){ return i * 2; })
+               >>= pipes::push_back(results);
+    
     REQUIRE(results == expected);
 }
 

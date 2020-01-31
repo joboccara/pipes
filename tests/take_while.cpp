@@ -75,6 +75,18 @@ TEST_CASE("take_while can handle multiple values")
     REQUIRE(result == expected);
 }
 
+TEST_CASE("take_while can emulate a for_each_until")
+{
+    auto numbers = std::vector<int>{1, 2, 3, 4, 5, 6, 7, 8, 9 ,10};
+    auto const expected = std::vector<int>{10, 20, 30, 40, 50, 6, 7, 8, 9 ,10};
+    
+    numbers
+    >>= pipes::take_while([](int i){ return i <= 5; })
+    >>= pipes::for_each([](int& i){ i *= 10; });
+    
+    REQUIRE(numbers == expected);
+}
+
 TEST_CASE("take_while operator=")
 {
     std::vector<int> results1, results2;

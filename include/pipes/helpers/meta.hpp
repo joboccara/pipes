@@ -39,7 +39,7 @@ namespace pipes
         template<typename...Ts, typename Function, size_t... Is>
         auto transform_impl(std::tuple<Ts...> const& inputs, Function function, std::index_sequence<Is...>)
         {
-            return std::tuple<std::result_of_t<Function(Ts)>...>{function(std::get<Is>(inputs))...};
+            return std::make_tuple(function(std::get<Is>(inputs))...);
         }
         
         template<typename... Ts, typename Function>

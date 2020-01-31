@@ -2,15 +2,16 @@ add_executable(pipes_test
     main.cpp
     adjacent.cpp
     cartesian_product.cpp
+    combinations.cpp
     dev_null.cpp
     do_then.cpp
     drop.cpp
     drop_while.cpp
     for_each.cpp
+    fork.cpp
     map_aggregator.cpp
     set_aggregator.cpp
     sorted_inserter.cpp
-    demux.cpp
     intersperse.cpp
     filter.cpp
     join.cpp

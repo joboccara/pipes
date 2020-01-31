@@ -32,9 +32,9 @@ TEST_CASE("map_aggregator with operator>>=")
     std::map<int, std::string> expected = { {1, "a"}, {2, "bb"}, {3, "cc"}, {4, "dd"}, {5, "e"} };
     std::map<int, std::string> results;
     
-    entries >>= pipes::map_aggregator(results, concatenateStrings);
+    entries >>= pipes::map_aggregator(results, std::plus<>{});
     
-    entries2 >>= pipes::map_aggregator(results, concatenateStrings);
+    entries2 >>= pipes::map_aggregator(results, std::plus<>{});
     
     REQUIRE((results == expected));
 }
