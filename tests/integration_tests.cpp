@@ -123,6 +123,7 @@ TEST_CASE("Sequence of output iterators, no algorithms, with pipes")
 
 std::vector<int> operator|(std::vector<int> const&, std::vector<int> const& v2)
 {
+    static_cast<void>(v1);
     return v2;
 }
 
@@ -147,6 +148,7 @@ namespace MyCollectionNamespace
     {
         std::vector<int> data_;
     };
+
 
     auto begin(MyCollection const& myCollection)
     {
@@ -175,7 +177,6 @@ TEST_CASE("Reading from a collection with ADL begin and end")
 
 TEST_CASE("A pipeline can accept rvalues as inputs")
 {
-    
     auto const getInput = [](){ return std::vector<int>{1, 2, 3, 4, 5}; };
     auto const expected = std::vector<int>{4, 8};
     

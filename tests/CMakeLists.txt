@@ -2,6 +2,7 @@ add_executable(pipes_test
     main.cpp
     adjacent.cpp
     cartesian_product.cpp
+    combinations.cpp
     dev_null.cpp
     do_then.cpp
     drop.cpp
@@ -40,5 +41,6 @@ target_compile_options(pipes_test
                        $<$<CXX_COMPILER_ID:MSVC>:/W4>
                        $<$<CXX_COMPILER_ID:MSVC>:/WX>
                        $<$<OR:$<CXX_COMPILER_ID:GNU>,$<CXX_COMPILER_ID:Clang>>:-Wall>
+                       $<$<OR:$<CXX_COMPILER_ID:GNU>,$<CXX_COMPILER_ID:Clang>>:-Wextra>
                        $<$<OR:$<CXX_COMPILER_ID:GNU>,$<CXX_COMPILER_ID:Clang>>:-Werror>
                        $<$<OR:$<CXX_COMPILER_ID:GNU>,$<CXX_COMPILER_ID:Clang>>:-pedantic>)

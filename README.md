@@ -134,6 +134,30 @@ pipes::adjacent(input)
 // result contains {1, 2, 3, 4, 5};
 ```
 
+## Operating on all combinations of elements of one collection
+
+`pipes::combinations` sends each possible couple of different elements of a range to a pipeline:
+
+```cpp
+auto const inputs = std::vector<int>{ 1, 2, 3, 4, 5 };
+
+auto results = std::vector<std::pair<int, int>>{};
+
+ pipes::combinations(inputs)
+     >>= pipes::transform([](int i, int j){ return std::make_pair(i, j); })
+     >>= pipes::push_back(results);
+     
+ /*
+ results contains:
+ {
+    { 1, 2 }, { 1, 3 }, { 1, 4 }, { 1, 5 },
+              { 2, 3 }, { 2, 4 }, { 2, 5 },
+                        { 3, 4 }, { 3, 5 },
+                                  { 4, 5 }
+ }
+ /*
+```
+
 # End pipes
 
 This library also provides end pipes, which are components that send data to a collection in an elaborate way. For example, the `map_aggregate`  pipe receives `std::pair<Key, Value>`s and adds them to a map with the following rule:
