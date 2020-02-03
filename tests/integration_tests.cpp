@@ -123,7 +123,6 @@ TEST_CASE("Sequence of output iterators, no algorithms, with pipes")
 
 std::vector<int> operator|(std::vector<int> const&, std::vector<int> const& v2)
 {
-    static_cast<void>(v1);
     return v2;
 }
 
