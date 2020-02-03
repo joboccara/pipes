@@ -22,7 +22,6 @@ namespace pipes
     template<typename Value, typename Pipeline>
     auto operator>>= (read_in_stream<Value>, Pipeline&& pipeline)
     {
-        static_cast<void>(readInStreamPipe);
         return read_in_stream_pipeline<Value, std::decay_t<Pipeline>>{pipeline};
     }
 
