@@ -232,7 +232,7 @@ std::cin >>= pipes::read_in_stream<std::string>{}
     * [`override`](#-override-)
     * [`push_back`](#-push-back-)
     * [`set_aggregator`](#-set-aggregator-)
-    * [`sorted_inserter`](#-sorted-inserter-)
+    * [`insert`](#-insert-)
     * [`to_out_stream`](#-to-out-stream-)
 
 ## General pipes
@@ -519,6 +519,27 @@ std::copy(begin(input), end(input), pipes::for_each(pipes::do_([&](int i){ resul
 
 ```
 
+### `insert`
+
+In the majority of cases where it is used in algoritms, `std::inserter` forces its user to provide a position. It makes sense for un-sorted containers such as `std::vector`, but for sorted containers such as `std::set` we end up choosing begin or end by default, which doesn't make sense:
+
+```cpp
+std::vector<int> v = {1, 3, -4, 2, 7, 10, 8};
+std::set<int> results;
+std::copy(begin(v), end(v), std::inserter(results, end(results)));
+```
+
+`insert` removes this constraint by making the position optional. If no hint is passed, the containers is left to determine the correct position to insert:
+
+```cpp
+std::vector<int> v = {1, 3, -4, 2, 7, 10, 8};
+std::set<int> results;
+std::copy(begin(v), end(v), insert(results));
+
+//results contains { -4, 1, 2, 3, 7, 8, 10 }
+```
+Read the [full story](https://www.fluentcpp.com/2017/03/17/smart-iterators-for-inserting-into-sorted-container/) about `insert`.
+
 ### `map_aggregator`
 
 `map_aggregator` provides the possibility to embark an aggregator function in the inserter iterator, so that new elements whose **key is already present in the map** can be merged with the existent (e.g. have their values added together).
@@ -633,27 +654,6 @@ int main()
     // results contain { Value{1, "a"}, Value{2, "bb"}, Value{3, "cc"}, Value{4, "dd"}, Value{5, "e"} }
 }
 ```
-
-### `sorted_inserter`
-
-In the majority of cases where it is used in algoritms, `std::inserter` forces its user to provide a position. It makes sense for un-sorted containers such as `std::vector`, but for sorted containers such as `std::set` we end up choosing begin or end by default, which doesn't make sense:
-
-```cpp
-std::vector<int> v = {1, 3, -4, 2, 7, 10, 8};
-std::set<int> results;
-std::copy(begin(v), end(v), std::inserter(results, end(results)));
-```
-
-`sorted_inserter` removes this constraint by making the position optional. If no hint is passed, the containers is left to determine the correct position to insert:
-
-```cpp
-std::vector<int> v = {1, 3, -4, 2, 7, 10, 8};
-std::set<int> results;
-std::copy(begin(v), end(v), sorted_inserter(results));
-
-//results contains { -4, 1, 2, 3, 7, 8, 10 }
-```
-Read the [full story](https://www.fluentcpp.com/2017/03/17/smart-iterators-for-inserting-into-sorted-container/) about `sorted_inserter`.
 
 ### `to_out_stream`
 

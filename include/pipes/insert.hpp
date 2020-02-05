@@ -12,7 +12,7 @@ namespace pipes
 {
 
 template <typename Container>
-class sorted_insert_iterator : public pipeline_base<sorted_insert_iterator<Container>>
+class insert_iterator : public pipeline_base<insert_iterator<Container>>
 {
 public:
     template<typename T>
@@ -24,8 +24,8 @@ public:
             container_->insert(FWD(value));
     }
 
-    explicit sorted_insert_iterator (Container& container) : container_(&container), hint_(detail::nullopt) {}
-    sorted_insert_iterator (Container& container, typename Container::iterator hint) : container_(&container), hint_(hint) {}
+    explicit insert_iterator (Container& container) : container_(&container), hint_(detail::nullopt) {}
+    insert_iterator (Container& container, typename Container::iterator hint) : container_(&container), hint_(hint) {}
     
 private:
     Container* container_;
@@ -33,15 +33,15 @@ private:
 };
 
 template <typename Container>
-sorted_insert_iterator<Container> sorted_inserter(Container& container)
+insert_iterator<Container> insert(Container& container)
 {
-    return sorted_insert_iterator<Container>(container);
+    return insert_iterator<Container>(container);
 }
 
 template <typename Container>
-sorted_insert_iterator<Container> sorted_inserter(Container& container, typename Container::iterator hint)
+insert_iterator<Container> insert(Container& container, typename Container::iterator hint)
 {
-    return sorted_insert_iterator<Container>(container, hint);
+    return insert_iterator<Container>(container, hint);
 }
 
 } // namespace pipes

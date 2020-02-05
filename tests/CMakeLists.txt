@@ -11,7 +11,7 @@ add_executable(pipes_test
     fork.cpp
     map_aggregator.cpp
     set_aggregator.cpp
-    sorted_inserter.cpp
+    insert.cpp
     intersperse.cpp
     filter.cpp
     join.cpp
