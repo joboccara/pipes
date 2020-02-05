@@ -2,15 +2,14 @@
 #include "pipes/pipes.hpp"
 
 #include <algorithm>
+#include <cctype>
 #include <iostream>
-#include <locale>
 #include <sstream>
 
 std::string toUpper(std::string const& s)
 {
     std::string result(s.size(), '_');
-    std::locale loc;
-    std::transform(begin(s), end(s), begin(result), [&loc](char c){ return static_cast<char>(std::toupper(c, loc)); });
+    std::transform(begin(s), end(s), begin(result), [](char c){ return static_cast<char>(std::toupper(c)); });
     return result;
 }
 
