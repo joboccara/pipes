@@ -5,6 +5,7 @@
 #include "pipes/unzip.hpp"
 
 #include <algorithm>
+#include <locale>
 #include <map>
 #include <string>
 #include <utility>
@@ -70,7 +71,8 @@ TEST_CASE("unzip can override existing contents")
 std::string toUpperString(std::string const& s)
 {
     std::string upperString;
-    std::transform(begin(s), end(s), pipes::push_back(upperString), [](char c){ return static_cast<char>(std::toupper(c)); });
+    std::locale loc;
+    std::transform(begin(s), end(s), pipes::push_back(upperString), [&loc](char c){ return static_cast<char>(std::toupper(c, loc)); });
     return upperString;
 }
 

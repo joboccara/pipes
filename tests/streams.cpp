@@ -3,12 +3,14 @@
 
 #include <algorithm>
 #include <iostream>
+#include <locale>
 #include <sstream>
 
 std::string toUpper(std::string const& s)
 {
     std::string result(s.size(), '_');
-    std::transform(begin(s), end(s), begin(result), [](char c){ return static_cast<char>(std::toupper(c)); });
+    std::locale loc;
+    std::transform(begin(s), end(s), begin(result), [&loc](char c){ return static_cast<char>(std::toupper(c, loc)); });
     return result;
 }
 
