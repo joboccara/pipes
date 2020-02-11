@@ -25,6 +25,32 @@ TEST_CASE("insert should not insert existing values")
     REQUIRE((results == expected));
 }
 
+TEST_CASE("insert can take a position")
+{
+    auto const inputDestination = std::vector<int>{1, 2, 3, 4, 5};
+    auto const inputSource = std::vector<int>{10, 20, 30};
+
+    auto const expectedDestination = std::vector<int>{ 10, 20, 30, 1, 2, 3, 4, 5 };
+    
+    auto resultsDestination = inputDestination;
+    std::copy(begin(inputSource), end(inputSource), pipes::insert(resultsDestination, begin(resultsDestination)));
+    
+    REQUIRE((resultsDestination == expectedDestination));
+}
+
+TEST_CASE("insert supports a destination that gets reallocated")
+{
+    auto const inputDestination = std::vector<int>{};
+    auto const inputSource = std::vector<int>(999, 0);
+
+    auto const expectedDestination = inputSource;
+
+    auto resultsDestination = inputDestination;
+    std::copy(begin(inputSource), end(inputSource), pipes::insert(resultsDestination, begin(resultsDestination)));
+    
+    REQUIRE((resultsDestination == expectedDestination));
+}
+
 TEST_CASE("insert's iterator category should be std::output_iterator_tag")
 {
     std::set<int> results;
