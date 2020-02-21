@@ -48,7 +48,8 @@ public:
     template<typename T>
     void onReceive(T&& value)
     {
-        container_->insert(position_,FWD(value));
+        position_ = container_->insert(position_, FWD(value));
+        ++position_;
     }
 
     insert_iterator_with_position (Container& container, typename Container::iterator position) : container_(&container), position_(position) {}
@@ -70,16 +71,19 @@ struct insert_iterator_type<Container, false>
     using type = insert_iterator_with_position<Container>;
 };
 
+template<typename Container, bool HasNoPosition>
+using insert_iterator_t = typename insert_iterator_type<Container, HasNoPosition>::type;
+
 template <typename Container>
 auto insert(Container& container)
 {
-    return insert_iterator_type<Container, detail::HasInserterWithNoPosition<container>>::type(container);
+    return insert_iterator_t<Container, detail::HasInserterWithNoPosition<Container>>{container};
 }
 
 template <typename Container>
 auto insert(Container& container, typename Container::iterator position)
 {
-    return insert_iterator_type<Container, detail::HasInserterWithNoPosition<container>>::type(container, position);
+    return insert_iterator_t<Container, detail::HasInserterWithNoPosition<Container>>{container, position};
 }
 
 } // namespace pipes

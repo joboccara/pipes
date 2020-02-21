@@ -35,7 +35,7 @@ TEST_CASE("insert can take a position")
     auto resultsDestination = inputDestination;
     std::copy(begin(inputSource), end(inputSource), pipes::insert(resultsDestination, begin(resultsDestination)));
     
-    REQUIRE((resultsDestination == expectedDestination));
+    REQUIRE(resultsDestination == expectedDestination);
 }
 
 TEST_CASE("insert supports a destination that gets reallocated")
