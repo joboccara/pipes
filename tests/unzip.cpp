@@ -5,6 +5,7 @@
 #include "pipes/unzip.hpp"
 
 #include <algorithm>
+#include <cctype>
 #include <map>
 #include <string>
 #include <utility>
