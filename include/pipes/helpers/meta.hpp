@@ -91,9 +91,31 @@ namespace pipes
         {
             return transform(tuple, [](auto&& element) -> decltype(auto) { return *element; });
         }
-        
-    }  // namespace detail
-}  // namespace pipes
 
+        template<typename T, typename = void>
+        struct is_pair : std::false_type
+        {};
+
+        template<typename T>
+        struct is_pair<T, std::void_t<decltype(std::declval<T>().first), decltype(std::declval<T>().second)>>
+            : std::true_type
+        {};
+
+        template<typename T>
+        constexpr bool is_pair_v = is_pair<T>::value;
+
+        template<typename T, typename = void>
+        struct is_clearable : std::false_type
+        {};
+
+        template<typename T>
+        struct is_clearable<T, std::void_t<decltype(std::declval<T>().clear())>> : std::true_type
+        {};
+
+        template<typename T>
+        constexpr bool is_clearable_v = is_clearable<T>::value;
+
+    } // namespace detail
+} // namespace pipes
 
 #endif /* PIPES_META_HPP */

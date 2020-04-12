@@ -338,6 +338,28 @@ input >>= pipes::join >>= pipes::push_back(results);
 // results contain {1, 2, 3, 4, 5, 6}
 ```
 
+### `keys`
+
+`keys` is a pipe that sends the first value of a pair to the next pipe, ignoring the second value. It is useful to get keys of a map
+```cpp
+auto const input = std::map<int, std::string>{ {1, "1"}, {2, "2"}, {3, "3"} };
+auto results = std::vector<int>{};
+
+input >>= pipes::keys{} >>= pipes::push_back(results);
+
+// results contain {1, 2, 3}
+```
+
+```cpp
+auto const input = std::vector<std::vector<int>>{ {1, 2}, {3, 4}, {5, 6} };
+auto results = std::vector<int>{};
+
+input >>= pipes::join >>= pipes::push_back(results);
+
+// results contain {1, 2, 3, 4, 5, 6}
+```
+
+
 ### `partition`
 
 <p align="center"><img src="https://github.com/joboccara/pipes/blob/readme/docs/partition_pipe.png"/></p>
@@ -492,6 +514,18 @@ entries >>= pipes::unzip(pipes::push_back(keys),
 // values contains {"one", "two", "three", "four", "five"};
 ```
 
+### `values`
+
+`values` is a pipe that sends the second value of a pair to the next pipe, ignoring the first value. It is useful to get values of a map
+```cpp
+auto const input = std::map<int, std::string>{ {1, "1"}, {2, "2"}, {3, "3"} };
+auto results = std::vector<std::string>{};
+
+input >>= pipes::values{} >>= pipes::push_back(results);
+
+// results contain {"1", "2", "3"}
+```
+
 ## End pipes
 
 ### `for_each`
@@ -612,6 +646,11 @@ xs >>= pipes::override(results, &P::setX);
 ### `push_back`
 
 `push_back` is a pipe that is equivalent to `std::back_inserter`. It takes a collection that has a `push_back` member function, such as a `std::vector`, and `push_back`s the values it receives into that collection.
+
+### `replace`
+
+`replace` is a pipe that is equivalent to calling clear() and then using `std::back_inserter`. It takes a collection that has `clear` and `push_back` member functions, such as a `std::vector`, `clear`s the container and `push_back`s the values it receives into that collection.
+
 
 ### `set_aggregator`
 
