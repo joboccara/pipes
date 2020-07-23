@@ -667,3 +667,5 @@ input >>= pipes::transform(toUpper)
 
 // sends "WORD1WORD2WORD3" to the standard output
 ```
+
+<a href="https://www.patreon.com/bePatron?u=10076953" data-patreon-widget-type="become-patron-button">Become a Patron!</a><script async src="https://c6.patreon.com/becomePatronButton.bundle.js"></script>
