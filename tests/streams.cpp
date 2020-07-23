@@ -2,6 +2,7 @@
 #include "pipes/pipes.hpp"
 
 #include <algorithm>
+#include <cctype>
 #include <iostream>
 #include <sstream>
 
