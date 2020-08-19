@@ -4,6 +4,13 @@ dist: bionic
 
 matrix:
     include:
+    - env: CXX=g++-10 CC=gcc-10
+      addons:
+        apt:
+          packages:
+            - g++-10
+          sources:
+            - sourceline: 'ppa:ubuntu-toolchain-r/test'
     - env: CXX=g++-9 CC=gcc-9
       addons:
         apt:

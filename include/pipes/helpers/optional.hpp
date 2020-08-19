@@ -1,12 +1,20 @@
 #ifndef PIPES_OPTIONAL_HPP
 #define PIPES_OPTIONAL_HPP
 
+#include <utility>
 #include <type_traits>
 
 namespace pipes
 {
 namespace detail
 {
+#if __cplusplus >= 201703L
+    using nullopt_t = std::nullopt_t;
+    static const nullopt_t nullopt = std::nullopt;
+
+    template <typename T>
+    using optional = std::optional<T>;
+#else
     struct nullopt_t {};
     static const nullopt_t nullopt;
 
@@ -47,6 +55,7 @@ namespace detail
         std::aligned_storage_t<sizeof(T)> m_object;
         bool m_initialized;
     };
+#endif /* #if __cplusplus == 201703L */
 
 } // namespace detail
 } // namespace pipes
