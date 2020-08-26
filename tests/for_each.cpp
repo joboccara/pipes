@@ -1,5 +1,5 @@
 #include "catch.hpp"
-#include "pipes/for_each.hpp"
+#include "pipes/pipes.hpp"
 
 #include <algorithm>
 #include <vector>
@@ -43,4 +43,19 @@ TEST_CASE("for_each::operator= (called in the _Recheck function of Visual Studio
     pipes::send(0, for_each2);
     REQUIRE(context1 == 43);
     REQUIRE(context2 == 42);
+}
+
+auto counter(int& count)
+{
+    return pipes::for_each([&count](auto const&){ ++count; });
+}
+
+TEST_CASE("counter pipe implemented with for_each")
+{
+    std::vector<int> input = {1, 2, 3, 4, 5, 6, 7 ,8, 9, 10};
+    auto expected = 5;
+    int result = 0;
+    input >>= pipes::filter([](int i){ return i % 2 == 0; }) >>= counter(result);
+    
+    REQUIRE(result == expected);
 }
