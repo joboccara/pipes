@@ -18,6 +18,8 @@ namespace pipes
     template<typename Range, typename Pipeline, detail::IsARange<Range> = true, detail::IsAPipeline<Pipeline> = true>
     void operator>>=(Range&& range, Pipeline&& pipeline)
     {
+	using std::begin;
+	using std::end;
         std::copy(begin(range), end(range), pipeline);
     }
 
