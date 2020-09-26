@@ -213,27 +213,27 @@ std::cin >>= pipes::read_in_stream<std::string>{}
 # List of available pipes
 
 * [General pipes](#general-pipes)
-    * [`dev_null`](#-dev-null-)
-    * [`drop`](#-drop-)
-    * [`drop_while`](#-drop-while-)
-    * [`filter`](#-filter-)
-    * [`fork`](#-fork-)
-    * [`partition`](#-partition-)
-    * [`read_in_stream`](#-read-in-stream-)
-    * [`switch`](#-switch-)
-    * [`stride`](#-stride-)
-    * [`take`](#-take-)
-    * [`tee`](#-tee-)
-    * [`transform`](#-transform-)
-    * [`unzip`](#-unzip-)
+    * [`dev_null`](#dev_null)
+    * [`drop`](#drop)
+    * [`drop_while`](#drop_while)
+    * [`filter`](#filter)
+    * [`fork`](#fork)
+    * [`partition`](#partition)
+    * [`read_in_stream`](#read_in_stream)
+    * [`switch`](#switch)
+    * [`stride`](#stride)
+    * [`take`](#take)
+    * [`tee`](#tee)
+    * [`transform`](#transform)
+    * [`unzip`](#unzip)
 * [End pipes](#end-pipes-1)
-    * [`for_each`](#-for-each-)
-    * [`map_aggregator`](#-map-aggregator-)
-    * [`override`](#-override-)
-    * [`push_back`](#-push-back-)
-    * [`set_aggregator`](#-set-aggregator-)
-    * [`insert`](#-insert-)
-    * [`to_out_stream`](#-to-out-stream-)
+    * [`for_each`](#for_each)
+    * [`map_aggregator`](#map_aggregator)
+    * [`override`](#override)
+    * [`push_back`](#push_back)
+    * [`set_aggregator`](#set_aggregator)
+    * [`insert`](#insert)
+    * [`to_out_stream`](#to_out_stream)
 
 ## General pipes
 
@@ -669,3 +669,4 @@ input >>= pipes::transform(toUpper)
 ```
 
 <a href="https://www.patreon.com/join/fluentcpp?"><img alt="become a patron" src="https://c5.patreon.com/external/logo/become_a_patron_button.png" height="35px"></a>
+
