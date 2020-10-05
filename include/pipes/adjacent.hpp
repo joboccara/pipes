@@ -2,7 +2,6 @@
 #define PIPES_ADJACENT_HPP
 
 #include <pipes/impl/concepts.hpp>
-#include <pipes/helpers/FWD.hpp>
 #include <iterator>
 
 namespace pipes

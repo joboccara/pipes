@@ -4,7 +4,6 @@
 #include "pipes/helpers/FWD.hpp"
 
 #include "pipes/base.hpp"
-#include "pipes/operator.hpp"
 #include "pipes/send.hpp"
 
 namespace pipes

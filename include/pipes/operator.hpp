@@ -1,14 +1,10 @@
 #ifndef OPERATOR_HPP
 #define OPERATOR_HPP
 
-#include "pipes/base.hpp"
-#include "pipes/helpers/detect.hpp"
-#include "pipes/helpers/FWD.hpp"
 #include "pipes/impl/concepts.hpp"
 #include "pipes/impl/pipes_assembly.hpp"
 
 #include <type_traits>
-#include <utility>
 
 namespace pipes
 {

@@ -4,7 +4,6 @@
 #include "pipes/operator.hpp"
 
 #include "pipes/helpers/assignable.hpp"
-#include "pipes/helpers/meta.hpp"
 #include "pipes/base.hpp"
 
 namespace pipes

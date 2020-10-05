@@ -2,7 +2,6 @@
 #define READ_IN_STREAM_HPP
 
 #include "pipes/base.hpp"
-#include "pipes/helpers/FWD.hpp"
 
 #include <iterator>
 

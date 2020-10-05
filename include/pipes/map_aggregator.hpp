@@ -7,7 +7,6 @@
 #include "pipes/helpers/assignable.hpp"
 
 #include <functional>
-#include <iterator>
 
 namespace pipes
 {

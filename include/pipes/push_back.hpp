@@ -1,8 +1,6 @@
 #ifndef PUSH_BACK_HPP
 #define PUSH_BACK_HPP
 
-#include "pipes/operator.hpp"
-
 #include "pipes/base.hpp"
 #include "pipes/helpers/FWD.hpp"
 

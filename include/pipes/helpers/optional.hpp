@@ -1,7 +1,6 @@
 #ifndef PIPES_OPTIONAL_HPP
 #define PIPES_OPTIONAL_HPP
 
-#include <utility>
 #include <type_traits>
 
 namespace pipes

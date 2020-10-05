@@ -2,7 +2,6 @@
 #define PIPES_CONCEPTS_HPP
 
 #include <type_traits>
-#include <utility>
 
 #include "pipes/base.hpp"
 #include "pipes/helpers/detect.hpp"
