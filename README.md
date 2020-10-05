@@ -15,7 +15,7 @@ The library is under development and subject to change. Contributions are welcom
 
 * [A First Example](#a-first-example)
 * [A Second Example](#a-second-example)
-* [Doesn't it look like ranges?](#doesn-t-it-look-like-ranges-)
+* [Doesn't it look like ranges?](#doesnt-it-look-like-ranges)
 * [Operating on several collections](#operating-on-several-collections)
 * [End pipes](#end-pipes)
 * [Easy integration with STL algorithms](#easy-integration-with-stl-algorithms)
