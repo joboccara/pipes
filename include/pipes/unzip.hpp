@@ -1,8 +1,6 @@
 #ifndef PIPES_UNZIP_HPP
 #define PIPES_UNZIP_HPP
 
-#include "pipes/operator.hpp"
-
 #include "pipes/base.hpp"
 #include "pipes/helpers/meta.hpp"
 

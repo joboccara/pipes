@@ -1,9 +1,6 @@
 #ifndef PIPES_DO_THEN_HPP
 #define PIPES_DO_THEN_HPP
 
-#include <functional>
-#include <vector>
-
 #include "pipes/helpers/FWD.hpp"
 
 namespace pipes

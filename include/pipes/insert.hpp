@@ -6,9 +6,6 @@
 #include "pipes/base.hpp"
 #include "pipes/helpers/optional.hpp"
 
-#include <iterator>
-#include <utility>
-
 namespace pipes
 {
     namespace detail

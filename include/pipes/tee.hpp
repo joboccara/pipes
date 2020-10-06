@@ -1,8 +1,6 @@
 #ifndef PIPES_TEE_HPP
 #define PIPES_TEE_HPP
 
-#include "pipes/operator.hpp"
-
 #include "pipes/base.hpp"
 #include "pipes/helpers/FWD.hpp"
 

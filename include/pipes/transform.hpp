@@ -1,12 +1,9 @@
 #ifndef PIPES_TRANSFORM_HPP
 #define PIPES_TRANSFORM_HPP
 
-#include "pipes/operator.hpp"
-
 #include "pipes/base.hpp"
 #include "pipes/helpers/assignable.hpp"
 #include "pipes/helpers/FWD.hpp"
-#include "pipes/helpers/meta.hpp"
 #include "pipes/helpers/invoke.hpp"
 
 #include <type_traits>

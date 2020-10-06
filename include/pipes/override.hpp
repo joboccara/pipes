@@ -2,11 +2,9 @@
 #define BEGIN_HPP
 
 #include "pipes/operator.hpp"
-
 #include "pipes/base.hpp"
 
 #include <iterator>
-#include <utility>
 
 namespace pipes
 {

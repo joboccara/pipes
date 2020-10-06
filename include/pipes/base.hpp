@@ -6,7 +6,6 @@
 #include "pipes/helpers/FWD.hpp"
 
 #include <iterator>
-#include <tuple>
 
 namespace pipes
 {

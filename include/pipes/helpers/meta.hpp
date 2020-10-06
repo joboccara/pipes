@@ -1,7 +1,6 @@
 #ifndef PIPES_META_HPP
 #define PIPES_META_HPP
 
-#include <iterator>
 #include <type_traits>
 #include <utility>
 

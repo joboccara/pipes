@@ -3,8 +3,6 @@
 
 #include <type_traits>
 
-#include "pipes/operator.hpp"
-
 #include "pipes/base.hpp"
 #include "pipes/helpers/assignable.hpp"
 #include "pipes/helpers/FWD.hpp"
