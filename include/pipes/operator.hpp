@@ -9,13 +9,23 @@
 namespace pipes
 {
 
-// range >>= pipeline
+// range >>= pipeline (rvalue ranges)
     
     template<typename Range, typename Pipeline, detail::IsARange<Range> = true, detail::IsAPipeline<Pipeline> = true>
-    void operator>>=(Range&& range, Pipeline&& pipeline)
+    std::enable_if_t<!std::is_lvalue_reference<Range>::value> operator>>=(Range&& range, Pipeline&& pipeline)
     {
-	using std::begin;
-	using std::end;
+        using std::begin;
+        using std::end;
+        std::copy(std::make_move_iterator(begin(range)), std::make_move_iterator(end(range)), pipeline);
+    }
+
+// range >>= pipeline (lvalue ranges)
+    
+    template<typename Range, typename Pipeline, detail::IsARange<Range> = true, detail::IsAPipeline<Pipeline> = true>
+    std::enable_if_t<std::is_lvalue_reference<Range>::value> operator>>=(Range&& range, Pipeline&& pipeline)
+    {
+        using std::begin;
+        using std::end;
         std::copy(begin(range), end(range), pipeline);
     }
 

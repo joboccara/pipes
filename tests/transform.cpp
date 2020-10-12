@@ -5,6 +5,7 @@
 #include "pipes/override.hpp"
 
 #include <algorithm>
+#include <memory>
 #include <vector>
 
 TEST_CASE("transform")
@@ -76,4 +77,27 @@ TEST_CASE("transform operator=")
     send(1, pipeline2);
     REQUIRE(results1.size() == 1);
     REQUIRE(results2.size() == 0);
+}
+
+TEST_CASE("transform move_only types")
+{
+    // Can't use initializer list since it needs to copy
+    std::vector<std::unique_ptr<int>> input;
+    input.push_back(std::make_unique<int>(1));
+    input.push_back(std::make_unique<int>(2));
+
+    std::vector<std::unique_ptr<int>> result;
+
+    std::move(input) >>= pipes::transform([](auto&& ptr) -> decltype(auto) { return std::move(ptr); })
+                     >>= pipes::push_back(result);
+
+    // unique_ptr op == compares ptr not value
+    REQUIRE(result.size() == 2);
+    REQUIRE(*result[0] == 1);
+    REQUIRE(*result[1] == 2);
+
+    // input elements were moved from
+    REQUIRE(input.size() == 2);
+    REQUIRE(input[0] == nullptr);
+    REQUIRE(input[1] == nullptr);
 }
