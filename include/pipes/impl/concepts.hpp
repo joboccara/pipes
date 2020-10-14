@@ -50,6 +50,15 @@ namespace pipes
         template<typename Pipeline>
         using IsAPipeline = impl::IsAPipeline<std::remove_reference_t<Pipeline>>;
         
+		template< class, class = void >
+		struct has_reduced_value : std::false_type {};
+		template< class T >
+		struct has_reduced_value<T, std::void_t<decltype( std::declval<T&>().move_reduced_value_from() )> > : std::true_type {};
+
+        template<typename Pipeline, detail::IsAPipeline<Pipeline> = true>
+        using IsANonReturningPipeline = std::enable_if_t<!detail::has_reduced_value<Pipeline>::value, bool>;
+        template<typename Pipeline, detail::IsAPipeline<Pipeline> = true>
+        using IsAReturningPipeline = std::enable_if_t<detail::has_reduced_value<Pipeline>::value, bool>;
     } // namespace detail
 } // namespace pipes
 

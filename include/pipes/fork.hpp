@@ -5,6 +5,7 @@
 
 #include "pipes/helpers/meta.hpp"
 #include "pipes/base.hpp"
+#include "pipes/impl/pipelines_reduction.hpp"
 
 namespace pipes
 {
@@ -18,6 +19,16 @@ public:
     {
         detail::for_each(tailPipelines_, [&value](auto&& tailPipeline){ send(FWD(value), tailPipeline); });
     }
+
+	template<size_t... indices>
+	auto move_reduced_value_from(std::index_sequence<indices...>)
+	{
+		return std::make_tuple(detail::move_reduced_value_from(std::get<indices>(tailPipelines_))...);
+	}
+	auto move_reduced_value_from()
+	{
+		return move_reduced_value_from(std::make_index_sequence<sizeof...(TailPipelines)>());
+	}
 
     explicit fork_pipeline(TailPipelines const&... tailPipelines) : tailPipelines_(tailPipelines...) {}
     
