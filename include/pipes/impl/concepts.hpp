@@ -12,6 +12,11 @@ namespace pipes
     {
         namespace impl
         {
+			// definition of void_t from C++17
+
+			template< class... >
+			using void_t = void;
+
             // definition of range
             
             namespace adl
@@ -53,7 +58,7 @@ namespace pipes
 		template< class, class = void >
 		struct has_reduced_value : std::false_type {};
 		template< class T >
-		struct has_reduced_value<T, std::void_t<decltype( std::declval<T&>().move_reduced_value_from() )> > : std::true_type {};
+		struct has_reduced_value<T, impl::void_t<decltype( std::declval<T&>().move_reduced_value_from() )> > : std::true_type {};
 
         template<typename Pipeline, detail::IsAPipeline<Pipeline> = true>
         using IsANonReturningPipeline = std::enable_if_t<!detail::has_reduced_value<Pipeline>::value, bool>;
