@@ -249,10 +249,10 @@ std::set<int> setB = {3, 4, 5, 6, 7};
 std::vector<int> inAOnly;
 std::vector<int> inBoth;
 
-sets::set_seggregate(setA, setB,
-                     pipes::push_back(inAOnly),
-                     pipes::push_back(inBoth),
-                     dev_null{});
+sets::set_segregate(setA, setB,
+                    pipes::push_back(inAOnly),
+                    pipes::push_back(inBoth),
+                    dev_null{});
 
 // inAOnly contains {1, 2}
 // inBoth contains {3, 4, 5}
