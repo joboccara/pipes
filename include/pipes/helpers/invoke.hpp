@@ -8,8 +8,7 @@ namespace pipes
 {
     namespace detail
     {
-#ifdef _MSC_VER
-#if _MSVC_LANG >  201703L
+#if defined(_MSC_VER) && _MSVC_LANG >=  201703L
         template<typename Functor, typename... Args>
         typename std::enable_if<
             std::is_member_pointer<typename std::decay<Functor>::type>::value,
@@ -45,7 +44,6 @@ namespace pipes
         {
             return std::forward<Functor>(f)(std::forward<Args>(args)...);
         }
-#endif
 #endif
 
     }

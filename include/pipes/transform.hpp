@@ -17,12 +17,10 @@ namespace pipes
         template<typename... Values, typename TailPipeline>
         void onReceive(Values&&... values, TailPipeline&& tailPipeline)
         {
-#ifdef _MSC_VER
-#if _MSVC_LANG >=  201703L
+#if defined(_MSC_VER) && _MSVC_LANG >=  201703L
             send(std::invoke(function_.get(), FWD(values)...), tailPipeline);
 #else
             send(details::invoke(function_.get(), FWD(values)...), tailPipeline);
-#endif
 #endif
         }
         
