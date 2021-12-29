@@ -16,6 +16,6 @@ namespace pipes
         }
     };
     
-} // namespace fluent
+} // namespace pipes
 
 #endif /* PIPES_DEAD_END_ITERATOR_HPP */

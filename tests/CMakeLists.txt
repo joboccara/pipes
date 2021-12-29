@@ -1,6 +1,7 @@
 add_executable(pipes_test
     main.cpp
     adjacent.cpp
+    buffered_transform.cpp
     cartesian_product.cpp
     combinations.cpp
     dev_null.cpp

@@ -52,7 +52,7 @@ namespace pipes
     template<typename Pipe, typename Pipeline, detail::IsAPipe<Pipe> = true, detail::IsAPipeline<Pipeline> = true>
     auto operator>>=(Pipe&& pipe, Pipeline&& pipeline)
     {
-        return make_generic_pipeline(pipe, pipeline);
+        return make_generic_pipeline(std::forward<Pipe>(pipe), std::forward<Pipeline>(pipeline));
     }
 
 } // namespace pipes
