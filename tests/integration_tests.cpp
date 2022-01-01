@@ -5,10 +5,12 @@
 #include "pipes/unzip.hpp"
 #include "pipes/switch.hpp"
 #include "pipes/push_back.hpp"
+#include "pipes/for_each.hpp"
 
 #include <algorithm>
 #include <utility>
 #include <vector>
+#include <numeric>
 
 TEST_CASE("Mix of various pipes")
 {
@@ -260,4 +262,100 @@ TEST_CASE("Aggregation of pipes into reusable components")
             REQUIRE(results == expected);
         }
     }
+}
+
+namespace
+{
+    namespace DifferentIteratorsNS
+    {
+
+        struct Sentinel {};
+        struct CustomIter
+        {
+            using iterator_category = std::input_iterator_tag;
+            using value_type = int;
+            using difference_type = std::ptrdiff_t;
+            using pointer = value_type*;
+            using reference = value_type&;
+
+            CustomIter(const std::vector<int>::iterator vec_bg,
+                       const std::vector<int>::iterator vec_end)
+        		: VecBg_(vec_bg), VecEnd_(vec_end)
+            {}
+
+            auto& operator++()
+            {
+                ++VecBg_;
+                return *this;
+            }
+
+            auto operator++(int)
+            {
+                auto self = *this;
+                operator++();
+                return self;
+            }
+
+            int& operator*() const
+            {
+                return *VecBg_;
+            }
+
+            bool operator==(Sentinel) const
+            {
+                return VecBg_ == VecEnd_;
+            }
+
+            bool operator!=(Sentinel) const
+            {
+                return !operator==(Sentinel{});
+            }
+        private:
+            std::vector<int>::iterator VecBg_;
+            std::vector<int>::iterator VecEnd_;
+        };
+
+        struct DifferentIterators
+        {
+            std::vector<int> data_;
+
+            auto begin()
+            {
+                return CustomIter(data_.begin(), data_.end());
+            }
+
+            static auto end() 
+            {
+                return Sentinel{};
+            }
+        };
+    }
+}
+
+TEST_CASE("A pipeline with 2 different iterator types as source")
+{
+    DifferentIteratorsNS::DifferentIterators d;
+    {
+	    int i = 0;
+	    std::generate_n(std::back_inserter(d.data_), 10, [&i] {return i++; });
+    }
+
+    const auto expected = std::accumulate(d.data_.begin(), d.data_.end(), 0, std::plus{});
+
+    SECTION("l-value container")
+    {
+        int result = 0;
+        d >>= pipes::for_each([&result](const int i) {result += i; });
+
+        REQUIRE(result == expected);
+    }
+
+    SECTION("r-value container")
+    {
+        int result = 0;
+        std::move(d) >>= pipes::for_each([&result](const int i) {result += i; });
+
+        REQUIRE(result == expected);
+    }
+
 }

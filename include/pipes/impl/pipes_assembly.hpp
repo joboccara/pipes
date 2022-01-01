@@ -17,8 +17,11 @@ namespace pipes
             {
                 headPipe_.template onReceive<Ts...>(FWD(inputs)..., tailPipeline_);
             }
-            
-            generic_pipeline(HeadPipe headPipe, TailPipeline tailPipeline) : headPipe_(headPipe), tailPipeline_(tailPipeline) {}
+
+            template <typename HeadPipeFwd, typename TailPipelineFwd>
+            generic_pipeline(HeadPipeFwd&& headPipe, TailPipelineFwd&& tailPipeline)
+				: headPipe_(std::forward<HeadPipeFwd>(headPipe)), tailPipeline_(std::forward<TailPipelineFwd>(tailPipeline))
+        	{}
             
         private:
             HeadPipe headPipe_;

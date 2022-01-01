@@ -32,15 +32,15 @@ namespace pipes
 
         if (second != end(range))
         {
-            second++;
+            ++second;
         }
 
         while (second != end(range))
         {
             send(*first, *second, pipeline);
 
-            first++;
-            second++;
+            ++first;
+            ++second;
         }
     }
 } // namespace pipes
