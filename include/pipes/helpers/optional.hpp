@@ -2,6 +2,9 @@
 #define PIPES_OPTIONAL_HPP
 
 #include <type_traits>
+#if __cplusplus >= 201703L
+#  include <optional>
+#endif
 
 namespace pipes
 {
