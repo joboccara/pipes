@@ -4,6 +4,7 @@
 #include "pipes/override.hpp"
 #include "pipes/transform.hpp"
 #include "pipes/push_back.hpp"
+#include "pipes/to_container.hpp"
 
 #include <algorithm>
 #include <utility>
@@ -55,9 +56,11 @@ TEST_CASE("fork can send data to other pipes")
 
     std::vector<int> multiplesOf2, multiplesOf3, multiplesOf4;
     
-    std::copy(begin(numbers), end(numbers), pipes::fork(pipes::filter([](int i){return i%2 == 0;}) >>= pipes::push_back(multiplesOf2),
-                                                         pipes::filter([](int i){return i%3 == 0;}) >>= pipes::push_back(multiplesOf3),
-                                                         pipes::filter([](int i){return i%4 == 0;}) >>= pipes::push_back(multiplesOf4)));
+	std::tie(std::ignore, multiplesOf3, multiplesOf4) = (numbers>>=pipes::fork(
+		pipes::filter([](int i){return i%2 == 0;}) >>= pipes::push_back(multiplesOf2),
+        pipes::filter([](int i){return i%3 == 0;}) >>= pipes::to_<std::vector<int>>(),
+        pipes::filter([](int i){return i%4 == 0;}) >>= pipes::to_<std::vector<int>>()
+	));
     
     REQUIRE(multiplesOf2 == expectedMultiplesOf2);
     REQUIRE(multiplesOf3 == expectedMultiplesOf3);

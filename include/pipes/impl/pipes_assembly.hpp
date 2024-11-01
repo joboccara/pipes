@@ -1,6 +1,7 @@
 #ifndef PIPES_PIPES_ASSEMBLY
 #define PIPES_PIPES_ASSEMBLY
 
+#include "pipes/impl/pipelines_reduction.hpp"
 
 
 namespace pipes
@@ -18,6 +19,11 @@ namespace pipes
                 headPipe_.template onReceive<Ts...>(FWD(inputs)..., tailPipeline_);
             }
             
+			auto move_reduced_value_from()
+			{
+				return detail::move_reduced_value_from(tailPipeline_);
+			}
+
             generic_pipeline(HeadPipe headPipe, TailPipeline tailPipeline) : headPipe_(headPipe), tailPipeline_(tailPipeline) {}
             
         private:

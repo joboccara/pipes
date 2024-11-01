@@ -26,6 +26,7 @@ add_executable(pipes_test
     tap.cpp
     tee.cpp
     transform.cpp
+    to_container.cpp
     unzip.cpp
     integration_tests.cpp)
 add_test(NAME pipes_test COMMAND pipes_test)

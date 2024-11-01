@@ -26,6 +26,7 @@
 #include "pipes/take.hpp"
 #include "pipes/take_while.hpp"
 #include "pipes/tee.hpp"
+#include "pipes/to_container.hpp"
 #include "pipes/to_out_stream.hpp"
 #include "pipes/transform.hpp"
 #include "pipes/unzip.hpp"
